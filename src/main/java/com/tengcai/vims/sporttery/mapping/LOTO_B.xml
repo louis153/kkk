@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.tengcai.vims.entity.sporttery.LOTO_B">
+	<select id = "selectLOTO_BList" resultType="LOTO_B" parameterType="LOTO_B">
+		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,status,leaguename from t_loto_b
+        <where>
+<if test="issue != null and issue !=''">
+ and issue=#{issue}
+</if>
+<if test="starttime != null and starttime !=''">
+ and starttime = #{starttime}
+</if>
+<if test="endtime != null and endtime !=''">
+ and endtime = #{endtime}
+</if>
+<if test="home_team_name != null and home_team_name !=''">
+ and home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null and guest_team_name !=''">
+ and guest_team_name = #{guest_team_name}
+</if>
+<if test="home_team_id != null and home_team_id!=''">
+ and home_team_id = #{home_team_id}
+</if>
+<if test="guest_team_id != null and guest_team_id!=''">
+ and guest_team_id = #{guest_team_id}
+</if>
+<if test="home_full_result != null and home_full_result!=''">
+ and home_full_result = #{home_full_result}
+</if>
+<if test="guest_full_result != null and guest_full_result!=''">
+ and guest_full_result = #{guest_full_result}
+</if>
+<if test="cg_hilo != null and cg_hilo!=''">
+ and cg_hilo = #{cg_hilo}
+</if>
+<if test="cg_mnl != null and cg_mnl!=''">
+ and cg_mnl = #{cg_mnl}
+</if>
+<if test="mnl != null and mnl !=''">
+ and mnl = #{mnl}
+</if>
+<if test="mnl_h != null and mnl_h != ''">
+ and mnl_h = #{mnl_h}
+</if>
+<if test="mnl_a != null and mnl_a != ''">
+ and mnl_a = #{mnl_a}
+</if>
+<if test="hilo != null and hilo != ''">
+ and hilo = #{hilo}
+</if>
+<if test="hilo_h != null and hilo_h != ''">
+ and hilo_h = #{hilo_h}
+</if>
+<if test="hilo_l != null and hilo_l != ''">
+ and hilo_l = #{hilo_l}
+</if>
+<if test="hilo_presetscore != null and hilo_presetscore != ''">
+ and hilo_presetscore = #{hilo_presetscore}
+</if>
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="status != null">
+ and status=#{status}
+</if>
+<if test="leaguename != null and leaguename!= ''">
+ and leaguename = #{leaguename}
+</if>
+</where>
+order by issue
+
+        <if test = "row_start != null and page_size != null" >
+        limit #{row_start},#{page_size}
+        </if>
+    </select>
+    <select id = "selectLOTO_BCount" resultType="int" parameterType="LOTO_B">
+		SELECT count(*) from t_loto_b
+        <where>
+<if test="issue != null and issue != ''">
+ and issue=#{issue}
+</if>
+<if test="starttime != null and starttime != ''">
+ and starttime = #{starttime}
+</if>
+<if test="endtime != null and endtime != ''">
+ and endtime = #{endtime}
+</if>
+<if test="home_team_name != null and home_team_name!=''">
+ and home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null and guest_team_name!=''">
+ and guest_team_name = #{guest_team_name}
+</if>
+<if test="home_team_id != null and home_team_id!=''">
+ and home_team_id = #{home_team_id}
+</if>
+<if test="guest_team_id != null and guest_team_id!=''">
+ and guest_team_id = #{guest_team_id}
+</if>
+<if test="home_full_result != null and home_full_result!=''">
+ and home_full_result = #{home_full_result}
+</if>
+<if test="guest_full_result != null and guest_full_result!=''">
+ and guest_full_result = #{guest_full_result}
+</if>
+<if test="cg_hilo != null and cg_hilo!=''">
+ and cg_hilo = #{cg_hilo}
+</if>
+<if test="cg_mnl != null and cg_mnl!=''">
+ and cg_mnl = #{cg_mnl}
+</if>
+<if test="mnl != null and mnl!=''">
+ and mnl = #{mnl}
+</if>
+<if test="mnl_h != null and mnl_h!=''">
+ and mnl_h = #{mnl_h}
+</if>
+<if test="mnl_a != null and mnl_a!=''">
+ and mnl_a = #{mnl_a}
+</if>
+<if test="hilo != null and hilo != ''">
+ and hilo = #{hilo}
+</if>
+<if test="hilo_h != null and hilo_h != ''">
+ and hilo_h = #{hilo_h}
+</if>
+<if test="hilo_l != null and hilo_l !=''">
+ and hilo_l = #{hilo_l}
+</if>
+<if test="hilo_presetscore != null and hilo_presetscore != ''">
+ and hilo_presetscore = #{hilo_presetscore}
+</if>
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="status != null">
+ and status=#{status}
+</if>
+<if test="leaguename != null and leaguename!=''">
+ and leaguename = #{leaguename}
+</if>
+</where>
+order by issue
+       
+    </select>
+    <insert id="save" parameterType="LOTO_B">
+    <![CDATA[
+        INSERT INTO t_loto_b(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,status,leaguename)
+VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_full_result},#{guest_full_result},#{cg_hilo},#{cg_mnl},#{mnl},#{mnl_h},#{mnl_a},#{hilo},#{hilo_h},#{hilo_l},#{hilo_presetscore},#{mnl_h_0},#{mnl_a_0},#{hilo_h_0},#{hilo_l_0},#{is_recommend},#{status},#{leaguename})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_b(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,status,leaguename)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_hilo},#{v.cg_mnl},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.hilo},#{v.hilo_h},#{v.hilo_l},#{mnl_h_0},#{mnl_a_0},#{hilo_h_0},#{hilo_l_0},#{v.hilo_presetscore},#{v.is_recommend},#{v.status},#{v.leaguename}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="LOTO_B">
+    <![CDATA[
+        UPDATE t_loto_b set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},cg_hilo=#{cg_hilo},cg_mnl=#{cg_mnl},mnl=#{mnl},mnl_h=#{mnl_h},mnl_a=#{mnl_a},hilo=#{hilo},hilo_h=#{hilo_h},hilo_l=#{hilo_l},mnl_h_0=#{mnl_h_0},mnl_a_0=#{mnl_a_0},hilo_h_0=#{hilo_h_0},hilo_l_0=#{hilo_l_0},hilo_presetscore=#{hilo_presetscore},is_recommend=#{is_recommend},status=#{status},leaguename=#{leaguename}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_b(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,status,leaguename,mnl_h_0,mnl_a_0,hilo_h_0,v.hilo_l_0)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_hilo},#{v.cg_mnl},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.hilo},#{v.hilo_h},#{v.hilo_l},#{v.mnl_h_0},#{v.mnl_a_0},#{v.hilo_h_0},#{v.hilo_l_0},#{v.hilo_presetscore},#{v.status},#{v.leaguename}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="LOTO_B">
+    <![CDATA[
+        DELETE FROM t_loto_b WHERE  issue=#{issue} 
+	]]>
+    </delete>    
+</mapper > 

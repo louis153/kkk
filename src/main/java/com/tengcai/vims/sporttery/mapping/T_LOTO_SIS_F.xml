@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.tengcai.vims.entity.sporttery.T_LOTO_SIS_F">
+	<select id = "selectT_LOTO_SIS_FList" resultType="T_LOTO_SIS_F" parameterType="T_LOTO_SIS_F">
+		SELECT issue,had_h,had_d,had_a,hhad_h,hhad_d,hhad_a,had_h_d,had_d_d,had_a_d,hhad_h_d,hhad_d_d,hhad_a_d from t_loto_sis_f
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+</where>
+order by issue
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    <select id = "selectT_LOTO_SIS_FCount" resultType="int" parameterType="T_LOTO_SIS_F">
+		SELECT count(*) from t_loto_sis_f
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+</where>
+order by issue
+       
+    </select>
+    <insert id="save" parameterType="T_LOTO_SIS_F">
+    <![CDATA[
+        INSERT INTO t_loto_sis_f(issue,had_h,had_d,had_a,hhad_h,hhad_d,hhad_a,had_h_d,had_d_d,had_a_d,hhad_h_d,hhad_d_d,hhad_a_d)
+VALUES(#{issue},#{had_h},#{had_d},#{had_a},#{hhad_h},#{hhad_d},#{hhad_a},#{had_h_d},#{had_d_d},#{had_a_d},#{hhad_h_d},#{hhad_d_d},#{hhad_a_d})
+	]]>
+    </insert>
+    <insert id="save_sis" parameterType="T_LOTO_SIS_B">
+    <![CDATA[
+        INSERT INTO t_loto_sis_f(issue,had_h,had_d,had_a,hhad_h,hhad_d,hhad_a,had_h_d,had_d_d,had_a_d,hhad_h_d,hhad_d_d,hhad_a_d) VALUES (#{issue},#{had_h},#{had_d},#{had_a},#{hhad_h},#{hhad_d},#{hhad_a},#{had_h_d},#{had_d_d},#{had_a_d},#{hhad_h_d},#{hhad_d_d},#{hhad_a_d})  
+ON DUPLICATE KEY UPDATE had_h=had_h+#{had_h},had_d=had_d+#{had_d},had_a=had_a+#{had_a},hhad_h=hhad_h+#{hhad_h},hhad_d=hhad_d+#{hhad_d},hhad_a=hhad_a+#{hhad_a},had_h_d=had_h_d+#{had_h_d},had_d_d=had_d_d+#{had_d_d},had_a_d=had_a_d+#{had_a_d},hhad_h_d=hhad_h_d+#{hhad_h_d},hhad_d_d=hhad_d_d+#{hhad_d_d},hhad_a_d=hhad_a_d+#{hhad_a_d};    
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_sis_f(issue,had_h,had_d,had_a,hhad_h,hhad_d,hhad_a,had_h_d,had_d_d,had_a_d,hhad_h_d,hhad_d_d,hhad_a_d)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.had_h},#{v.had_d},#{v.had_a},#{v.hhad_h},#{v.hhad_d},#{v.hhad_a},#{v.had_h_d},#{v.had_d_d},#{v.had_a_d},#{v.hhad_h_d},#{v.hhad_d_d},#{v.hhad_a_d}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="T_LOTO_SIS_F">
+    <![CDATA[
+        UPDATE t_loto_sis_f set issue=#{issue},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},hhad_h=#{hhad_h},hhad_d=#{hhad_d},hhad_a=#{hhad_a},had_h_d=#{had_h_d},had_d_d=#{had_d_d},had_a_d=#{had_a_d},hhad_h_d=#{hhad_h_d},hhad_d_d=#{hhad_d_d},hhad_a_d=#{hhad_a_d}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_sis_f(issue,had_h,had_d,had_a,hhad_h,hhad_d,hhad_a,had_h_d,had_d_d,had_a_d,hhad_h_d,hhad_d_d,hhad_a_d)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.had_h},#{v.had_d},#{v.had_a},#{v.hhad_h},#{v.hhad_d},#{v.hhad_a},#{v.had_h_d},#{v.had_d_d},#{v.had_a_d},#{v.hhad_h_d},#{v.hhad_d_d},#{v.hhad_a_d}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="T_LOTO_SIS_F">
+    <![CDATA[
+        DELETE FROM t_loto_sis_f WHERE  issue=#{issue} 
+	]]>
+    </delete>
+    
+</mapper > 

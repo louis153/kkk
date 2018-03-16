@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.tengcai.vims.entity.sporttery.LOTO_BN">
+    <select id = "selectRemBN" resultType="LOTO_B" parameterType="LOTO_B">
+    select issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,status,leaguename,hilo_bet,mnl_bet from t_loto_bn 
+where endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+  and (hilo_bet=1 or mnl_bet=1)
+  and (is_hot=1 or is_recommend=1)
+order by is_hot desc,is_recommend DESC,endtime aSC
+LIMIT 0,1 
+    </select>
+	<select id = "selectLOTO_BNList" resultType="LOTO_B" parameterType="LOTO_B">
+		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,status,leaguename,hilo_bet,mnl_bet from t_loto_bn
+        <where>
+<if test="issue != null and issue != ''">
+ and issue = #{issue}
+</if>
+<if test="startIssue != null">
+  <![CDATA[ and issue>#{startIssue}]]>
+</if>
+<if test="endIssue != null">
+  <![CDATA[ and issue<#{endIssue}]]>
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+<if test="starttime != null">
+ <![CDATA[and starttime = #{starttime}]]>
+</if>
+<if test="endtime != null">
+ <![CDATA[and endtime > #{endtime}]]>
+</if>
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="is_hot != null">
+ and is_hot=#{is_hot}
+</if>
+<if test="hilo_bet != null and mnl_bet != null">
+ and (hilo_bet=#{hilo_bet} or mnl_bet=#{mnl_bet})
+</if>
+<if test="hilo_bet != null and mnl_bet == null">
+ and (hilo_bet=#{hilo_bet})
+</if>
+<if test="hilo_bet == null and mnl_bet != null">
+ and (mnl_bet=#{mnl_bet})
+</if>
+</where>
+order by starttime
+
+        <if test = "row_start != null and page_size != null" >
+        limit #{row_start},#{page_size}
+        </if>
+    </select>
+    <select id = "selectLOTO_BNCount" resultType="int" parameterType="LOTO_B">
+		SELECT count(*) from t_loto_bn
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+<if test="starttime != null">
+ and starttime = #{starttime}
+</if>
+<if test="endtime != null">
+ and endtime > #{endtime}
+</if>
+
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="is_hot != null">
+ and is_hot=#{is_hot}
+</if>
+</where>
+order by issue
+       
+    </select>
+    <insert id="save" parameterType="LOTO_B">
+    <![CDATA[
+        INSERT INTO t_loto_bn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,status,leaguename,hilo_bet,mnl_bet)
+VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_full_result},#{guest_full_result},#{cg_hilo},#{cg_mnl},#{mnl},#{mnl_h},#{mnl_a},#{hilo},#{hilo_h},#{hilo_l},#{hilo_presetscore},#{mnl_h_0},#{mnl_a_0},#{hilo_h_0},#{hilo_l_0},#{is_recommend},#{status},#{leaguename},#{hilo_bet},#{mnl_bet})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_bn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,hilo_presetscore,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,status,leaguename,hilo_bet,mnl_bet)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_hilo},#{v.cg_mnl},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.hilo},#{v.hilo_h},#{v.hilo_l},#{v.hilo_presetscore},#{v.is_recommend},#{v.mnl_h_0},#{v.mnl_a_0},#{v.hilo_h_0},#{v.hilo_l_0},#{v.status},#{v.leaguename},#{hilo_bet},#{mnl_bet}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="LOTO_B">
+    <![CDATA[
+        UPDATE t_loto_bn set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},
+        cg_hilo=#{cg_hilo},cg_mnl=#{cg_mnl},mnl=#{mnl},mnl_h=#{mnl_h},mnl_a=#{mnl_a},hilo=#{hilo},hilo_h=#{hilo_h},hilo_l=#{hilo_l},hilo_presetscore=#{hilo_presetscore},mnl_h_0=#{mnl_h_0},mnl_a_0=#{mnl_a_0},hilo_h_0=#{hilo_h_0},hilo_l_0=#{hilo_l_0},is_recommend=#{is_recommend},status=#{status},leaguename=#{leaguename},mnl_bet=#{mnl_bet},hilo_bet=#{hilo_bet}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_bn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_hilo,cg_mnl,mnl,mnl_h,mnl_a,hilo,hilo_h,hilo_l,mnl_h_0,mnl_a_0,hilo_h_0,hilo_l_0,is_recommend,hilo_presetscore,status,leaguename,hilo_bet,mnl_bet)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_hilo},#{v.cg_mnl},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.hilo},#{v.hilo_h},#{v.hilo_l},#{mnl_h_0},#{mnl_a_0},#{hilo_h_0},#{hilo_l_0},#{v.is_recommend},#{v.hilo_presetscore},#{v.status},#{v.leaguename},#{hilo_bet},#{mnl_bet}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="LOTO_B">
+    <![CDATA[
+        DELETE FROM t_loto_bn WHERE  issue=#{issue} 
+	]]>
+    </delete>  
+    <delete id="deleteAll" >
+    <![CDATA[
+        DELETE FROM t_loto_bn
+	]]>
+	
+    </delete>  
+    
+    
+</mapper > 

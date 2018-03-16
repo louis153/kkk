@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.tengcai.vims.entity.sporttery.T_ADVERT_TURN">
+    <cache eviction="LRU" flushInterval="300000" size="1024" readOnly="true" />
+	<select id = "selectT_ADVERT_TURNList" resultType="T_ADVERT_TURN" parameterType="T_ADVERT_TURN">
+		SELECT id,adtitle,adtimebegin,adtimeend,adtype,adseq,adimgname,adurl,adstatus,createtime,updatetime,order_source from t_advert_turn
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="adtitle != null">
+ and adtitle = #{adtitle}
+</if>
+<if test="adtimebegin != null">
+ and date(adtimebegin)=date(#{adtimebegin})
+</if>
+<if test="start_adtimebegin != null and end_adtimebegin != null ">
+ and adtimebegin between #{start_adtimebegin} and #{end_adtimebegin}
+</if>
+<if test="adtimeend != null">
+ and date(adtimeend)=date(#{adtimeend})
+</if>
+<if test="start_adtimeend != null and end_adtimeend != null ">
+ and adtimeend between #{start_adtimeend} and #{end_adtimeend}
+</if>
+<if test="adtype != null">
+ and adtype=#{adtype}
+</if>
+<if test="adseq != null">
+ and adseq=#{adseq}
+</if>
+<if test="adimgname != null">
+ and adimgname = #{adimgname}
+</if>
+<if test="adurl != null">
+ and adurl = #{adurl}
+</if>
+<if test="adstatus != null">
+ and adstatus=#{adstatus}
+</if>
+<if test="createtime != null">
+ and date(createtime)=date(#{createtime})
+</if>
+<if test="start_createtime != null and end_createtime != null ">
+ and createtime between #{start_createtime} and #{end_createtime}
+</if>
+<if test="updatetime != null">
+ and date(updatetime)=date(#{updatetime})
+</if>
+<if test="start_updatetime != null and end_updatetime != null ">
+ and updatetime between #{start_updatetime} and #{end_updatetime}
+</if>
+<if test="order_source != null">
+ and order_source = #{order_source}
+</if>
+<if test="position != null">
+ and position = #{position}
+</if>
+and now() between (adtimebegin) and (adtimeend)
+</where>
+order by adseq,id
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    <select id = "selectT_ADVERT_TURNCount" resultType="int" parameterType="T_ADVERT_TURN">
+		SELECT count(*) from t_advert_turn
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="adtitle != null">
+ and adtitle = #{adtitle}
+</if>
+<if test="adtimebegin != null">
+ and date(adtimebegin)=date(#{adtimebegin})
+</if>
+<if test="start_adtimebegin != null and end_adtimebegin != null ">
+ and adtimebegin between #{start_adtimebegin} and #{end_adtimebegin}
+</if>
+<if test="adtimeend != null">
+ and date(adtimeend)=date(#{adtimeend})
+</if>
+<if test="start_adtimeend != null and end_adtimeend != null ">
+ and adtimeend between #{start_adtimeend} and #{end_adtimeend}
+</if>
+<if test="adtype != null">
+ and adtype=#{adtype}
+</if>
+<if test="adseq != null">
+ and adseq=#{adseq}
+</if>
+<if test="adimgname != null">
+ and adimgname = #{adimgname}
+</if>
+<if test="adurl != null">
+ and adurl = #{adurl}
+</if>
+<if test="adstatus != null">
+ and adstatus=#{adstatus}
+</if>
+<if test="createtime != null">
+ and date(createtime)=date(#{createtime})
+</if>
+<if test="start_createtime != null and end_createtime != null ">
+ and createtime between #{start_createtime} and #{end_createtime}
+</if>
+<if test="updatetime != null">
+ and date(updatetime)=date(#{updatetime})
+</if>
+<if test="start_updatetime != null and end_updatetime != null ">
+ and updatetime between #{start_updatetime} and #{end_updatetime}
+</if>
+<if test="order_source != null">
+ and order_source = #{order_source}
+</if>
+and now() between (adtimebegin) and (adtimeend)
+</where>
+order by id
+       
+    </select>   
+</mapper > 

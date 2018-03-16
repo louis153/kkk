@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.tengcai.vims.entity.sporttery.V_LEAGUE">
+	<select id = "selectV_LEAGUEList" resultType="V_LEAGUE" parameterType="V_LEAGUE">
+		 
+<if test='position == "3"'>
+select leaguename,count(*) AS leaguecount,#{position} as position, left(issue,8) as saleday from t_loto_bn
+</if>		
+<if test='position == "2"'>
+select leaguename,count(*) AS leaguecount,#{position} as position, left(issue,8) as saleday from t_loto_fn
+</if>		
+<if test='position == "4"'>
+select game_name as leaguename,count(*) AS leaguecount,#{position} as position, left(endtime,10) as saleday from t_loto_en
+</if>		
+
+       where status=1 
+<if test="leaguename != null">
+ and leaguename=#{leaguename}
+</if>
+<if test='position == "3"'>
+<![CDATA[and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+and (mnl_bet=1 or hilo_bet=1) and issue<>#{rem_issue}]]>
+group by leaguename,left(issue,8) order by leaguename
+</if>
+<if test='position == "2"'>
+<![CDATA[and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
+and (had_bet=1 or hhad_bet=1) and issue<>#{rem_issue}]]>
+group by leaguename,left(issue,8) order by leaguename
+</if>
+<if test='position == "4"'>
+<![CDATA[and endtime > DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s')
+and mnl_bet=1 and issue<>#{rem_issue}]]>
+group by game_name,left(endtime,10) order by game_name
+</if>
+
+
+       
+    </select>
+    <select id = "selectV_LEAGUECount" resultType="int" parameterType="V_LEAGUE">
+		SELECT count(t.*) from (select distinct leaguename AS leaguename from t_loto_bn where status=1) t
+        <where>
+<if test="leaguename != null">
+ and t.leaguename=#{leaguename}
+</if>
+<![CDATA[endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')]]>
+</where>
+order by t.leaguename
+       
+    </select>   
+</mapper > 

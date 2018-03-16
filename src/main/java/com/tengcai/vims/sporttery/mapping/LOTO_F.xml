@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.tengcai.vims.entity.sporttery.LOTO_F">
+	<select id = "selectLOTO_FList" resultType="LOTO_F" parameterType="LOTO_F">
+		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount from t_loto_f
+        <where>
+<if test="issue != null">
+ and issue = #{issue}
+</if>
+<if test="starttime != null">
+ and starttime = #{starttime}
+</if>
+<if test="endtime != null">
+ and endtime = #{endtime}
+</if>
+<if test="home_team_name != null">
+ and home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null">
+ and guest_team_name = #{guest_team_name}
+</if>
+<if test="home_team_id != null">
+ and home_team_id = #{home_team_id}
+</if>
+<if test="guest_team_id != null">
+ and guest_team_id = #{guest_team_id}
+</if>
+<if test="home_half_result != null">
+ and home_half_result = #{home_half_result}
+</if>
+<if test="guest_half_result != null">
+ and guest_half_result = #{guest_half_result}
+</if>
+<if test="home_full_result != null">
+ and home_full_result = #{home_full_result}
+</if>
+<if test="guest_full_result != null">
+ and guest_full_result = #{guest_full_result}
+</if>
+<if test="had != null">
+ and had = #{had}
+</if>
+<if test="cg_had != null">
+ and cg_had = #{cg_had}
+</if>
+<if test="cg_hhad != null">
+ and cg_hhad = #{cg_hhad}
+</if>
+<if test="had_h != null">
+ and had_h = #{had_h}
+</if>
+<if test="had_d != null">
+ and had_d = #{had_d}
+</if>
+<if test="had_a != null">
+ and had_a = #{had_a}
+</if>
+<if test="hhad != null">
+ and hhad = #{hhad}
+</if>
+<if test="hhad_h != null">
+ and hhad_h = #{hhad_h}
+</if>
+<if test="hhad_d != null">
+ and hhad_d = #{hhad_d}
+</if>
+<if test="hhad_a != null">
+ and hhad_a = #{hhad_a}
+</if>
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="status != null">
+ and status=#{status}
+</if>
+<if test="leaguename != null">
+ and leaguename = #{leaguename}
+</if>
+<if test="letcount != null">
+ and letcount=#{letcount}
+</if>
+</where>
+order by issue
+
+        <if test = "row_start != null and page_size != null" >
+        limit #{row_start},#{page_size}
+        </if>
+    </select>
+    <select id = "selectLOTO_FCount" resultType="int" parameterType="LOTO_F">
+		SELECT count(*) from t_loto_f
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="starttime != null">
+ and starttime = #{starttime}
+</if>
+<if test="endtime != null">
+ and endtime = #{endtime}
+</if>
+<if test="home_team_name != null">
+ and home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null">
+ and guest_team_name = #{guest_team_name}
+</if>
+<if test="home_team_id != null">
+ and home_team_id = #{home_team_id}
+</if>
+<if test="guest_team_id != null">
+ and guest_team_id = #{guest_team_id}
+</if>
+<if test="home_half_result != null">
+ and home_half_result = #{home_half_result}
+</if>
+<if test="guest_half_result != null">
+ and guest_half_result = #{guest_half_result}
+</if>
+<if test="home_full_result != null">
+ and home_full_result = #{home_full_result}
+</if>
+<if test="guest_full_result != null">
+ and guest_full_result = #{guest_full_result}
+</if>
+<if test="had != null">
+ and had = #{had}
+</if>
+<if test="cg_had != null">
+ and cg_had = #{cg_had}
+</if>
+<if test="cg_hhad != null">
+ and cg_hhad = #{cg_hhad}
+</if>
+<if test="had_h != null">
+ and had_h = #{had_h}
+</if>
+<if test="had_d != null">
+ and had_d = #{had_d}
+</if>
+<if test="had_a != null">
+ and had_a = #{had_a}
+</if>
+<if test="hhad != null">
+ and hhad = #{hhad}
+</if>
+<if test="hhad_h != null">
+ and hhad_h = #{hhad_h}
+</if>
+<if test="hhad_d != null">
+ and hhad_d = #{hhad_d}
+</if>
+<if test="hhad_a != null">
+ and hhad_a = #{hhad_a}
+</if>
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="status != null">
+ and status=#{status}
+</if>
+<if test="leaguename != null">
+ and leaguename = #{leaguename}
+</if>
+<if test="letcount != null">
+ and letcount=#{letcount}
+</if>
+</where>
+order by issue
+       
+    </select>
+    <insert id="save" parameterType="LOTO_F">
+    <![CDATA[
+        INSERT INTO t_loto_f(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount)
+VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_half_result},#{guest_half_result},#{home_full_result},#{guest_full_result},#{had},#{cg_had},#{cg_hhad},#{had_h},#{had_d},#{had_a},#{hhad},#{hhad_h},#{hhad_d},#{hhad_a},#{had_h_0},#{had_d_0},#{had_a_0},#{hhad_h_0},#{hhad_d_0},#{hhad_a_0},#{is_recommend},#{status},#{leaguename},#{letcount})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_f(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.cg_hhad},#{v.had_h},#{v.had_d},#{v.had_a},#{v.hhad},#{v.hhad_h},#{v.hhad_d},#{v.hhad_a},#{v.had_h_0},#{v.had_d_0},#{v.had_a_0},#{v.hhad_h_0},#{v.hhad_d_0},#{v.hhad_a_0},#{v.is_recommend},#{v.status},#{v.leaguename},#{v.letcount}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="LOTO_F">
+    <![CDATA[
+        UPDATE t_loto_f set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_half_result=#{home_half_result},guest_half_result=#{guest_half_result},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},had=#{had},cg_had=#{cg_had},cg_hhad=#{cg_hhad},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},hhad=#{hhad},hhad_h=#{hhad_h},hhad_d=#{hhad_d},hhad_a=#{hhad_a},had_h_0=#{had_h_0},had_d_0=#{had_d_0},had_a_0=#{had_a_0},hhad_h_0=#{hhad_h_0},hhad_d_0=#{hhad_d_0},hhad_a_0=#{hhad_a_0},is_recommend=#{is_recommend},status=#{status},leaguename=#{leaguename},letcount=#{letcount}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_f(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,status,leaguename,letcount)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.cg_hhad},#{v.had_h},#{v.had_d},#{v.had_a},#{v.hhad},#{v.hhad_h},#{v.hhad_d},#{v.hhad_a},#{v.had_h_0},#{v.had_d_0},#{v.had_a_0},#{v.hhad_h_0},#{v.hhad_d_0},#{v.hhad_a_0},#{v.status},#{v.leaguename},#{v.letcount}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="LOTO_F">
+    <![CDATA[
+        DELETE FROM t_loto_f WHERE  issue=#{issue} 
+	]]>
+    </delete>    
+</mapper > 

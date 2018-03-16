@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.tengcai.vims.entity.sporttery.T_CONTROL">
+	<select id = "selectT_CONTROLList" resultType="T_CONTROL" parameterType="T_CONTROL">
+		SELECT id,maxval,sporttype,setstatus from t_control
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="maxval != null">
+ and maxval=#{maxval}
+</if>
+<if test="sporttype != null">
+ and sporttype = #{sporttype}
+</if>
+<if test="setstatus != null">
+ and setstatus=#{setstatus}
+</if>
+</where>
+order by id
+
+        <if test = "row_start != null and page_size != null" >
+        limit #{row_start},#{page_size}
+        </if>
+    </select>
+    <select id = "selectT_CONTROLCount" resultType="int" parameterType="T_CONTROL">
+		SELECT count(*) from t_control
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="maxval != null">
+ and maxval=#{maxval}
+</if>
+<if test="sporttype != null">
+ and sporttype = #{sporttype}
+</if>
+<if test="setstatus != null">
+ and setstatus=#{setstatus}
+</if>
+</where>
+order by id
+       
+    </select>
+    <insert id="save" parameterType="T_CONTROL">
+    <![CDATA[
+        INSERT INTO T_CONTROL(id,maxval,sporttype,setstatus)
+VALUES(#{id},#{maxval},#{sporttype},#{setstatus})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO T_CONTROL(id,maxval,sporttype,setstatus)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.maxval},#{v.sporttype},#{v.setstatus}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="T_CONTROL">
+    <![CDATA[
+        UPDATE T_CONTROL set id=#{id},maxval=#{maxval},sporttype=#{sporttype},setstatus=#{setstatus}
+		WHERE  id=#{id} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO T_CONTROL(id,maxval,sporttype,setstatus)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.maxval},#{v.sporttype},#{v.setstatus}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="T_CONTROL">
+    <![CDATA[
+        DELETE FROM T_CONTROL WHERE  id=#{id} 
+	]]>
+    </delete>    
+</mapper > 
