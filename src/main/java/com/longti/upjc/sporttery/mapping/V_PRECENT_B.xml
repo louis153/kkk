@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.V_PRECENT_B">
+	<select id = "selectV_PRECENT_BList" resultType="V_PRECENT_B" parameterType="V_PRECENT_B">
+		select
+CONCAT(ROUND(sum(case when left(BET_INFO,6)='hilo_h' THEN 1 ELSE 0 END)/sum(CASE WHEN bet_type=309 then 1 else 0 END)*100),'%') hilo_h,
+CONCAT(ROUND(sum(case when left(BET_INFO,6)='hilo_l' THEN 1 ELSE 0 END)/sum(CASE WHEN bet_type=309 then 1 else 0 end)*100),'%') hilo_l,
+issue
+from t_loto_order 
+        <where>
+<if test="issue != null">
+ and issue = #{issue}
+</if>
+</where>
+order by issue
+        <if test = "row_start != null and page_size != null" >
+        limit #{row_start},#{page_size}
+        </if>
+    </select>
+    <select id = "selectV_PRECENT_BCount" resultType="int" parameterType="V_PRECENT_B">
+		select
+CONCAT(ROUND(sum(case when left(BET_INFO,6)='hilo_h' THEN 1 ELSE 0 END)/sum(CASE WHEN bet_type=309 then 1 else 0 END)*100),'%') hilo_h,
+CONCAT(ROUND(sum(case when left(BET_INFO,6)='hilo_l' THEN 1 ELSE 0 END)/sum(CASE WHEN bet_type=309 then 1 else 0 end)*100),'%') hilo_l,
+issue
+from t_loto_order 
+        <where>
+<if test="issue != null">
+ and issue = #{issue}
+</if>
+</where>       
+    </select>   
+</mapper > 

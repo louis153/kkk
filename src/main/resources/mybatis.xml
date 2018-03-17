@@ -9,36 +9,36 @@
 	<typeAliases>
 		<!-- 竞彩 -->
 		<!-- 竞彩比赛日 -->
-		<typeAlias type="com.tengcai.vims.entity.sporttery.LOTO_B" alias="LOTO_B"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_LOTO_E" alias="T_LOTO_E"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.LOTO_F" alias="LOTO_F"></typeAlias>	
-		<typeAlias type="com.tengcai.vims.entity.sporttery.LOTO_ORDER" alias="LOTO_ORDER"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.V_ORDER" alias="V_ORDER"></typeAlias>		
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_CONTROL" alias="T_CONTROL"></typeAlias>	
+		<typeAlias type="com.longti.upjc.entity.sporttery.LOTO_B" alias="LOTO_B"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_E" alias="T_LOTO_E"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.LOTO_F" alias="LOTO_F"></typeAlias>	
+		<typeAlias type="com.longti.upjc.entity.sporttery.LOTO_ORDER" alias="LOTO_ORDER"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.V_ORDER" alias="V_ORDER"></typeAlias>		
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_CONTROL" alias="T_CONTROL"></typeAlias>	
 		
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_FOOT" alias="T_ADVERT_FOOT"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_POP" alias="T_ADVERT_POP"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_RECORD" alias="T_ADVERT_RECORD"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_TURN" alias="T_ADVERT_TURN"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_BANNER" alias="T_ADVERT_BANNER"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_FOOT" alias="T_ADVERT_FOOT"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_POP" alias="T_ADVERT_POP"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_RECORD" alias="T_ADVERT_RECORD"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_TURN" alias="T_ADVERT_TURN"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_BANNER" alias="T_ADVERT_BANNER"></typeAlias>
 		
-		<typeAlias type="com.tengcai.vims.entity.sporttery.V_SALEDAY" alias="V_SALEDAY"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.V_PRECENT_F" alias="V_PRECENT_F"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.V_PRECENT_B" alias="V_PRECENT_B"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.V_LEAGUE" alias="V_LEAGUE"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.USER_DAYWIN" alias="USER_DAYWIN"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_FLOAT" alias="T_ADVERT_FLOAT"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_REDPACK" alias="T_ADVERT_REDPACK"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_WELFARE" alias="T_ADVERT_WELFARE"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.V_SALEDAY" alias="V_SALEDAY"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.V_PRECENT_F" alias="V_PRECENT_F"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.V_PRECENT_B" alias="V_PRECENT_B"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.V_LEAGUE" alias="V_LEAGUE"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.USER_DAYWIN" alias="USER_DAYWIN"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_FLOAT" alias="T_ADVERT_FLOAT"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_REDPACK" alias="T_ADVERT_REDPACK"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_WELFARE" alias="T_ADVERT_WELFARE"></typeAlias>
 		
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_MARKET_CHANNEL" alias="T_MARKET_CHANNEL"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_MARKET_CHANNEL" alias="T_MARKET_CHANNEL"></typeAlias>
 		
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_LOTO_SIS_B" alias="T_LOTO_SIS_B"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_LOTO_SIS_E" alias="T_LOTO_SIS_E"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_LOTO_SIS_F" alias="T_LOTO_SIS_F"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_B" alias="T_LOTO_SIS_B"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E" alias="T_LOTO_SIS_E"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_F" alias="T_LOTO_SIS_F"></typeAlias>
 		
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_QUOTATION_CONTROL" alias="T_QUOTATION_CONTROL"></typeAlias>
-		<typeAlias type="com.tengcai.vims.entity.sporttery.T_ADVERT_CHANNEL" alias="T_ADVERT_CHANNEL"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_QUOTATION_CONTROL" alias="T_QUOTATION_CONTROL"></typeAlias>
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_ADVERT_CHANNEL" alias="T_ADVERT_CHANNEL"></typeAlias>
 	</typeAliases>
 	<mappers>
 		<!-- 竞彩 -->

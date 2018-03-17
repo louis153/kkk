@@ -12,7 +12,7 @@
 						http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 
 	<context:annotation-config />
-	<context:component-scan base-package="com.tengcai.vims.dao.impl,com.tengcai.vims.service.impl,com.tengcai.vims.strategy.impl" />
+	<context:component-scan base-package="com.longti.upjc.dao.impl,com.longti.upjc.service.impl,com.longti.upjc.strategy.impl" />
 
 	<context:property-placeholder location="classpath*:*.properties" />
 
@@ -68,7 +68,7 @@
 
 	<!-- 哪些类里面的哪些方法，参与配置的事务管理 -->
 	<aop:config>				 
-		<aop:pointcut expression="execution(* com.tengcai.vims.service.impl.sporttery.*.*(..))"
+		<aop:pointcut expression="execution(* com.longti.upjc.service.impl.sporttery.*.*(..))"
 			id="serviceMethod" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod" />
 	</aop:config>

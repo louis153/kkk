@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.LOTO_ORDER_E">
+	<select id = "selectLOTO_ORDERList" resultType="LOTO_ORDER" parameterType="LOTO_ORDER">
+		SELECT id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo from t_loto_order_e
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="order_id != null">
+ and order_id = #{order_id}
+</if>
+<if test="user_pin != null">
+ and user_pin = #{user_pin}
+</if>
+<if test="issue != null">
+ and issue = #{issue}
+</if>
+<if test="vsteam != null">
+ and vsteam = #{vsteam}
+</if>
+<if test="vsresult != null">
+ and vsresult = #{vsresult}
+</if>
+<if test="bet_fee != null">
+ and bet_fee=#{bet_fee}
+</if>
+<if test="win_fee != null">
+ and win_fee=#{win_fee}
+</if>
+<if test="create_time != null">
+ and date(create_time)=date(#{create_time})
+</if>
+<if test="start_create_time != null and end_create_time != null ">
+ and create_time between #{start_create_time} and #{end_create_time}
+</if>
+<if test="bet_type != null">
+ and bet_type=#{bet_type}
+</if>
+<if test="bet_info != null and bet_info != ''">
+ and bet_info = #{bet_info}
+</if>
+<if test="bet_status != null">
+ and bet_status=#{bet_status}
+</if>
+<if test="prize_status != null">
+ and prize_status=#{prize_status}
+</if>
+<if test="prize_type != null">
+ and prize_type=#{prize_type}
+</if>
+<if test="prize_cancel_time != null">
+ and (prize_cancel_time)=(#{prize_cancel_time})
+</if>
+<if test="start_prize_cancel_time != null and end_prize_cancel_time != null ">
+ and prize_cancel_time between #{start_prize_cancel_time} and #{end_prize_cancel_time}
+</if>
+<if test="order_source != null and order_source!=''">
+ and order_source = #{order_source}
+</if>
+<if test="memo != null and memo!=''">
+ and memo = #{memo}
+</if>
+</where>
+order by id desc
+
+        <if test = "row_start != null and page_size != null" >
+        limit #{row_start},#{page_size}
+        </if>
+    </select>
+    <select id = "selectLOTO_ORDERCount" resultType="int" parameterType="LOTO_ORDER">
+		SELECT count(*) from t_loto_order_e
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="order_id != null">
+ and order_id = #{order_id}
+</if>
+<if test="user_pin != null">
+ and user_pin = #{user_pin}
+</if>
+<if test="issue != null">
+ and issue = #{issue}
+</if>
+<if test="vsteam != null">
+ and vsteam = #{vsteam}
+</if>
+<if test="vsresult != null">
+ and vsresult = #{vsresult}
+</if>
+<if test="bet_fee != null">
+ and bet_fee=#{bet_fee}
+</if>
+<if test="win_fee != null">
+ and win_fee=#{win_fee}
+</if>
+<if test="create_time != null">
+ and date(create_time)=date(#{create_time})
+</if>
+<if test="start_create_time != null and end_create_time != null ">
+ and create_time between #{start_create_time} and #{end_create_time}
+</if>
+<if test="bet_type != null">
+ and bet_type=#{bet_type}
+</if>
+<if test="bet_info != null and bet_info!=''">
+ and bet_info = #{bet_info}
+</if>
+<if test="bet_status != null">
+ and bet_status=#{bet_status}
+</if>
+<if test="prize_status != null">
+ and prize_status=#{prize_status}
+</if>
+<if test="prize_type != null">
+ and prize_type=#{prize_type}
+</if>
+<if test="prize_cancel_time != null">
+ and date(prize_cancel_time)=date(#{prize_cancel_time})
+</if>
+<if test="start_prize_cancel_time != null and end_prize_cancel_time != null ">
+ and prize_cancel_time between #{start_prize_cancel_time} and #{end_prize_cancel_time}
+</if>
+<if test="order_source != null and order_source != ''">
+ and order_source = #{order_source}
+</if>
+<if test="memo != null and memo != ''">
+ and memo = #{memo}
+</if>
+</where>
+order by id
+       
+    </select>
+    <insert id="save" parameterType="LOTO_ORDER">
+    <![CDATA[
+        INSERT INTO t_loto_order_e(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo)
+VALUES(#{id},#{order_id},#{user_pin},#{issue},#{vsteam},#{vsresult},#{bet_fee},#{win_fee},#{create_time},#{bet_type},#{bet_info},#{bet_status},#{prize_status},#{prize_type},#{prize_cancel_time},#{order_source},#{memo})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_order_e(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.order_id},#{v.user_pin},#{v.issue},#{v.vsteam},#{v.vsresult},#{v.bet_fee},#{v.win_fee},#{v.create_time},#{v.bet_type},#{v.bet_info},#{v.bet_status},#{v.prize_status},#{v.prize_type},#{v.prize_cancel_time},#{v.order_source},#{v.memo}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="LOTO_ORDER">
+    <![CDATA[
+        UPDATE t_loto_order_e set id=#{id},order_id=#{order_id},user_pin=#{user_pin},issue=#{issue},vsteam=#{vsteam},vsresult=#{vsresult},bet_fee=#{bet_fee},win_fee=#{win_fee},create_time=#{create_time},bet_type=#{bet_type},bet_info=#{bet_info},bet_status=#{bet_status},prize_status=#{prize_status},prize_type=#{prize_type},prize_cancel_time=#{prize_cancel_time},order_source=#{order_source},memo=#{memo}
+		WHERE  id=#{id} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_order_e(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.order_id},#{v.user_pin},#{v.issue},#{v.vsteam},#{v.vsresult},#{v.bet_fee},#{v.win_fee},#{v.create_time},#{v.bet_type},#{v.bet_info},#{v.bet_status},#{v.prize_status},#{v.prize_type},#{v.prize_cancel_time},#{v.order_source},#{v.memo}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="LOTO_ORDER">
+    <![CDATA[
+        DELETE FROM t_loto_order_e WHERE  id=#{id} 
+	]]>
+    </delete>    
+</mapper > 

@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_E">
+	<select id = "selectT_LOTO_EList" resultType="T_LOTO_E" parameterType="T_LOTO_E">
+		SELECT e.issue,e.match_mode,e.game_name,e.starttime,e.endtime,e.home_team_name,e.guest_team_name,e.home_team_id,
+e.guest_team_id,e.home_full_result,e.guest_full_result,e.cg_mnl,e.init_h,e.init_a,e.mnl,e.mnl_h,e.mnl_a,e.status,
+e.leaguename,e.available,e.is_recommend,e.is_hot,m.img_name,e.mnl_bet from t_loto_e e
+left join t_game t on e.game_name=t.game_name 
+left join t_imagemap m on t.pic_id=m.pro_id
+        <where>
+<if test="issue != null">
+ and e.issue=#{issue}
+</if>
+<if test="match_mode != null">
+ and e.match_mode = #{match_mode}
+</if>
+<if test="game_name != null">
+ and e.game_name = #{game_name}
+</if>
+<if test="starttime != null">
+ and e.starttime = #{starttime}
+</if>
+<if test="endtime != null">
+ and e.endtime = #{endtime}
+</if>
+<if test="home_team_name != null">
+ and e.home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null">
+ and e.guest_team_name = #{guest_team_name}
+</if>
+<if test="home_team_id != null">
+ and e.home_team_id = #{home_team_id}
+</if>
+<if test="guest_team_id != null">
+ and e.guest_team_id = #{guest_team_id}
+</if>
+<if test="home_full_result != null">
+ and home_full_result = #{home_full_result}
+</if>
+<if test="guest_full_result != null">
+ and guest_full_result = #{guest_full_result}
+</if>
+<if test="cg_mnl != null">
+ and cg_mnl = #{cg_mnl}
+</if>
+<if test="init_h != null">
+ and init_h = #{init_h}
+</if>
+<if test="init_a != null">
+ and init_a = #{init_a}
+</if>
+<if test="mnl != null">
+ and mnl = #{mnl}
+</if>
+<if test="mnl_h != null">
+ and mnl_h = #{mnl_h}
+</if>
+<if test="mnl_a != null">
+ and mnl_a = #{mnl_a}
+</if>
+<if test="status != null">
+ and status=#{status}
+</if>
+<if test="leaguename != null">
+ and leaguename = #{leaguename}
+</if>
+<if test="available != null">
+ and available=#{available}
+</if>
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="is_hot != null">
+ and is_hot=#{is_hot}
+</if>
+</where>
+order by issue
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    <select id = "selectT_LOTO_ECount" resultType="int" parameterType="T_LOTO_E">
+		SELECT count(*) from t_loto_e
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="match_mode != null">
+ and match_mode = #{match_mode}
+</if>
+<if test="game_name != null">
+ and game_name = #{game_name}
+</if>
+<if test="starttime != null">
+ and starttime = #{starttime}
+</if>
+<if test="endtime != null">
+ and endtime = #{endtime}
+</if>
+<if test="home_team_name != null">
+ and home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null">
+ and guest_team_name = #{guest_team_name}
+</if>
+<if test="home_team_id != null">
+ and home_team_id = #{home_team_id}
+</if>
+<if test="guest_team_id != null">
+ and guest_team_id = #{guest_team_id}
+</if>
+<if test="home_full_result != null">
+ and home_full_result = #{home_full_result}
+</if>
+<if test="guest_full_result != null">
+ and guest_full_result = #{guest_full_result}
+</if>
+<if test="cg_mnl != null">
+ and cg_mnl = #{cg_mnl}
+</if>
+<if test="init_h != null">
+ and init_h = #{init_h}
+</if>
+<if test="init_a != null">
+ and init_a = #{init_a}
+</if>
+<if test="mnl != null">
+ and mnl = #{mnl}
+</if>
+<if test="mnl_h != null">
+ and mnl_h = #{mnl_h}
+</if>
+<if test="mnl_a != null">
+ and mnl_a = #{mnl_a}
+</if>
+<if test="status != null">
+ and status=#{status}
+</if>
+<if test="leaguename != null">
+ and leaguename = #{leaguename}
+</if>
+<if test="available != null">
+ and available=#{available}
+</if>
+<if test="is_recommend != null">
+ and is_recommend=#{is_recommend}
+</if>
+<if test="is_hot != null">
+ and is_hot=#{is_hot}
+</if>
+</where>
+order by issue
+       
+    </select>
+    <insert id="save" parameterType="T_LOTO_E">
+    <![CDATA[
+        INSERT INTO t_loto_e(issue,match_mode,game_name,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_mnl,init_h,init_a,mnl,mnl_h,mnl_a,status,leaguename,available,is_recommend,is_hot)
+VALUES(#{issue},#{match_mode},#{game_name},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_full_result},#{guest_full_result},#{cg_mnl},#{init_h},#{init_a},#{mnl},#{mnl_h},#{mnl_a},#{status},#{leaguename},#{available},#{is_recommend},#{is_hot})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_e(issue,match_mode,game_name,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_mnl,init_h,init_a,mnl,mnl_h,mnl_a,status,leaguename,available,is_recommend,is_hot)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.match_mode},#{v.game_name},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_mnl},#{v.init_h},#{v.init_a},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.status},#{v.leaguename},#{v.available},#{v.is_recommend},#{v.is_hot}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="T_LOTO_E">
+    <![CDATA[
+        UPDATE t_loto_e set issue=#{issue},match_mode=#{match_mode},game_name=#{game_name},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},cg_mnl=#{cg_mnl},init_h=#{init_h},init_a=#{init_a},mnl=#{mnl},mnl_h=#{mnl_h},mnl_a=#{mnl_a},status=#{status},leaguename=#{leaguename},available=#{available},is_recommend=#{is_recommend},is_hot=#{is_hot}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_e(issue,match_mode,game_name,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_mnl,init_h,init_a,mnl,mnl_h,mnl_a,status,leaguename,available,is_recommend,is_hot)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.match_mode},#{v.game_name},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_mnl},#{v.init_h},#{v.init_a},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.status},#{v.leaguename},#{v.available},#{v.is_recommend},#{v.is_hot}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="T_LOTO_E">
+    <![CDATA[
+        DELETE FROM t_loto_e WHERE  issue=#{issue} 
+	]]>
+    </delete>    
+</mapper > 

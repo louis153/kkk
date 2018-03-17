@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E">
+	<select id = "selectT_LOTO_SIS_EList" resultType="T_LOTO_SIS_E" parameterType="T_LOTO_SIS_E">
+		SELECT issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d from t_loto_sis_e
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+<if test="mnl_h != null">
+ and mnl_h=#{mnl_h}
+</if>
+<if test="mnl_a != null">
+ and mnl_a=#{mnl_a}
+</if>
+<if test="mnl_h_d != null">
+ and mnl_h_d=#{mnl_h_d}
+</if>
+<if test="mnl_a_d != null">
+ and mnl_a_d=#{mnl_a_d}
+</if>
+</where>
+order by issue
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    <select id = "selectT_LOTO_SIS_ECount" resultType="int" parameterType="T_LOTO_SIS_E">
+		SELECT count(*) from t_loto_sis_e
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+<if test="mnl_h != null">
+ and mnl_h=#{mnl_h}
+</if>
+<if test="mnl_a != null">
+ and mnl_a=#{mnl_a}
+</if>
+<if test="mnl_h_d != null">
+ and mnl_h_d=#{mnl_h_d}
+</if>
+<if test="mnl_a_d != null">
+ and mnl_a_d=#{mnl_a_d}
+</if>
+</where>
+order by issue
+       
+    </select>
+    <insert id="save" parameterType="T_LOTO_SIS_E">
+    <![CDATA[
+        INSERT INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d)
+VALUES(#{issue},#{mnl_h},#{mnl_a},#{mnl_h_d},#{mnl_a_d})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.mnl_h},#{v.mnl_a},#{v.mnl_h_d},#{v.mnl_a_d}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="T_LOTO_SIS_E">
+    <![CDATA[
+        UPDATE t_loto_sis_e set issue=#{issue},mnl_h=#{mnl_h},mnl_a=#{mnl_a},mnl_h_d=#{mnl_h_d},mnl_a_d=#{mnl_a_d}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.mnl_h},#{v.mnl_a},#{v.mnl_h_d},#{v.mnl_a_d}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="T_LOTO_SIS_E">
+    <![CDATA[
+        DELETE FROM t_loto_sis_e WHERE  issue=#{issue} 
+	]]>
+    </delete>    
+    <insert id="save_sis" parameterType="T_LOTO_SIS_E">
+    <![CDATA[
+        INSERT INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d) VALUES (#{issue},#{mnl_h},#{mnl_a},#{mnl_h_d},#{mnl_a_d})  
+ON DUPLICATE KEY UPDATE mnl_h=mnl_h+#{mnl_h},mnl_a=mnl_a+#{mnl_a},mnl_h_d=mnl_h_d+#{mnl_h_d},mnl_a_d=mnl_a_d+#{mnl_a_d};    
+	]]>
+    </insert>
+   
+</mapper > 

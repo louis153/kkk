@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.V_SALEDAY">
+	<select id = "selectV_SALEDAYList" resultType="V_SALEDAY" parameterType="V_SALEDAY">
+		<if test = "sport_type==2" >
+        <![CDATA[select * from (select distinct left(issue,8) AS saleday,sum(case when status=1 then 1 else 0 end) match_count,sum(case when issue=#{rem_issue} then 1 else 0 end) rem_count from
+t_loto_fn where endtime>#{endtime} and (had_bet=1 or hhad_bet=1) 
+group by left(issue,8)) t where t.match_count>0 order by t.saleday
+        ]]> 
+        </if> 
+        <if test = "sport_type==3" >
+        <![CDATA[select * from (select distinct left(issue,8) AS saleday,sum(case when status=1 then 1 else 0 end) match_count,sum(case when issue=#{rem_issue} then 1 else 0 end) rem_count from
+t_loto_bn where endtime>#{endtime} and (hilo_bet=1 or mnl_bet=1)
+group by left(issue,8)) t where t.match_count>0 order by t.saleday 
+        ]]>
+        </if>
+        <if test = "sport_type==4" >
+        <![CDATA[select * from (select distinct REPLACE(left(endtime,10),'-','') AS saleday,sum(case when status=1 then 1 else 0 end) match_count,sum(case when issue=#{rem_issue} then 1 else 0 end) rem_count from
+t_loto_en where endtime>#{endtime} and (mnl_bet=1)
+group by left(endtime,10)) t where t.match_count>0 order by t.saleday]]> 
+        </if>       
+    </select>    
+     
+</mapper > 
