@@ -17,14 +17,9 @@ select game_name as leaguename,count(*) AS leaguecount,#{position} as position, 
 <if test="leaguename != null">
  and leaguename=#{leaguename}
 </if>
-<if test='position == "3"'>
-<![CDATA[and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
-and (mnl_bet=1 or hilo_bet=1) and issue<>#{rem_issue}]]>
-group by leaguename,left(issue,8) order by leaguename
-</if>
 <if test='position == "2"'>
 <![CDATA[and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
-and (had_bet=1 or hhad_bet=1) and issue<>#{rem_issue}]]>
+and (had_bet=1 ) and issue<>#{rem_issue}]]>
 group by leaguename,left(issue,8) order by leaguename
 </if>
 <if test='position == "4"'>

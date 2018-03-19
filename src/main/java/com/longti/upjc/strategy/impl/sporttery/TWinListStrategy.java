@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
+import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_ORDERService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.ErrorMessage;
@@ -63,7 +64,7 @@ public class TWinListStrategy implements IMethodStrategy{
 	@Autowired
 	private LOTO_ORDERService loto_ORDERService;
 	@Override
-	public String doJsonMethod(String userPin, JSONObject jsonRequest) throws Exception {
+	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
 		logger.info("t_win_list开始调用查看轮播图接口doJsonMethod------>");
 		ReturnValue<WinListData> rv = new ReturnValue<WinListData>();
 		rv.setData(new WinListData());

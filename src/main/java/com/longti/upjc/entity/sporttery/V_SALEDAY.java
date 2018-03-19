@@ -12,6 +12,7 @@ public class V_SALEDAY implements Serializable {
 	 */
 	private static final long serialVersionUID = -4379894055517632363L;
 	private String saleday; //
+	private String electronic_code;
     private Integer sport_type;
     private Integer row_start;//开始行
     private String endtime;//结束日期
@@ -76,6 +77,12 @@ public class V_SALEDAY implements Serializable {
 	}
 	public void setRem_issue(String rem_issue) {
 		this.rem_issue = rem_issue;
+	}
+	public String getElectronic_code() {
+		return electronic_code;
+	}
+	public void setElectronic_code(String electronic_code) {
+		this.electronic_code = electronic_code;
 	}
 
 	

@@ -10,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.longti.upjc.entity.sporttery.LOTO_F;
-import com.longti.upjc.entity.sporttery.T_LOTO_E;
 import com.longti.upjc.entity.sporttery.V_SALEDAY;
-import com.longti.upjc.service.sporttery.LOTO_FNService;
-import com.longti.upjc.service.sporttery.T_LOTO_ENService;
+import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.V_SALEDAYService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
@@ -42,37 +39,20 @@ public class VSaledayListStrategy implements IMethodStrategy{
 	}
 	@Autowired
 	private V_SALEDAYService vSaledayService;
-	@Autowired
-	private LOTO_FNService loto_fnService;
-	
-	@Autowired
-	private T_LOTO_ENService loto_enService;
 	@Override
-	public String doJsonMethod(String userPin, JSONObject jsonRequest) throws Exception {
+	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
 		logger.info("v_saleday_list查询首页日期栏列表doJsonMethod------>");
 		ReturnValue<SALEDAY_Data> rv = new ReturnValue<SALEDAY_Data>();
-		rv.setData(new SALEDAY_Data());Integer.parseInt(jsonRequest.get("position").toString());
+		rv.setData(new SALEDAY_Data());
 		V_SALEDAY vSaleday=new V_SALEDAY();
-		vSaleday.setSport_type(Integer.parseInt(jsonRequest.get("position").toString()));
+		
+		vSaleday.setSport_type(2);
+		vSaleday.setElectronic_code(request_LtGameLogic.getFeeType());
 		List<V_SALEDAY> lst=null;
 		try {			
-			if(jsonRequest.get("position").toString().equals("4")){
-				vSaleday.setEndtime(DateUtils.getDateToStr(new Date(), "yyyy-MM-dd HH:mm:ss"));
-			}else{
-				vSaleday.setEndtime(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));
-					
-			}
+			vSaleday.setEndtime(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));
 			vSaleday.setRem_issue("");
-			if(jsonRequest.get("position").toString().equals("2")){
-				LOTO_F loto_fn=loto_fnService.selectRemFN();
-				if(loto_fn!=null)
-					vSaleday.setRem_issue(loto_fn.getIssue());
-			}			
-			else if(jsonRequest.get("position").toString().equals("4")){
-				T_LOTO_E loto_en=loto_enService.selectRemEN();
-				if(loto_en!=null)
-					vSaleday.setRem_issue(loto_en.getIssue());
-			} 
+			
 			lst = vSaledayService.selectV_SALEDAYList(vSaleday);
 			for(V_SALEDAY s:lst){
 				
@@ -84,7 +64,7 @@ public class VSaledayListStrategy implements IMethodStrategy{
 			    saleday_detail.endtime=s.getEndtime();
 			    saleday_detail.match_count=s.getMatch_count();
 			    saleday_detail.rem_count=s.getRem_count();
-			    saleday_detail.position=Integer.parseInt(jsonRequest.get("position").toString());
+			    saleday_detail.position=2;
 			    
 				switch (DateUtils.getWeekDay(saledate)) {
 				case 1:

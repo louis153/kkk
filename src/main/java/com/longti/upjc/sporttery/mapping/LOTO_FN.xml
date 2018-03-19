@@ -2,15 +2,14 @@
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.LOTO_FN">
     <select id = "selectRemFN" resultType="LOTO_F" parameterType="LOTO_F">
-    select issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount,had_bet,hhad_bet from t_loto_fn 
+    select issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,is_recommend,status,leaguename,letcount,had_bet from t_loto_fn 
 where endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
-  and (had_bet=1 or hhad_bet=1)
-  and (is_hot=1 or is_recommend=1)
-order by is_hot desc,is_recommend DESC,endtime aSC
+  and (had_bet=1 )
+order by endtime aSC
 LIMIT 0,1 
     </select>
 	<select id = "selectLOTO_FNList" resultType="LOTO_F" parameterType="LOTO_F">
-		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount,had_bet,hhad_bet from t_loto_fn
+		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,is_recommend,status,leaguename,letcount,had_bet from t_loto_fn
         <where>
 <if test="issue != null and issue != ''">
  and issue = #{issue}
@@ -63,9 +62,6 @@ LIMIT 0,1
 <if test="cg_had != null">
  and cg_had = #{cg_had}
 </if>
-<if test="cg_hhad != null">
- and cg_hhad = #{cg_hhad}
-</if>
 <if test="had_h != null">
  and had_h = #{had_h}
 </if>
@@ -75,45 +71,17 @@ LIMIT 0,1
 <if test="had_a != null">
  and had_a = #{had_a}
 </if>
-<if test="hhad != null">
- and hhad = #{hhad}
-</if>
-<if test="hhad_h != null">
- and hhad_h = #{hhad_h}
-</if>
-<if test="hhad_d != null">
- and hhad_d = #{hhad_d}
-</if>
-<if test="hhad_a != null">
- and hhad_a = #{hhad_a}
-</if>
-<if test="is_recommend != null">
- and is_recommend=#{is_recommend}
-</if>
-<if test="is_hot != null">
- and is_hot=#{is_hot}
-</if>
 <if test="status != null">
  and status=#{status}
 </if>
 <if test="leaguename != null">
  and leaguename = #{leaguename}
 </if>
-<if test="letcount != null">
- and letcount=#{letcount}
-</if>
-<if test="had_bet != null and hhad_bet != null">
- and (had_bet=#{had_bet} or hhad_bet=#{hhad_bet})
-</if>
-<if test="had_bet == null and hhad_bet != null">
- and (hhad_bet=#{hhad_bet})
-</if>
-<if test="had_bet != null and hhad_bet == null">
+<if test="had_bet != null">
  and (had_bet=#{had_bet})
 </if>
 </where>
 order by starttime
-
         <if test = "row_start != null and page_size != null" >
         limit #{row_start},#{page_size}
         </if>
@@ -172,9 +140,6 @@ order by starttime
 <if test="cg_had != null">
  and cg_had = #{cg_had}
 </if>
-<if test="cg_hhad != null">
- and cg_hhad = #{cg_hhad}
-</if>
 <if test="had_h != null">
  and had_h = #{had_h}
 </if>
@@ -184,32 +149,11 @@ order by starttime
 <if test="had_a != null">
  and had_a = #{had_a}
 </if>
-<if test="hhad != null">
- and hhad = #{hhad}
-</if>
-<if test="hhad_h != null">
- and hhad_h = #{hhad_h}
-</if>
-<if test="hhad_d != null">
- and hhad_d = #{hhad_d}
-</if>
-<if test="hhad_a != null">
- and hhad_a = #{hhad_a}
-</if>
-<if test="is_recommend != null">
- and is_recommend=#{is_recommend}
-</if>
-<if test="is_hot != null">
- and is_hot=#{is_hot}
-</if>
 <if test="status != null">
  and status=#{status}
 </if>
 <if test="leaguename != null">
  and leaguename = #{leaguename}
-</if>
-<if test="letcount != null">
- and letcount=#{letcount}
 </if>
 </where>
 order by issue
@@ -217,33 +161,33 @@ order by issue
     </select>
     <insert id="save" parameterType="LOTO_F">
     <![CDATA[
-        INSERT INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount,had_bet,hhad_bet)
-VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_half_result},#{guest_half_result},#{home_full_result},#{guest_full_result},#{had},#{cg_had},#{cg_hhad},#{had_h},#{had_d},#{had_a},#{hhad},#{hhad_h},#{hhad_d},#{hhad_a},#{had_h_0},#{had_d_0},#{had_a_0},#{hhad_h_0},#{hhad_d_0},#{hhad_a_0},#{is_recommend},#{status},#{leaguename},#{letcount},#{had_bet},#{hhad_bet})
+        INSERT INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,is_recommend,status,leaguename,letcount,had_bet)
+VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_half_result},#{guest_half_result},#{home_full_result},#{guest_full_result},#{had},#{cg_had},#{had_h},#{had_d},#{had_a},#{had_h_0},#{had_d_0},#{had_a_0},#{status},#{leaguename},#{had_bet})
 	]]>
     </insert>
     <insert id="saveList" parameterType="java.util.List">
     <![CDATA[
-        INSERT INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount,had_bet,hhad_bet)
+        INSERT INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,had_bet)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.cg_hhad},#{v.had_h},#{v.had_d},#{v.had_a},#{v.hhad},#{v.hhad_h},#{v.hhad_d},#{v.hhad_a},#{v.had_h_0},#{v.had_d_0},#{v.had_a_0},#{v.hhad_h_0},#{v.hhad_d_0},#{v.hhad_a_0},#{v.is_recommend},#{v.status},#{v.leaguename},#{v.letcount},#{v.had_bet},#{v.hhad_bet}) ]]>
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.had_h},#{v.had_d},#{v.had_a},#{v.had_h_0},#{v.had_d_0},#{v.had_a_0},#{v.status},#{v.leaguename},#{v.had_bet}) ]]>
     </foreach>
     </insert>
     <update id="update" parameterType="LOTO_F">
     <![CDATA[
-        UPDATE t_loto_fn set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_half_result=#{home_half_result},guest_half_result=#{guest_half_result},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},had=#{had},cg_had=#{cg_had},cg_hhad=#{cg_hhad},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},hhad=#{hhad},hhad_h=#{hhad_h},hhad_d=#{hhad_d},hhad_a=#{hhad_a},
-        had_h_0=#{had_h_0},had_d_0=#{had_d_0},had_a_0=#{had_a_0},hhad_h_0=#{hhad_h_0},hhad_d_0=#{hhad_d_0},hhad_a_0=#{hhad_a_0},is_recommend=#{is_recommend},status=#{status},leaguename=#{leaguename},letcount=#{letcount},had_bet=#{had_bet},hhad_bet=#{hhad_bet}
+        UPDATE t_loto_fn set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_half_result=#{home_half_result},guest_half_result=#{guest_half_result},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},had=#{had},cg_had=#{cg_had},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},
+        had_h_0=#{had_h_0},had_d_0=#{had_d_0},had_a_0=#{had_a_0},status=#{status},leaguename=#{leaguename},had_bet=#{had_bet}
 		WHERE  issue=#{issue} 
 	]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
     <![CDATA[
-        REPLACE INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,cg_hhad,had_h,had_d,had_a,hhad,hhad_h,hhad_d,hhad_a,had_h_0,had_d_0,had_a_0,hhad_h_0,hhad_d_0,hhad_a_0,is_recommend,status,leaguename,letcount,had_bet,hhad_bet)
+        REPLACE INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,letcount,had_bet)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.cg_hhad},#{v.had_h},#{v.had_d},#{v.had_a},#{v.hhad},#{v.hhad_h},#{v.hhad_d},#{v.hhad_a},had_h_0=#{v.had_h_0},had_d_0=#{v.had_d_0},had_a_0=#{v.had_a_0},hhad_h_0=#{v.hhad_h_0},hhad_d_0=#{v.hhad_d_0},hhad_a_0=#{v.hhad_a_0},#{v.is_recommend},#{v.status},#{v.leaguename},#{v.letcount},#{v.had_bet},#{v.hhad_bet}) ]]>
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.had_h},#{v.had_d},#{v.had_a},had_h_0=#{v.had_h_0},had_d_0=#{v.had_d_0},had_a_0=#{v.had_a_0},#{v.status},#{v.leaguename},#{v.letcount},#{v.had_bet}) ]]>
     </foreach>
     </insert>
     <delete id="delete" parameterType="LOTO_F">

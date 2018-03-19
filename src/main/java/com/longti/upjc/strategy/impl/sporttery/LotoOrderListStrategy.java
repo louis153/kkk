@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
+import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_ORDERService;
-import com.longti.upjc.service.sporttery.LOTO_ORDER_EService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
@@ -58,10 +58,8 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 	private static String desKey=IOUtils.getConfigParam("jd.deskey", "send.properties");
 	@Autowired
 	private LOTO_ORDERService loto_ORDERService;
-	@Autowired
-	private LOTO_ORDER_EService loto_ORDER_EService;
 	@Override
-	public String doJsonMethod(String userPin, JSONObject jsonRequest) throws Exception {
+	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic , JSONObject jsonRequest) throws Exception {
 		logger.info("进入loto_orderList查询我的投注信息的方法：doJsonMethod");
 		ReturnValue<LOTO_ORDERData> rv = new ReturnValue<LOTO_ORDERData>();
 		rv.setData(new LOTO_ORDERData());
@@ -71,30 +69,19 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 		if (jsonRequest.containsKey("page_index")) {
 			page_index = Integer.parseInt(jsonRequest.get("page_index").toString());
 		}		
-		String position="2";
-		if(jsonRequest.containsKey("position")){
-			position=jsonRequest.get("position").toString();
-		}
 		
-		lotoOrder.setPosition(position);
-
-		if (StringUtil.isEmpty(userPin) == false) {
-			lotoOrder.setUser_pin(userPin);
+		
+		if (StringUtil.isEmpty(request_LtGameLogic.getUserPin()) == false) {
+			lotoOrder.setUser_pin(request_LtGameLogic.getUserPin());
 		}
 		if(StringUtil.isEmpty(jsonRequest.get("bet_status"))==false){
 			lotoOrder.setBet_status(Integer.parseInt(jsonRequest.get("bet_status").toString()));
 		}
 		int record_count=0;
 		try {
-			if(position.equals("4")){
-				record_count = this.loto_ORDER_EService.selectLOTO_ORDERCount(lotoOrder);
-				
-			}else{
-				
-				record_count = this.loto_ORDERService.selectLOTO_ORDERCount(lotoOrder);
-			}
+			record_count = this.loto_ORDERService.selectLOTO_ORDERCount(lotoOrder);
 		} catch (Exception e) {
-			logger.error("查询我的投注数据总数userPin："+userPin+"失败----->");
+			logger.error("查询我的投注数据总数userPin："+request_LtGameLogic.getUserPin()+"失败----->");
 			rv.setStatus(ErrorMessage.FAIL.getCode());
 			rv.setMessage(ErrorMessage.FAIL.getMessage());
 			return JSONObject.toJSONString(rv);
@@ -118,11 +105,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
         List<LOTO_ORDER> lst=null;
         
 		try {
-			if(position.equals("4")){
-				lst = this.loto_ORDER_EService.selectLOTO_ORDERList(lotoOrder);
-			}else{
-				lst = this.loto_ORDERService.selectLOTO_ORDERList(lotoOrder);
-			}
+			lst = this.loto_ORDERService.selectLOTO_ORDERList(lotoOrder);
 			for(LOTO_ORDER loto_ORDER:lst){
 				LOTO_ORDERDetail loto_ORDERDetail=new LOTO_ORDERDetail();
 				loto_ORDERDetail.bet_fee=(loto_ORDER.getBet_fee());
@@ -149,7 +132,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 			}
 			
 		} catch (Exception e) {			
-			logger.error("查询我的投注数据userPin："+userPin+"失败----->");
+			logger.error("查询我的投注数据userPin："+request_LtGameLogic.getUserPin()+"失败----->");
 			rv.setStatus(ErrorMessage.FAIL.getCode());
 	        rv.setMessage(ErrorMessage.FAIL.getMessage());
 	        return JSONObject.toJSONString(rv);
@@ -163,7 +146,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
         rv.setStatus(ErrorMessage.SUCCESS.getCode());
         rv.setMessage(ErrorMessage.SUCCESS.getMessage());
         String outStr=JSONObject.toJSONString(rv);
-        logger.info("查询我的投注数据userPin："+userPin+"成功----->");
+        logger.info("查询我的投注数据userPin："+request_LtGameLogic.getUserPin()+"成功----->");
 		return outStr;
 	}
 	

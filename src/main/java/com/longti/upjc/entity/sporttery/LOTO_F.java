@@ -30,21 +30,15 @@ public class LOTO_F implements Serializable {
     private String guest_full_result; //客队全场进球
     private String had; //胜平负赛果赔率
     private String cg_had; //胜平负赛果
-    private String cg_hhad; //让球胜平负赛果
     private String had_h; //胜
     private String had_d; //平
     private String had_a; //负
-    private String hhad; //让球胜平负赛果赔率
-    private String hhad_h; //让球胜
-    private String hhad_d; //让球平
-    private String hhad_a; //让球负
+    
     
     private String had_h_0; //胜初始值    
 	private String had_d_0; //平初始值
     private String had_a_0; //负初始值
-    private String hhad_h_0; //让球胜初始值
-    private String hhad_d_0; //让球平初始值
-    private String hhad_a_0; //让球负初始值
+    
     private Integer is_recommend; //推荐 1推荐 0 不推荐
     private Integer status; //比赛状态,1进行中2已派奖3已开奖99取消
     private String leaguename; //比赛名称
@@ -54,7 +48,6 @@ public class LOTO_F implements Serializable {
 
     private Integer is_hot;//热点
     private Integer had_bet;
-    private Integer hhad_bet;
     public String getIssue() {
         return StringUtil.ifnull(issue);
 	}
@@ -133,12 +126,8 @@ public class LOTO_F implements Serializable {
 	public void setCg_had(String cg_had) {
 		this.cg_had = cg_had;
 	}
-    public String getCg_hhad() {
-        return cg_hhad;
-	}
-	public void setCg_hhad(String cg_hhad) {
-		this.cg_hhad = cg_hhad;
-	}
+    
+	
     public String getHad_h() {
         return had_h;
 	}
@@ -157,30 +146,7 @@ public class LOTO_F implements Serializable {
 	public void setHad_a(String had_a) {
 		this.had_a = had_a;
 	}
-    public String getHhad() {
-        return hhad;
-	}
-	public void setHhad(String hhad) {
-		this.hhad = hhad;
-	}
-    public String getHhad_h() {
-        return hhad_h;
-	}
-	public void setHhad_h(String hhad_h) {
-		this.hhad_h = hhad_h;
-	}
-    public String getHhad_d() {
-        return hhad_d;
-	}
-	public void setHhad_d(String hhad_d) {
-		this.hhad_d = hhad_d;
-	}
-    public String getHhad_a() {
-        return hhad_a;
-	}
-	public void setHhad_a(String hhad_a) {
-		this.hhad_a = hhad_a;
-	}
+    
     public Integer getIs_recommend() {
         return is_recommend;
 	}
@@ -256,24 +222,8 @@ public class LOTO_F implements Serializable {
 	public void setHad_a_0(String had_a_0) {
 		this.had_a_0 = had_a_0;
 	}
-	public String getHhad_h_0() {
-		return hhad_h_0;
-	}
-	public void setHhad_h_0(String hhad_h_0) {
-		this.hhad_h_0 = hhad_h_0;
-	}
-	public String getHhad_d_0() {
-		return hhad_d_0;
-	}
-	public void setHhad_d_0(String hhad_d_0) {
-		this.hhad_d_0 = hhad_d_0;
-	}
-	public String getHhad_a_0() {
-		return hhad_a_0;
-	}
-	public void setHhad_a_0(String hhad_a_0) {
-		this.hhad_a_0 = hhad_a_0;
-	}
+	
+	
 	
 	public Integer getIs_hot() {
 		return is_hot;
@@ -287,11 +237,6 @@ public class LOTO_F implements Serializable {
 	public void setHad_bet(Integer had_bet) {
 		this.had_bet = had_bet;
 	}
-	public Integer getHhad_bet() {
-		return hhad_bet;
-	}
-	public void setHhad_bet(Integer hhad_bet) {
-		this.hhad_bet = hhad_bet;
-	}
+	
 	
 }

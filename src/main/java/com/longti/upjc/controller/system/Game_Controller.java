@@ -71,12 +71,13 @@ public class Game_Controller {
 		}	
 		
 		request_LtGameLogic.setExt(jsonObject.getString("ext"));
-		request_LtGameLogic.setFeeType(Integer.parseInt(jsonObject.get("feeType").toString()));
+		request_LtGameLogic.setFeeType((jsonObject.get("feeType").toString()));
 		request_LtGameLogic.setGameId(Long.parseLong(jsonObject.get("gameID").toString()));
 		request_LtGameLogic.setGameRequest(jsonObject.get("gameRequest").toString());
 		request_LtGameLogic.setTranType(Integer.valueOf(jsonObject.get("tranType").toString()));
 		request_LtGameLogic.setGameSource(Integer.valueOf(jsonObject.get("gameSource").toString()));
 		request_LtGameLogic.setUserPin(jsonObject.getString("userPin"));
+		request_LtGameLogic.setUserToken(jsonObject.getString("userToken"));
 		Response_LtGameLogic response_LtGameLogic=new Response_LtGameLogic();
 		
 		try {
@@ -88,7 +89,7 @@ public class Game_Controller {
 			logger.info("请求的方法："+jsonRequest.get("method").toString(),jsonRequest.get("method").toString());
 			logger.info("访问的userPin:"+request_LtGameLogic.getUserPin(),request_LtGameLogic.getUserPin());
 			
-			String gameResponse=ctxMethod.doAction(jsonRequest.get("method").toString(),request_LtGameLogic.getUserPin() ,jsonRequest);
+			String gameResponse=ctxMethod.doAction(jsonRequest.get("method").toString(),request_LtGameLogic ,jsonRequest);
 			response_LtGameLogic.setGameResponse(gameResponse);
 			response_LtGameLogic.setReturnCode(0);
 			response_LtGameLogic.setReturnMsg("访问成功");

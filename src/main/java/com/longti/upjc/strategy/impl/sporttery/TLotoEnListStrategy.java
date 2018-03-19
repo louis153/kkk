@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
+import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.T_LOTO_ENService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
@@ -35,7 +36,6 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 		public String endtime; // 截止投注时间
 		public String home_team_name; // 主队名称
 		public String guest_team_name; // 客队名称
-		public String l; // 大小分标准/让球数
 		public String leaguename; // 比赛名称
 		public String mh = "";
 		public String ma = "";
@@ -55,7 +55,7 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 	private T_LOTO_ENService lotoENService;
 
 	@Override
-	public String doJsonMethod(String userPin, JSONObject jsonRequest) throws Exception {
+	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
 
 		ReturnValue<LotoEnData> rv = new ReturnValue<LotoEnData>();
 		rv.setData(new LotoEnData());
@@ -94,7 +94,6 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 				lotoEnDetail.home_team_name = e.getHome_team_name();
 				lotoEnDetail.guest_team_name = e.getGuest_team_name();
 				lotoEnDetail.issue = e.getIssue();
-				lotoEnDetail.l = "";
 				lotoEnDetail.leaguename = e.getLeaguename();
 				lotoEnDetail.image_name = (e.getImg_name()==null?"":e.getImg_name());
 				lotoEnDetail.game_name = e.getGame_name();
