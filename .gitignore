@@ -1,6 +1,6 @@
-/target/
 /.settings
+/target
 /.classpath
+/.mymetadata
 /.project
-/.idea
-/bin
+/.gitignore
