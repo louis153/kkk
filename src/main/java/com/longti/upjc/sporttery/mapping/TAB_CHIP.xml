@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.TAB_CHIP">
+	<select id = "selectTAB_CHIPList" resultType="TAB_CHIP" parameterType="TAB_CHIP">
+		SELECT 
+		    t.id,t.currency_type,t.options_one,t.options_two,t.options_three,t.options_four
+		from tab_chip t
+        <where>
+<if test="currency_type != null">
+ and t.currency_type=#{currency_type}
+</if>
+</where>
+order by id
+    </select>
+    
+    <select id = "selectTAB_CHIPCount" resultType="int" parameterType="TAB_CHIP">
+		SELECT count(*) from tab_chip
+        <where>
+<if test="currency_type != null">
+ and t.currency_type=#{currency_type}
+</if>
+</where>
+order by id
+       
+    </select>
+    
+    <insert id="save" parameterType="TAB_CHIP">
+    <![CDATA[
+        INSERT INTO tab_chip(id,currency_type,options_one,options_two,options_three,options_four)
+VALUES(#{id},#{currency_type},#{options_one},#{options_two},#{options_three},#{options_four})
+	]]>
+    </insert>
+    
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO tab_chip(id,currency_type,options_one,options_two,options_three,options_four)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.currency_type},#{v.options_one},#{v.options_two},#{v.options_three},#{v.options_four}) ]]>
+    </foreach>
+    </insert>
+    
+    <update id="update" parameterType="TAB_CHIP">
+    <![CDATA[
+        UPDATE tab_chip set id=#{id},currency_type=#{currency_type},options_one=#{options_one},options_two=#{options_two},options_three=#{options_three},options_four=#{options_four}
+		WHERE  currency_type=#{currency_type} 
+	]]>
+    </update>
+    
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO tab_chip(id,currency_type,options_one,options_two,options_three,options_four)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.currency_type},#{v.options_one},#{v.options_two},#{v.options_three},#{v.options_four})) ]]>
+    </foreach>
+    </insert>
+    
+    <delete id="delete" parameterType="TAB_CHIP">
+    <![CDATA[
+        DELETE FROM tab_chip WHERE  currency_type=#{currency_type} 
+	]]>
+    </delete>    
+</mapper > 

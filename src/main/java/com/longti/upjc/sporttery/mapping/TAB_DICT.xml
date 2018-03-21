@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.TAB_DICT">
+	<select id = "selectTAB_DICTList" resultType="TAB_DICT" parameterType="TAB_DICT">
+		SELECT 
+		    t.id,t.type,t.value,t.create_time,t.available
+		from tab_dict t
+        <where>
+<if test="type != null">
+ and t.type=#{type}
+</if>
+</where>
+order by create_time
+    </select>
+    
+    <select id = "selectTAB_DICTCount" resultType="int" parameterType="TAB_DICT">
+		SELECT count(*) from tab_dict
+        <where>
+<if test="type != null">
+ and t.type=#{type}
+</if>
+</where>
+order by create_time
+       
+    </select>
+    
+    <insert id="save" parameterType="TAB_DICT">
+    <![CDATA[
+        INSERT INTO tab_dict(id,type,value,create_time,available)
+VALUES(#{id},#{type},#{value},#{create_time},#{available})
+	]]>
+    </insert>
+    
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO TAB_DICT(id,type,value,create_time,available)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.type},#{v.value},#{v.create_time},#{v.available}) ]]>
+    </foreach>
+    </insert>
+    
+    <update id="update" parameterType="TAB_DICT">
+    <![CDATA[
+        UPDATE tab_dict set id=#{id},type=#{type},value=#{value},create_time=#{create_time},available=#{available}
+		WHERE  type=#{type} 
+	]]>
+    </update>
+    
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO tab_dict(id,type,value,create_time,available)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.type},#{v.value},#{v.create_time},#{v.available})) ]]>
+    </foreach>
+    </insert>
+    
+    <delete id="delete" parameterType="TAB_DICT">
+    <![CDATA[
+        DELETE FROM tab_dict WHERE  type=#{type} 
+	]]>
+    </delete>    
+</mapper > 

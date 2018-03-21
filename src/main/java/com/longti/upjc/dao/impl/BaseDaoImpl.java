@@ -87,7 +87,15 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
    public int deleteBatch(List<?> ids, String methodName){
 	   return sqlSession.delete(entityClass.getName() + "." + methodName, ids);
    }
-
+   
+   /**
+    * 删除对象
+    * @param methodName	方法名
+    * @param object
+    */
+   public int delete(String methodName, Object object){
+	   return sqlSession.delete(entityClass.getName() + "." + methodName, object);
+   }
 
    /**
     * 修改
@@ -117,6 +125,15 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 	   return sqlSession.update(entityClass.getName() + "." + methodName, params);
    }
 	
+   /**
+    * 修改
+    * @param methodName 方法名
+    * @param object 	对象
+    */
+   public int update(String methodName, Object object){
+	   return sqlSession.update(entityClass.getName() + "." + methodName, object);
+   }
+   
    /**
     * 查询 按ID
     * @param pk
@@ -150,6 +167,14 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
 		sqlSession.insert(entityClass.getName() + "." + methodName, params);
 	}
 
+	/**
+	 * 增加
+	 * @param object
+	 */
+	public int save(String methodName, Object object){
+		return  sqlSession.insert(entityClass.getName() + "." + methodName, object);
+	}
+	
    /**
     * 通过一个参数取到对应的对象
     * @param entityClass
