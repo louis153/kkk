@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E_UZ">
+	<select id = "selectT_LOTO_SIS_E_UZList" resultType="T_LOTO_SIS_E_UZ" parameterType="T_LOTO_SIS_E_UZ">
+		SELECT e.issue,e.electronic_code,e.one,e.two,e.three,e.one_d,e.two_d,e.three_d from t_loto_sis_e_uz e
+        <where>
+<if test="issue != null and issue != ''">
+ and e.issue=#{issue}
+</if>
+<if test="issues != null">
+ and e.issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+</where>
+order by issue
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    
+    <select id = "selectT_LOTO_SIS_E_UZCount" resultType="int" parameterType="T_LOTO_SIS_E_UZ">
+		SELECT count(*) from t_loto_sis_e_uz
+        <where>
+<if test="issue != null and issue != ''">
+ and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+</where>
+order by issue
+       
+    </select>
+    
+    <insert id="save" parameterType="T_LOTO_SIS_E_UZ">
+    <![CDATA[
+        INSERT INTO t_loto_sis_e_uz(issue,electronic_code,one,two,three,one_d,two_d,three_d)
+VALUES(#{issue},#{electronic_code},#{one},#{two},#{three},#{one_d},#{two_d},#{three_d})
+	]]>
+    </insert>
+    
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_sis_e_uz(issue,electronic_code,one,two,three,one_d,two_d,three_d)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.electronic_code},#{v.one},#{v.two},#{v.three},#{v.one_d},#{v.two_d},#{v.three_d}) ]]>
+    </foreach>
+    </insert>
+    
+    <update id="update" parameterType="T_LOTO_SIS_E_UZ">
+    <![CDATA[
+        UPDATE t_loto_sis_e_uz set issue=#{issue},electronic_code=#{electronic_code},one=#{one},two=#{two},three=#{three},one_d=#{one_d},two_d=#{two_d},three_d=#{three_d}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_sis_e_uz(issue,electronic_code,one,two,three,one_d,two_d,three_d)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.electronic_code},#{v.one},#{v.two},#{v.three},#{v.one_d},#{v.two_d},#{v.three_d}) ]]>
+    </foreach>
+    </insert>
+    
+    <delete id="delete" parameterType="T_LOTO_SIS_E_UZ">
+    <![CDATA[
+        DELETE FROM t_loto_sis_e_uz WHERE  issue=#{issue} 
+	]]>
+    </delete>    
+</mapper > 

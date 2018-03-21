@@ -4,7 +4,6 @@
  */
 package com.longti.upjc.strategy.impl.sporttery;
 
-import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import com.longti.upjc.entity.sporttery.T_LOTO_INVCODE;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.T_LOTO_INVCODEService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
+import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.ReturnValue;
 
@@ -34,11 +34,12 @@ public class Invcode_CreateStrategy implements IMethodStrategy {
 		ReturnValue<String> rv = new ReturnValue<String>();
 		logger.info("create_invcode开始调用生成邀请码接口doJsonMethod------>");
 		String user_pin = jsonRequest.get("user_pin").toString().trim();
-		String invitation_code = getInvcode();
+		String first_time = jsonRequest.get("first_time").toString().trim();
+		String invitation_code = getInvcode();//随机生成六位邀请码
 		T_LOTO_INVCODE t_loto_invcode = new T_LOTO_INVCODE();
 		t_loto_invcode.setUser_pin(user_pin);
 		t_loto_invcode.setInvitation_code(invitation_code);
-		t_loto_invcode.setFirstlogin_time(new Date());
+		t_loto_invcode.setFirstlogin_time(DateUtils.getStrToDate(first_time,"yyyy-MM-dd HH:mm:ss"));
 		t_loto_invcode.setIs_bind(0);
 		try {	
 			lotoINVCODEService.insertT_LOTO_INVCODE(t_loto_invcode);
