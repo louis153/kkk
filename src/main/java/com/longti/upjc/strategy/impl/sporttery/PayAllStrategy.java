@@ -426,7 +426,7 @@ public class PayAllStrategy implements IMethodStrategy {
 
 			Date nowDate = new Date();
 			V_ORDER vOrder = new V_ORDER();
-			vOrder.setBet_fee(0);
+			vOrder.setBet_fee(0L);
 			String bet_type = "";
 			double oddv = 0;
 			List<LOTO_ORDER> lstTemp = new ArrayList<LOTO_ORDER>();
@@ -682,7 +682,7 @@ public class PayAllStrategy implements IMethodStrategy {
 
 			Date nowDate = new Date();
 			V_ORDER vOrder = new V_ORDER();
-			vOrder.setBet_fee(0);
+			vOrder.setBet_fee(0L);
 			String bet_type = "";
 			double oddv = 0;
 			List<LOTO_ORDER> lstTemp = new ArrayList<LOTO_ORDER>();

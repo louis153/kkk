@@ -11,13 +11,14 @@ public class V_ORDER implements Serializable {
 	 */
 	private static final long serialVersionUID = 6336455048318621347L;
 	private String order_id; //订单编号
+	private String electronic_code;//币种
     private String user_pin; //用户PIN
     private Integer bet_type; //玩法
     private String create_time; //创建日期
     private String vsteam; //对阵
     private Integer bet_status; //中奖状态
     private Integer prize_status; //派奖状态
-    private Integer bet_fee; //消费
+    private Long bet_fee; //消费
     private Integer win_fee; //奖金
     private String issume; //期号
     private Integer row_start;//开始行
@@ -66,10 +67,10 @@ public class V_ORDER implements Serializable {
 	public void setPrize_status(Integer prize_status) {
 		this.prize_status = prize_status;
 	}
-    public Integer getBet_fee() {
+    public Long getBet_fee() {
         return bet_fee;
 	}
-	public void setBet_fee(Integer bet_fee) {
+	public void setBet_fee(Long bet_fee) {
 		this.bet_fee = bet_fee;
 	}
     public Integer getWin_fee() {
@@ -99,6 +100,12 @@ public class V_ORDER implements Serializable {
     public void setPage_size(Integer page_size){
         this.page_size=page_size;
     }
+	public String getElectronic_code() {
+		return electronic_code;
+	}
+	public void setElectronic_code(String electronic_code) {
+		this.electronic_code = electronic_code;
+	}
 
 	
 }

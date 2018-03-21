@@ -74,7 +74,7 @@
 	</aop:config>
 
 	
-	
+	<import resource="classpath:config/spring-ehcache.xml" /> 
 	
 
 </beans>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.T_USER">
+	<select id = "selectT_USERList" resultType="T_USER" parameterType="T_USER">
+		SELECT user_pin,user_token,nick_name,first_time,land_time from t_user
+        <where>
+<if test="user_pin != null">
+ and user_pin=#{user_pin}
+</if>
+<if test="user_token != null">
+ and user_token = #{user_token}
+</if>
+<if test="nick_name != null">
+ and nick_name = #{nick_name}
+</if>
+<if test="first_time != null">
+ and date(first_time)=date(#{first_time})
+</if>
+<if test="start_first_time != null and end_first_time != null ">
+ and first_time between #{start_first_time} and #{end_first_time}
+</if>
+<if test="land_time != null">
+ and date(land_time)=date(#{land_time})
+</if>
+<if test="start_land_time != null and end_land_time != null ">
+ and land_time between #{start_land_time} and #{end_land_time}
+</if>
+</where>
+order by user_pin
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    <select id = "selectT_USERCount" resultType="int" parameterType="T_USER">
+		SELECT count(*) from t_user
+        <where>
+<if test="user_pin != null">
+ and user_pin=#{user_pin}
+</if>
+<if test="user_token != null">
+ and user_token = #{user_token}
+</if>
+<if test="nick_name != null">
+ and nick_name = #{nick_name}
+</if>
+<if test="first_time != null">
+ and date(first_time)=date(#{first_time})
+</if>
+<if test="start_first_time != null and end_first_time != null ">
+ and first_time between #{start_first_time} and #{end_first_time}
+</if>
+<if test="land_time != null">
+ and date(land_time)=date(#{land_time})
+</if>
+<if test="start_land_time != null and end_land_time != null ">
+ and land_time between #{start_land_time} and #{end_land_time}
+</if>
+</where>
+order by user_pin
+       
+    </select>
+    <insert id="save" parameterType="T_USER">
+    <![CDATA[
+        INSERT INTO t_user(user_pin,user_token,nick_name,first_time,land_time)
+VALUES(#{user_pin},#{user_token},#{nick_name},#{first_time},#{land_time})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_user(user_pin,user_token,nick_name,first_time,land_time)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.user_pin},#{v.user_token},#{v.nick_name},#{v.first_time},#{v.land_time}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="T_USER">
+    <![CDATA[
+        UPDATE t_user set user_pin=#{user_pin},user_token=#{user_token},nick_name=#{nick_name},first_time=#{first_time},land_time=#{land_time}
+		WHERE  user_pin=#{user_pin} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_user(user_pin,user_token,nick_name,first_time,land_time)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.user_pin},#{v.user_token},#{v.nick_name},#{v.first_time},#{v.land_time}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="T_USER">
+    <![CDATA[
+        DELETE FROM t_user WHERE  user_pin=#{user_pin} 
+	]]>
+    </delete>    
+</mapper > 

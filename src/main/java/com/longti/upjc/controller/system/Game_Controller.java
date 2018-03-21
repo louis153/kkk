@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -15,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.alibaba.fastjson.JSONObject;
+import com.longti.upjc.entity.sporttery.T_USER;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.formdata.system.Response_LtGameLogic;
+import com.longti.upjc.service.sporttery.T_USERService;
 import com.longti.upjc.strategy.impl.sporttery.GameLogicMethodFactory;
+
 
 
 
@@ -30,6 +35,9 @@ public class Game_Controller {
 	protected final transient static Logger logger = LoggerFactory.getLogger(Game_Controller.class);
 	@Autowired
 	private GameLogicMethodFactory ctxMethod;
+	@Autowired
+	private T_USERService tuserService;
+	
 	/**
 	 * 提交方法
 	 *  100请求ctrl格式错误！
@@ -84,31 +92,74 @@ public class Game_Controller {
 			String gameRequest=java.net.URLDecoder.decode(request_LtGameLogic.getGameRequest(), "utf-8");
 			logger.info("游戏逻辑gameLogic接收到的请求信息----->："+gameRequest,gameRequest);
 			
-			//meth = this.getClass().getDeclaredMethod(JSONObject.parseObject(gameRequest).get("method").toString(),String.class,request_LtGameLogic.getGameRequest().getClass());
 			JSONObject jsonRequest=JSONObject.parseObject(gameRequest);
 			logger.info("请求的方法："+jsonRequest.get("method").toString(),jsonRequest.get("method").toString());
 			logger.info("访问的userPin:"+request_LtGameLogic.getUserPin(),request_LtGameLogic.getUserPin());
 			
-			String gameResponse=ctxMethod.doAction(jsonRequest.get("method").toString(),request_LtGameLogic ,jsonRequest);
-			response_LtGameLogic.setGameResponse(gameResponse);
-			response_LtGameLogic.setReturnCode(0);
-			response_LtGameLogic.setReturnMsg("访问成功");
+			int checkTokenFlag=0;
+			if(jsonRequest.get("method").equals("login")==false){
+				if(jsonRequest.get("method").equals("pay")||request_LtGameLogic.getTranType()==1){
+					checkTokenFlag=checkServerToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
+				}else{
+					checkTokenFlag=checkToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
+				}
+			}
+			
+			response_LtGameLogic.setGameResponse("");
+			if(checkTokenFlag==1){				
+				response_LtGameLogic.setReturnCode(1);
+				response_LtGameLogic.setReturnMsg("用户未登录");
+			}
+			else if(checkTokenFlag==2){
+				response_LtGameLogic.setReturnCode(2);
+				response_LtGameLogic.setReturnMsg("token失效");
+			}
+			else{
+				String gameResponse=ctxMethod.doAction(jsonRequest.get("method").toString(),request_LtGameLogic ,jsonRequest);
+				response_LtGameLogic.setGameResponse(gameResponse);
+				response_LtGameLogic.setReturnCode(0);
+				response_LtGameLogic.setReturnMsg("访问成功");
+			}
+			
 			logger.info("游戏逻辑gameLogic：访问成功----->");
 		} catch (NoSuchMethodException e) {			
 			logger.error("游戏逻辑gameLogic：访问的游戏逻辑接口不存在----->");
-			throw new Exception("访问的游戏逻辑接口不存在");			
+			response_LtGameLogic.setReturnCode(1);
+			response_LtGameLogic.setReturnMsg("访问的游戏逻辑接口不存在");
 		} catch (SecurityException e) {
 			logger.error("游戏逻辑gameLogic：没有访问的游戏逻辑的安全权限----->");
-			throw new Exception("访问的游戏逻辑接口不存在");
+			response_LtGameLogic.setReturnCode(1);
+			response_LtGameLogic.setReturnMsg("没有访问的游戏逻辑的安全权限");
 		}
 		
 		String outStr=JSONObject.toJSONString(response_LtGameLogic);
 		logger.info("游戏逻辑gameLogic调用成功,返回信息----->："+outStr);
 		OutPrintStr(outStr,response);
 	}
+	private int checkServerToken(String userPin,String userToken) throws Exception{
+		return checkToken(userPin, userToken);//正式对接时需要修改
+	}
+	private int checkToken(String userPin,String userToken) throws Exception{
+		T_USER t_user=new T_USER();
+		t_user.setUser_pin(userPin);
+		
+		List<T_USER> lstUser=tuserService.selectT_USERList(t_user);
+		if(lstUser.isEmpty()){
+			return 1;
+		}
+		else if(lstUser.get(0).getUser_token().equals(userToken)==false){
+			return 2;
+		}
+		else if(lstUser.get(0).getLand_time().equals(userToken)==false){
+			return 2;
+		}
+		else{
+			return 0;
+		}
+	}
 	
 	/**
-	 * 给京东返回信息
+	 * 给亚创返回信息
 	 * @param str
 	 * @return
 	 * 
@@ -116,11 +167,10 @@ public class Game_Controller {
 	private void OutPrintStr(String str,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = null;
 		
 		try {
-			out = response.getWriter();//new PrintWriter(response.getOutputStream());// 发送请求参数
+			out = new PrintWriter(response.getOutputStream());// 发送请求参数
 	        out.print(str);//使用url编码
 	        // flush输出流的缓冲	        
 	        out.flush();

@@ -1,39 +1,37 @@
 package com.longti.upjc.util.jdbet;
 
 
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
 import com.longti.upjc.controller.system.Game_Controller;
-import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.formdata.Head;
 import com.longti.upjc.formdata.Msg;
-import com.longti.upjc.formdata.sporttery.ASK_Bet;
-import com.longti.upjc.formdata.sporttery.GameAreaBet;
-import com.longti.upjc.formdata.sporttery.RV;
-import com.longti.upjc.formdata.sporttery.RV_Login;
-import com.longti.upjc.util.DateUtils;
+import com.longti.upjc.formdata.sporttery.ASK_Balance;
+import com.longti.upjc.formdata.sporttery.ASK_Change;
+import com.longti.upjc.formdata.sporttery.ASK_Query;
+import com.longti.upjc.formdata.sporttery.RV_Balance;
+import com.longti.upjc.formdata.sporttery.RV_Change;
+import com.longti.upjc.formdata.sporttery.RV_Query;
 import com.longti.upjc.util.IOUtils;
-import com.longti.upjc.util.Md5;
 import com.longti.upjc.util.PostUtils;
 
 
 public class BetUtils {
 	protected final transient static Logger logger = LoggerFactory.getLogger(Game_Controller.class);
-	public static String venderId;
-	public static String gameId;
-	public static String url;
-	public static String key;
-	public static String version;
+	public static Long preMul=1000000L;
+	public static String up_balance;
+	public static String up_change;
+	public static String up_query;
+	public static String up_appkey;
+	public static String up_appSecret;
 	static{
-		venderId=IOUtils.getConfigParam("jd.venderId", "send.properties");
-		gameId=IOUtils.getConfigParam("jd.gameId", "send.properties");
-		url=IOUtils.getConfigParam("jd.url", "send.properties");
-		key=IOUtils.getConfigParam("jd.key", "send.properties");
-		version="1.2";
+		up_balance=IOUtils.getConfigParam("up.balance", "up.properties");
+		up_change=IOUtils.getConfigParam("up.change", "up.properties");
+		up_query=IOUtils.getConfigParam("up.query", "up.properties");
+		up_appkey=IOUtils.getConfigParam("up.appkey", "up.properties");
+		up_appSecret=IOUtils.getConfigParam("up.appSecret", "up.properties");
 	}
 	
 	/**
@@ -44,8 +42,7 @@ public class BetUtils {
 	 */
 	@SuppressWarnings("unused")
 	private static boolean check_sign(Head head){
-		String checkStr= Md5.getDigest(venderId+gameId+head.getUuId().toLowerCase()+head.getTimestamp()+key);		
-		return head.getMd().toLowerCase().equals(checkStr.toLowerCase());
+		return true;
 	}
 	/**
 	 * 创建签名 
@@ -53,72 +50,138 @@ public class BetUtils {
 	 * @return
 	 */
 	private static void Set_sign(Head head){		
-		String md= Md5.getDigest(venderId+gameId+head.getUuId()+head.getTimestamp()+key).toLowerCase();	
-		head.setMd(md);
+		
 	}
 	/**
 	 * 生成报文头
 	 * @param uuid
 	 * @return
 	 */
-	private static Head Create_Head(String uuid){
+	private static Head Create_Head(){
 		Head head=new Head();
-		head.setGameId(gameId);
-		head.setTimestamp(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));
-		head.setUuId(uuid);
-		head.setVenderId(venderId);
-		head.setVersion(version);
+		head.setAppkey(up_appkey);
 		Set_sign(head);
 		return head;
 	}
-	public static RV_Login login(){
-		RV_Login rv=null;
-		try {
-			String jsonStr=PostUtils.doPost(url+"/login", "{}");
-			JSONObject obj = JSONObject.parseObject(jsonStr);
-			//将json对象转换为java对象
-			rv = (RV_Login)JSONObject.toJavaObject(obj,RV_Login.class);//将建json对象转换为RV_Login对象
-		} catch (Exception e) {
-			logger.error("测试login错误");
-		}
-		return rv;
-	}
 	
-	public static RV Bet(V_ORDER order) throws Exception{
-		Msg<RV> rv=new Msg<RV>();
-		Msg<ASK_Bet> ask=new Msg<ASK_Bet>();
-		ask.setBody(new ASK_Bet());
-		ask.getBody().setBetFee(Long.valueOf(order.getBet_fee()));
-		ask.getBody().setFeeType(4);
-		GameAreaBet gameAreaBet=new GameAreaBet();
-		gameAreaBet.setBetBatchNo(order.getIssume());
-		ask.getBody().setGameAreaBet(JSONObject.toJSONString(gameAreaBet));
-		ask.getBody().setGameSource(3);
-		ask.getBody().setUserPin(order.getUser_pin());
-		ask.setHead(Create_Head(order.getOrder_id()));
+	
+	public static RV_Change Bet(String userPin,String electronic_code,String orderId,String bet_fee,String password) throws Exception{
+		Msg<RV_Change> rv=new Msg<RV_Change>();
+		Msg<ASK_Change> ask=new Msg<ASK_Change>();
+		ask.setBody(new ASK_Change());
+		ask.getBody().amount=bet_fee;
+		ask.getBody().currencyCode=electronic_code.toUpperCase();
+		ask.getBody().passphrase=password;
+		ask.getBody().transactionId=orderId;
+		ask.getBody().type="sub";
+		ask.getBody().walletId="uplive"+userPin;
+		
+		
+		ask.setHead(Create_Head());
 		try {
-			String rvStr=PostUtils.doPostGZip(url+"game/bet/"+order.getUser_pin(),ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			String rvStr=PostUtils.doPostGZip(up_change,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
 			JSONObject obj=JSONObject.parseObject(rvStr);
 			Head head=new Head();
-			head.setGameId("");
-			head.setMd("");
-			head.setTimestamp("");
-			head.setUuId("");
-			head.setVenderId("");
-			head.setVersion("1.2");
+			head.setAppkey(up_appkey);
 			rv.setHead(head);
-			RV body=new RV();
-			body.setCode(Integer.valueOf(((JSONObject)obj).getString("code")));
-			body.setMsg(((JSONObject)obj).getString("msg"));
-			body.setSuccess(Boolean.valueOf(((JSONObject)obj).getString("success")));
+			RV_Change body=new RV_Change();
+			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
+			body.balance.ETH=jsonBalance.getString("ETH");
+			body.balance.GTO=jsonBalance.getString("GTO");
 			rv.setBody(body);//将建json对象转换为RV_Login对象
 			
 		} catch (Exception e) {
-			logger.error("访问京东神豆接口抛出服务异常 错误信息："+(e.getMessage()==null?"":e.getMessage()));
+			logger.error("访问亚创支付抛出服务异常 错误信息："+(e.getMessage()==null?"":e.getMessage()));
+			throw new Exception(e.getMessage());
+		}
+		
+		return rv.getBody();
+	}
+	public static RV_Change Award(String userPin,String electronic_code,String orderId,String bet_fee) throws Exception{
+		Msg<RV_Change> rv=new Msg<RV_Change>();
+		Msg<ASK_Change> ask=new Msg<ASK_Change>();
+		ask.setBody(new ASK_Change());
+		ask.getBody().amount=bet_fee;
+		ask.getBody().currencyCode=electronic_code.toUpperCase();
+		ask.getBody().transactionId=orderId;
+		ask.getBody().type="add";
+		ask.getBody().walletId="uplive"+userPin;
+		
+		
+		ask.setHead(Create_Head());
+		try {
+			String rvStr=PostUtils.doPostGZip(up_change,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			JSONObject obj=JSONObject.parseObject(rvStr);
+			Head head=new Head();
+			head.setAppkey(up_appkey);
+			rv.setHead(head);
+			RV_Change body=new RV_Change();
+			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
+			body.balance.ETH=jsonBalance.getString("ETH");
+			body.balance.GTO=jsonBalance.getString("GTO");
+			rv.setBody(body);//将建json对象转换为RV_Login对象
+			
+		} catch (Exception e) {
+			logger.error("访问亚创派奖接口抛出服务异常 错误信息："+(e.getMessage()==null?"":e.getMessage()));
 			throw new Exception(e.getMessage());
 		}
 		
 		return rv.getBody();
 	}
 	
+	public static RV_Balance Balance(String userPin,String electronic_code) throws Exception{
+		Msg<RV_Balance> rv=new Msg<RV_Balance>();
+		Msg<ASK_Balance> ask=new Msg<ASK_Balance>();
+		ask.setBody(new ASK_Balance());
+		ask.getBody().walletId="uplive"+userPin;
+		ask.getBody().currencyCode=electronic_code.toUpperCase();
+		
+		
+		ask.setHead(Create_Head());
+		try {
+			String rvStr=PostUtils.doPostGZip(up_balance,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			JSONObject obj=JSONObject.parseObject(rvStr);
+			Head head=new Head();
+			head.setAppkey(up_appkey);
+			rv.setHead(head);
+			RV_Balance body=new RV_Balance();
+			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
+			body.balance=jsonBalance.getString("ETH");
+			body.balance=jsonBalance.getString("GTO");
+			rv.setBody(body);//将建json对象转换为RV_Login对象
+			
+		} catch (Exception e) {
+			logger.error("访问亚创余额接口抛出服务异常 错误信息："+(e.getMessage()==null?"":e.getMessage()));
+			throw new Exception(e.getMessage());
+		}
+		
+		return rv.getBody();
+	}
+	
+	public static RV_Query Query(String transactionId) throws Exception{
+		Msg<RV_Query> rv=new Msg<RV_Query>();
+		Msg<ASK_Query> ask=new Msg<ASK_Query>();
+		ask.setBody(new ASK_Query());
+		ask.getBody().transactionId=transactionId;		
+		
+		ask.setHead(Create_Head());
+		try {
+			String rvStr=PostUtils.doPostGZip(up_query,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			JSONObject obj=JSONObject.parseObject(rvStr);
+			Head head=new Head();
+			head.setAppkey(up_appkey);
+			rv.setHead(head);
+			RV_Query body=new RV_Query();
+			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
+			body.balance.ETH=jsonBalance.getString("ETH");
+			body.balance.GTO=jsonBalance.getString("GTO");
+			rv.setBody(body);//将建json对象转换为RV_Login对象
+			
+		} catch (Exception e) {
+			logger.error("访问亚创查询交易接口抛出服务异常 错误信息："+(e.getMessage()==null?"":e.getMessage()));
+			throw new Exception(e.getMessage());
+		}
+		
+		return rv.getBody();
+	}
 }

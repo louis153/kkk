@@ -230,45 +230,19 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 		}
 
 		logger.info("开始调用支付接口");
-		Integer betResult = BetUtils.Bet(vOrder).getCode();
+		String password="";
+		String betResult = BetUtils.Bet(vOrder.getUser_pin(),vOrder.getElectronic_code(),vOrder.getOrder_id(),String.format("%.2f", vOrder.getBet_fee()/BetUtils.preMul),password).status;
+		
 		if (betResult == null) {
 			throw new Exception("调用接口异常");
 		}
-		if (betResult == 200) {
-			logger.info(String.format("调用京东神豆bet接口成功----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
+		if (betResult.equals("success")) {
+			logger.info(String.format("调用亚创支付接口成功----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
 					lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
 					lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
-		} else {
-			if (betResult == 201) {
-				logger.info(
-						String.format("调用京东神豆bet接口 201 成功但没有符合要求的数据----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
-								lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
-								lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
+		} else {			
 
-			} else if (betResult == 300) {
-				logger.info(String.format("调用京东神豆bet接口,300 游戏已下线----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
-						lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
-						lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
-			} else if (betResult == 301) {
-				logger.info(String.format("调用京东神豆bet接口,301 接口版本错误----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
-						lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
-						lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
-			} else if (betResult == 302) {
-				logger.info(String.format(
-						"调用京东神豆bet接口,302 中奖结果通知处理失败，校验后重新提交（可能存在重复数据）----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
-						lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
-						lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
-			} else if (betResult == 400) {
-				logger.info(String.format("调用京东神豆bet接口,400 请求参数错误----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
-						lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
-						lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
-			} else if (betResult == 500) {
-				logger.info(String.format("调用京东神豆bet接口,500 服务器错误----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
-						lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
-						lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
-			}
-
-			throw new Exception("扣除京东神豆失败");
+			throw new Exception("调用亚创支付接口失败");
 		}
 
 		if (vOrder.getBet_type() == 301 || vOrder.getBet_type() == 305) {
@@ -295,7 +269,6 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 			// 对阵编号
 			logger.info("调用计算电竞赔率开始---->");
 			try{
-			@SuppressWarnings("unused")
 			JSONObject pvRv = JSONObject.parseObject(PostUtils.doPost(djUrl, String.format(
 					"{\"timestamp\":\"%s\",\"signature\":\"%s\",\"issue\":\"%s\"}", timestamp, signature, issume)));
 			logger.info("调用计算电竞赔率成功---->"+JSONObject.toJSONString(pvRv));
