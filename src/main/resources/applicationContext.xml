@@ -72,9 +72,5 @@
 			id="serviceMethod" />
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethod" />
 	</aop:config>
-
 	
-	<import resource="classpath:config/spring-ehcache.xml" /> 
-	
-
 </beans>

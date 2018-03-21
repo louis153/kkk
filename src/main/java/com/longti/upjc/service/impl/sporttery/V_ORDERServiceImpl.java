@@ -254,30 +254,9 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 		return 0;
 	}
 
-	private static String djUrl = IOUtils.getConfigParam("dj.url", "dj.properties");
-	private static String djKey = IOUtils.getConfigParam("dj.key", "dj.properties");
-
+	
 	@Override
 	public void updateDPs(String issume, HashMap<String, Boolean> canChangeOdd, List<String> canBet) throws Exception {
-
-		if (canChangeOdd.get(issume + "|407") != null && canChangeOdd.get(issume + "|407")) {
-			String timestamp = DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"); // 时间戳
-
-			String signature = Md5.EncoderByMd5(timestamp + "#" + djKey).toLowerCase(); // 签名
-																						// MD5(timestamp+"#"+key)
-
-			// 对阵编号
-			logger.info("调用计算电竞赔率开始---->");
-			try{
-			JSONObject pvRv = JSONObject.parseObject(PostUtils.doPost(djUrl, String.format(
-					"{\"timestamp\":\"%s\",\"signature\":\"%s\",\"issue\":\"%s\"}", timestamp, signature, issume)));
-			logger.info("调用计算电竞赔率成功---->"+JSONObject.toJSONString(pvRv));
-			}catch(Exception e){
-				logger.info("调用计算电竞赔率异常---->"+djUrl+"|"+String.format(
-						"{\"timestamp\":\"%s\",\"signature\":\"%s\",\"issue\":\"%s\"}", timestamp, signature, issume));
-			}
-			
-		}
 		T_LOTO_E loto_en = new T_LOTO_E();
 		loto_en.setIssue(issume);
 		List<T_LOTO_E> lst_LOTO_E = loto_ENDao.selectLOTO_ENList(loto_en);

@@ -19,7 +19,6 @@ import com.longti.upjc.service.sporttery.LOTO_ORDERService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
-import com.longti.upjc.util.IOUtils;
 import com.longti.upjc.util.ReturnValue;
 import com.longti.upjc.util.StringUtil;
 
@@ -54,8 +53,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 		public List<LOTO_ORDERDetail> lst=new ArrayList<LOTO_ORDERDetail>();
 	}
 	
-	@SuppressWarnings("unused")
-	private static String desKey=IOUtils.getConfigParam("jd.deskey", "send.properties");
+	
 	@Autowired
 	private LOTO_ORDERService loto_ORDERService;
 	@Override
