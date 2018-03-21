@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_EN_GTO">
+	<select id = "selectT_LOTO_EN_GTOList" resultType="T_LOTO_EN_GTO" parameterType="T_LOTO_EN_GTO">
+		SELECT 
+		    e.issue,e.play_method,e.starttime,e.sale_time,e.endtime,e.home_team_name,e.guest_team_name,e.options_one,
+		    e.options_two,e.options_three,e.cg,e.odds_one,e.odds_two,e.odds_three,
+		    e.status,e.leaguename,e.available,e.mnl_bet,e.create_time,e.update_time,e.compensate_min,e.compensate_max,
+		    e.single_lottery_max,e.single_match_max,e.sort,e.lottery_type,e.return_min,e.return_max
+		from t_loto_en_gto e
+        <where>
+<if test="issue != null">
+ and e.issue=#{issue}
+</if>
+ and NOW() BETWEEN sale_time AND endtime
+</where>
+order by sort
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    
+    <select id = "selectT_LOTO_EN_GTOCount" resultType="int" parameterType="T_LOTO_EN_GTO">
+		SELECT count(*) from t_loto_en_gto
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+ and NOW() BETWEEN sale_time AND endtime
+</where>
+order by sort
+       
+    </select>
+    
+    <insert id="save" parameterType="T_LOTO_EN_GTO">
+    <![CDATA[
+        INSERT INTO t_loto_en_gto(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,
+            options_two,options_three,cg,odds_one,odds_two,odds_three,
+            status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,
+            single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
+VALUES(#{issue},#{play_method},#{starttime},#{sale_time},#{endtime},#{home_team_name},#{guest_team_name},#{options_one},
+            #{options_two},#{options_three},#{cg},#{odds_one},#{odds_two},#{odds_three},
+            #{status},#{leaguename},#{available},#{mnl_bet},#{create_time},#{update_time},#{compensate_min},#{compensate_max},
+            #{single_lottery_max},#{single_match_max},#{sort},#{lottery_type},#{return_min},#{return_max})
+	]]>
+    </insert>
+    
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_loto_en_gto(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,
+            options_two,options_three,cg,odds_one,odds_two,odds_three,
+            status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,
+            single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.play_method},#{v.starttime},#{v.sale_time},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.options_one},
+            #{v.options_two},#{v.options_three},#{v.cg},#{v.odds_one},#{v.odds_two},#{v.odds_three},
+            #{v.status},#{v.leaguename},#{v.available},#{v.mnl_bet},#{v.create_time},#{v.update_time},#{v.compensate_min},#{v.compensate_max},
+            #{v.single_lottery_max},#{v.single_match_max},#{v.sort},#{v.lottery_type},#{v.return_min},#{v.return_max}) ]]>
+    </foreach>
+    </insert>
+    
+    <update id="update" parameterType="T_LOTO_EN_GTO">
+    <![CDATA[
+        UPDATE t_loto_en_gto set issue=#{issue},play_method=#{play_method},starttime=#{starttime},sale_time=#{sale_time},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},options_one=#{options_one},
+            options_two=#{options_two},options_three=#{options_three},cg=#{cg},odds_one=#{odds_one},odds_two=#{odds_two},odds_three=#{odds_three},
+            status=#{status},leaguename=#{leaguename},available=#{available},mnl_bet=#{mnl_bet},create_time=#{create_time},update_time=#{update_time},compensate_min=#{compensate_min},compensate_max=#{compensate_max},
+            single_lottery_max=#{single_lottery_max},single_match_max=#{single_match_max},sort=#{sort},lottery_type=#{lottery_type},return_min=#{return_min},return_max=#{return_max}
+		WHERE  issue=#{issue} 
+	]]>
+    </update>
+    
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_loto_en_gto(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,
+            options_two,options_three,cg,odds_one,odds_two,odds_three,
+            status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,
+            single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.issue},#{v.play_method},#{v.starttime},#{v.sale_time},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.options_one},
+            #{v.options_two},#{v.options_three},#{v.cg},#{v.odds_one},#{v.odds_two},#{v.odds_three},
+            #{v.status},#{v.leaguename},#{v.available},#{v.mnl_bet},#{v.create_time},#{v.update_time},#{v.compensate_min},#{v.compensate_max},
+            #{v.single_lottery_max},#{v.single_match_max},#{v.sort},#{v.lottery_type},#{v.return_min},#{v.return_max}) ]]>
+    </foreach>
+    </insert>
+    
+    <delete id="delete" parameterType="T_LOTO_EN_GTO">
+    <![CDATA[
+        DELETE FROM t_loto_en_gto WHERE  issue=#{issue} 
+	]]>
+    </delete>    
+</mapper > 

@@ -133,14 +133,13 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 			}
 			rv.setStatus(ErrorMessage.SUCCESS.getCode());
 			rv.setMessage(ErrorMessage.SUCCESS.getMessage());
+			logger.info("查看话题竞猜列表成功----->");
 		} catch (Exception e) {
+			e.printStackTrace();
 			rv.setStatus(ErrorMessage.FAIL.getCode());
 			rv.setMessage(ErrorMessage.FAIL.getMessage());
 			logger.info("查看话题竞猜列表失败----->");
-			throw e;
 		}
-
-		logger.info("查看话题竞猜列表成功----->");
 		return JSONObject.toJSONString(rv);
 	}
 }
