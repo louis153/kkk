@@ -142,15 +142,19 @@ public class Game_Controller {
 	private int checkToken(String userPin,String userToken) throws Exception{
 		T_USER t_user=new T_USER();
 		t_user.setUser_pin(userPin);
+		
 		List<T_USER> lstUser=tuserService.selectT_USERList(t_user);
 		if(lstUser.isEmpty()){
 			return 1;
 		}
-		else if(lstUser.get(0).getUser_token().equals(userToken)){
-			return 0;
+		else if(lstUser.get(0).getUser_token().equals(userToken)==false){
+			return 2;
+		}
+		else if(lstUser.get(0).getLand_time().equals(userToken)==false){
+			return 2;
 		}
 		else{
-			return 2;
+			return 0;
 		}
 	}
 	
@@ -163,11 +167,10 @@ public class Game_Controller {
 	private void OutPrintStr(String str,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = null;
 		
 		try {
-			out = response.getWriter();//new PrintWriter(response.getOutputStream());// 发送请求参数
+			out = new PrintWriter(response.getOutputStream());// 发送请求参数
 	        out.print(str);//使用url编码
 	        // flush输出流的缓冲	        
 	        out.flush();
