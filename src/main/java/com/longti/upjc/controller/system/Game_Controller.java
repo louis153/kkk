@@ -116,10 +116,11 @@ public class Game_Controller {
 	private void OutPrintStr(String str,HttpServletResponse response){
 		response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setContentType("application/json;charset=UTF-8");
 		PrintWriter out = null;
 		
 		try {
-			out = new PrintWriter(response.getOutputStream());// 发送请求参数
+			out = response.getWriter();//new PrintWriter(response.getOutputStream());// 发送请求参数
 	        out.print(str);//使用url编码
 	        // flush输出流的缓冲	        
 	        out.flush();

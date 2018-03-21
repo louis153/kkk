@@ -23,6 +23,11 @@ public interface BaseDao<T> {
 	 * @param object
 	 */
 	public void saveEntity(String methodName, Object object);
+	/**
+	 * 增加
+	 * @param object
+	 */
+	public int save(String methodName, Object object);
    /**
     * 删除
     * @param id pk
@@ -60,11 +65,16 @@ public interface BaseDao<T> {
     */
    public int deleteBatch(List<?> ids, String methodName);
    /**
+    * 删除对象
+    * @param methodName	方法名
+    * @param object
+    */
+   public int delete(String methodName, Object object);
+   /**
     * 修改
     * @param entity
     */
-   public int update(T entity);
-   
+   public int update(T entity);  
    /**
     * 修改
     * @param methodName		方法名
@@ -73,14 +83,18 @@ public interface BaseDao<T> {
     * @throws
     */
    public int update(String methodName, String paramString);
-   
    /**
     * 修改
     * @param methodName 方法名
     * @param params 	参数类型为map
     */
    public int update(String methodName, Map<String, Object> params);
-   
+   /**
+    * 修改
+    * @param methodName 方法名
+    * @param object 	对象
+    */
+   public int update(String methodName, Object object);  
    /**
     * 查询 按ID
     * @param pk
@@ -130,8 +144,7 @@ public interface BaseDao<T> {
     * @param methodName
     * @return
     */
-	public int isExist(Map<String, Object> params, String methodName);
-	
+	public int isExist(Map<String, Object> params, String methodName);	
 	/**
 	 * 返回个数,count(*)
 	 * @param params		参数
@@ -140,8 +153,7 @@ public interface BaseDao<T> {
 	 * @return int
 	 * @throws
 	 */
-	public int getCountNum(Map<String, Object> params, String methodName);
-	
+	public int getCountNum(Map<String, Object> params, String methodName);	
 	/**
 	 * 返回个数,count(*)
 	 * @param params		参数

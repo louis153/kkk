@@ -39,6 +39,24 @@ public class DateUtils {
 			return null;
 		}
 	}
+	
+	/**
+	 * 制定日期n小时后时间
+	 */
+    public static Date getHourAfterDate(Date date, int n) {
+    	Calendar calendar = Calendar.getInstance();
+    	calendar.setTime(date);
+    	calendar.add(Calendar.HOUR_OF_DAY, n);
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date daten = null;
+		try {
+			daten = format.parse(format.format(calendar.getTime()));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return daten;
+	}
+	
 	/**
 	 * 得到n分钟后时间
 	 */
