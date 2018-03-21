@@ -143,12 +143,7 @@ public class PostUtils {
             System.out.println(conn.getRequestProperty("contentType"));
             conn.setRequestProperty("charset", "utf-8");
             conn.setRequestProperty("Accept-Encoding", "gzip");//gzip
-            conn.setRequestProperty("version",header.getVersion());
-            conn.setRequestProperty("venderId",header.getVenderId());
-            conn.setRequestProperty("gameId",header.getGameId());
-            conn.setRequestProperty("uuid",header.getUuId());
-            conn.setRequestProperty("timestamp",header.getTimestamp());
-            conn.setRequestProperty("md",header.getMd());
+            conn.setRequestProperty("appkey",header.getAppkey());
             conn.setUseCaches(false);
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);

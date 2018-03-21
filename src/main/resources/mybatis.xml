@@ -2,7 +2,7 @@
 <!DOCTYPE configuration        
     PUBLIC "-//ibatis.apache.org//DTD Config 3.0//EN"        
     "http://ibatis.apache.org/dtd/ibatis-3-config.dtd">
-<configuration>
+	<configuration>
 	<settings>
 		<setting name="logImpl" value="STDOUT_LOGGING" />
 	</settings>
@@ -22,6 +22,8 @@
 		
 		<typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E" alias="T_LOTO_SIS_E"></typeAlias>
 		<typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_F" alias="T_LOTO_SIS_F"></typeAlias>
+		
+		<typeAlias type="com.longti.upjc.entity.sporttery.T_USER" alias="T_USER"></typeAlias>
 		
 		<typeAlias type="com.longti.upjc.entity.sporttery.T_QUOTATION_CONTROL" alias="T_QUOTATION_CONTROL"></typeAlias>
 		
@@ -46,6 +48,8 @@
 		
 		<mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_F.xml" />
 		<mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_E.xml" />
+		
+		<mapper resource="com/longti/upjc/sporttery/mapping/T_USER.xml" />
 		
 		<mapper resource="com/longti/upjc/sporttery/mapping/T_QUOTATION_CONTROL.xml" />
 	</mappers>
