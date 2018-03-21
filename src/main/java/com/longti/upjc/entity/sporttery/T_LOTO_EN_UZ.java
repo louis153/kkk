@@ -43,6 +43,7 @@ public class T_LOTO_EN_UZ implements Serializable {
 	
 	private Integer row_start;//开始行
 	private Integer page_size;//每页行数
+	private String[] issues;//比赛编号数组
 	public String getIssue() {
 		return issue;
 	}
@@ -222,6 +223,12 @@ public class T_LOTO_EN_UZ implements Serializable {
 	}
 	public void setPage_size(Integer page_size) {
 		this.page_size = page_size;
+	}
+	public String[] getIssues() {
+		return issues;
+	}
+	public void setIssues(String[] issues) {
+		this.issues = issues;
 	}
 
     

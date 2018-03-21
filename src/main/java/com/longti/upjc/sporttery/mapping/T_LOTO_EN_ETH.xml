@@ -9,10 +9,16 @@
 		    e.single_lottery_max,e.single_match_max,e.sort,e.lottery_type,e.return_min,e.return_max
 		from t_loto_en_eth e
         <where>
-<if test="issue != null">
+<if test="issue != null and issue != ''">
  and e.issue=#{issue}
 </if>
- and NOW() BETWEEN sale_time AND endtime
+<if test="issues != null">
+ and e.issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+ and NOW() BETWEEN e.sale_time AND e.endtime
 </where>
 order by sort
 
@@ -24,8 +30,14 @@ order by sort
     <select id = "selectT_LOTO_EN_ETHCount" resultType="int" parameterType="T_LOTO_EN_ETH">
 		SELECT count(*) from t_loto_en_eth
         <where>
-<if test="issue != null">
+<if test="issue != null and issue != ''">
  and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
 </if>
  and NOW() BETWEEN sale_time AND endtime
 </where>
