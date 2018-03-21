@@ -17,7 +17,10 @@
         <!-- 奖励机制 -->
         <typeAlias type="com.longti.upjc.entity.sporttery.TAB_DICT" alias="TAB_DICT"></typeAlias>
         <typeAlias type="com.longti.upjc.entity.sporttery.TAB_CHIP" alias="TAB_CHIP"></typeAlias>
-        
+        <!-- 话题统计 -->
+        <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E_ETH" alias="T_LOTO_SIS_E_ETH"></typeAlias>
+        <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E_GTO" alias="T_LOTO_SIS_E_GTO"></typeAlias>
+        <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E_UZ" alias="T_LOTO_SIS_E_UZ"></typeAlias>
         
         <!-- 竞彩比赛日 -->
         <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_E" alias="T_LOTO_E"></typeAlias>
@@ -50,6 +53,10 @@
         <!-- 奖励机制 -->
         <mapper resource="com/longti/upjc/sporttery/mapping/TAB_DICT.xml" />
         <mapper resource="com/longti/upjc/sporttery/mapping/TAB_CHIP.xml" />
+        <!-- 话题统计 -->
+        <mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_E_ETH.xml" />
+        <mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_E_GTO.xml" />
+        <mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_E_UZ.xml" />
         
         <!-- 竞彩比赛日 -->  
         <mapper resource="com/longti/upjc/sporttery/mapping/LOTO_F.xml" />
