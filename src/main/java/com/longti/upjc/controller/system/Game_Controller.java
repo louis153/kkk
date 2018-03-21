@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.formdata.system.Response_LtGameLogic;
 import com.longti.upjc.service.sporttery.T_USERService;
 import com.longti.upjc.strategy.impl.sporttery.GameLogicMethodFactory;
+import com.longti.upjc.util.DateUtils;
 
 
 
@@ -87,7 +89,7 @@ public class Game_Controller {
 		request_LtGameLogic.setUserPin(jsonObject.getString("userPin"));
 		request_LtGameLogic.setUserToken(jsonObject.getString("userToken"));
 		Response_LtGameLogic response_LtGameLogic=new Response_LtGameLogic();
-		
+				
 		try {
 			String gameRequest=java.net.URLDecoder.decode(request_LtGameLogic.getGameRequest(), "utf-8");
 			logger.info("游戏逻辑gameLogic接收到的请求信息----->："+gameRequest,gameRequest);
@@ -150,7 +152,7 @@ public class Game_Controller {
 		else if(lstUser.get(0).getUser_token().equals(userToken)==false){
 			return 2;
 		}
-		else if(lstUser.get(0).getLand_time().equals(userToken)==false){
+		else if(DateUtils.getHourAfterDate(lstUser.get(0).getLand_time(),8).compareTo(new Date())<0){
 			return 2;
 		}
 		else{

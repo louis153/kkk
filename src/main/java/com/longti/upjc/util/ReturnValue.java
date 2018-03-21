@@ -1,14 +1,14 @@
 package com.longti.upjc.util;
 
 public class ReturnValue<T> {
-	private String Status;
+	private String status;
 	private String message;
 	private T data;
 	public String getStatus() {
-		return Status;
+		return status;
 	}
 	public void setStatus(String status) {
-		Status = status;
+		this.status = status;
 	}
 	public String getMessage() {
 		return message;

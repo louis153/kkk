@@ -9,6 +9,20 @@ public class Request_LtGameLogic {
 	private String gameRequest ;//Y 游戏请求信息（游戏系统补充内容）
 	private String userToken; //用户token
 	private String lang;//语言
+	public Request_LtGameLogic(){
+		
+	}
+	public Request_LtGameLogic(Request_LtGameLogic obj){
+		this.setExt(obj.ext);
+		this.setFeeType(obj.feeType);
+		this.setGameId(obj.gameId);
+		this.setGameRequest(obj.gameRequest);
+		this.setGameSource(obj.gameSource);
+		this.setLang(obj.lang);
+		this.setTranType(obj.tranType);
+		this.setUserPin(obj.userPin);
+		this.setUserToken(obj.userToken);
+	}
 	public String getUserToken() {
 		return userToken;
 	}
