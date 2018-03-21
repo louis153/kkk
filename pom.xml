@@ -5,7 +5,7 @@
 	<artifactId>upjclogic</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
-	<name>JDcaiqiuGameogicAPI</name>
+	<name>upjclogicAPI</name>
 	<url>http://maven.apache.org</url>
 
 	<build>
