@@ -35,13 +35,9 @@ public class LoginStrategy implements IMethodStrategy {
 	private Invcode_CreateStrategy invcode_CreateStrategy;
 	
 	public static class Login_Request{
-		public String user_pin="";
 		public String nick_name="";
-		public String user_token="";
 		public Login_Request(JSONObject jsonRequest){
-			user_pin=jsonRequest.getString("user_pin");
 			nick_name=jsonRequest.getString("nick_name");
-			user_token=jsonRequest.getString("user_token");
 		}
 	}
 	public static class Login_Data{
@@ -64,18 +60,18 @@ public class LoginStrategy implements IMethodStrategy {
 		rv.setData(new Login_Data());
 		Login_Request login_Request=new Login_Request(jsonRequest);
 		T_USER t_user=new T_USER();
-		
+		t_user.setUser_pin(request_LtGameLogic.getUserPin());
 		List<T_USER> lsT_USERs=t_USERService.selectT_USERList(t_user);
 		if(lsT_USERs.isEmpty()){
 			t_user.setFirst_time(new Date());
 			t_user.setLand_time(new Date());
-			t_user.setUser_pin(login_Request.user_pin);
-			t_user.setUser_token(login_Request.user_token);
+			t_user.setUser_pin(request_LtGameLogic.getUserPin());
+			t_user.setUser_token(request_LtGameLogic.getUserToken());
 			t_user.setNick_name(login_Request.nick_name);
 			
 			logger.info("登录接口调用生成邀请码接口开始----->");
 			JSONObject jsonRV=create_invcode(request_LtGameLogic,DateUtils.getDateToStr(t_user.getFirst_time(), "yyyy-MM-dd HH:mm:ss"));
-			if(jsonRV.getString("status").equals(ErrorMessage.SUCCESS)==false){
+			if(jsonRV.getString("status").equals(ErrorMessage.SUCCESS.getCode())==false){
 				rv.setStatus(jsonRV.getString("status"));
 				rv.setMessage(jsonRV.getString("message"));
 				logger.info("登录接口调用生成邀请码接口失败----->"+jsonRV.getString("message"));
@@ -87,8 +83,8 @@ public class LoginStrategy implements IMethodStrategy {
 		}else{
 			t_user=lsT_USERs.get(0);
 			t_user.setLand_time(new Date());
-			t_user.setUser_pin(login_Request.user_pin);
-			t_user.setUser_token(login_Request.user_token);
+			t_user.setUser_pin(request_LtGameLogic.getUserPin());
+			t_user.setUser_token(request_LtGameLogic.getUserToken());
 			t_user.setNick_name(login_Request.nick_name);			
 			t_USERService.updateT_USER(t_user);
 		}		
