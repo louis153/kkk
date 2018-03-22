@@ -204,11 +204,50 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 		JSONObject invcodeJSON=new JSONObject();
 		invcodeJSON.put("method","lang_list");
 		if(ethlst != null){
-			invcodeJSON.put("lst", ethlst);
+			List<T_LOTO_EN_ETH> ethlstt = new ArrayList<T_LOTO_EN_ETH>();
+			for(T_LOTO_EN_ETH eth:ethlst){
+				T_LOTO_EN_ETH etht = new T_LOTO_EN_ETH();
+				etht.setIssue(eth.getIssue());
+				etht.setLeaguename(eth.getLeaguename());
+				etht.setGuest_team_name(eth.getGuest_team_name());
+				etht.setHome_team_name(eth.getHome_team_name());
+				etht.setPlay_method(eth.getPlay_method());
+				etht.setOptions_one(eth.getOptions_one());
+				etht.setOptions_two(eth.getOptions_two());
+				etht.setOptions_three(eth.getOptions_three());
+				ethlstt.add(etht);
+			}
+			invcodeJSON.put("lst", ethlstt);
 		}else if(gtolst != null){
-			invcodeJSON.put("lst", gtolst);
+			List<T_LOTO_EN_GTO> gtolstt = new ArrayList<T_LOTO_EN_GTO>();
+			for(T_LOTO_EN_GTO gto:gtolst){
+				T_LOTO_EN_GTO gtot = new T_LOTO_EN_GTO();
+				gtot.setIssue(gto.getIssue());
+				gtot.setLeaguename(gto.getLeaguename());
+				gtot.setGuest_team_name(gto.getGuest_team_name());
+				gtot.setHome_team_name(gto.getHome_team_name());
+				gtot.setPlay_method(gto.getPlay_method());
+				gtot.setOptions_one(gto.getOptions_one());
+				gtot.setOptions_two(gto.getOptions_two());
+				gtot.setOptions_three(gto.getOptions_three());
+				gtolstt.add(gtot);
+			}
+			invcodeJSON.put("lst", gtolstt);		
 		}else if(uzlst != null){
-			invcodeJSON.put("lst", uzlst);
+			List<T_LOTO_EN_UZ> uzlstt = new ArrayList<T_LOTO_EN_UZ>();
+			for(T_LOTO_EN_UZ uz:uzlst){
+				T_LOTO_EN_UZ uzt = new T_LOTO_EN_UZ();
+				uzt.setIssue(uz.getIssue());
+				uzt.setLeaguename(uz.getLeaguename());
+				uzt.setGuest_team_name(uz.getGuest_team_name());
+				uzt.setHome_team_name(uz.getHome_team_name());
+				uzt.setPlay_method(uz.getPlay_method());
+				uzt.setOptions_one(uz.getOptions_one());
+				uzt.setOptions_two(uz.getOptions_two());
+				uzt.setOptions_three(uz.getOptions_three());
+				uzlstt.add(uzt);
+			}
+			invcodeJSON.put("lst", uzlstt);
 		}
 		invcode_Request.setGameRequest(invcodeJSON.toJSONString());
 		JSONObject jsonRV=JSONObject.parseObject(langListStrategy.doJsonMethod(invcode_Request, invcodeJSON));
