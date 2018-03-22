@@ -21,7 +21,7 @@ import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.ReturnValue;
 
 /**
- * 蓝球支付
+ * 登录
  * 
  * @return
  */
@@ -54,7 +54,7 @@ public class LoginStrategy implements IMethodStrategy {
 	}
 	@Override
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
-		logger.info("pay开始调用支付接口doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
+		logger.info("login开始调用登录接口doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
 		
 		ReturnValue<Login_Data> rv = new ReturnValue<>();
 		rv.setData(new Login_Data());
