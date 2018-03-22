@@ -92,13 +92,13 @@ public class LangListStrategy implements IMethodStrategy {
 				String options_two = ((JSONObject) jOdd).get("options_two").toString();
 				String options_three = ((JSONObject) jOdd).get("options_three").toString();
 				lotoLangDetail.issue = issue;
-				lotoLangDetail.leaguename = tab_leaguename_langs.get(leaguename);
-				lotoLangDetail.home_team_name = tab_teamname_langs.get(home_team_name);
-				lotoLangDetail.guest_team_name = tab_teamname_langs.get(guest_team_name);
-				lotoLangDetail.play_method = tab_playmethod_langs.get(play_method);
-				lotoLangDetail.options_one = tab_options_langs.get(options_one);
-				lotoLangDetail.options_two = tab_options_langs.get(options_two);
-				lotoLangDetail.options_three = tab_options_langs.get(options_three);
+				lotoLangDetail.leaguename = tab_leaguename_langs.get(leaguename)==null?"":tab_leaguename_langs.get(leaguename);
+				lotoLangDetail.home_team_name = tab_teamname_langs.get(home_team_name)==null?"":tab_teamname_langs.get(home_team_name);
+				lotoLangDetail.guest_team_name = tab_teamname_langs.get(guest_team_name)==null?"":tab_teamname_langs.get(guest_team_name);
+				lotoLangDetail.play_method = tab_playmethod_langs.get(play_method)==null?"":tab_playmethod_langs.get(play_method);
+				lotoLangDetail.options_one = tab_options_langs.get(options_one)==null?"":tab_options_langs.get(options_one);
+				lotoLangDetail.options_two = tab_options_langs.get(options_two)==null?"":tab_options_langs.get(options_two);
+				lotoLangDetail.options_three = tab_options_langs.get(options_three)==null?"":tab_options_langs.get(options_three);
 				rv.getData().lst.add(lotoLangDetail);
 			}
 			rv.setStatus(ErrorMessage.SUCCESS.getCode());
