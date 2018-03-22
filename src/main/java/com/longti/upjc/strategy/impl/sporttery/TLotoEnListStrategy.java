@@ -38,6 +38,7 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 		public String home_team_name; // 主队名称
 		public String guest_team_name; // 客队名称
 		public String leaguename; // 比赛名称
+		public String play_method; //玩法信息
 		public String options_one;	//选项1内容
 		public String options_two;	//选项2内容
 		public String options_three;	//选项3内容
@@ -82,6 +83,7 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 					lotoEnDetail.guest_team_name = e.getGuest_team_name();
 					lotoEnDetail.issue = e.getIssue();
 					lotoEnDetail.leaguename = e.getLeaguename();
+					lotoEnDetail.play_method = e.getPlay_method();
 					lotoEnDetail.options_one=e.getOptions_one();
 					lotoEnDetail.options_two=e.getOptions_two();
 					lotoEnDetail.options_three=e.getOptions_three();
@@ -102,6 +104,7 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 					lotoEnDetail.guest_team_name = e.getGuest_team_name();
 					lotoEnDetail.issue = e.getIssue();
 					lotoEnDetail.leaguename = e.getLeaguename();
+					lotoEnDetail.play_method = e.getPlay_method();
 					lotoEnDetail.options_one=e.getOptions_one();
 					lotoEnDetail.options_two=e.getOptions_two();
 					lotoEnDetail.options_three=e.getOptions_three();
@@ -122,6 +125,7 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 					lotoEnDetail.guest_team_name = e.getGuest_team_name();
 					lotoEnDetail.issue = e.getIssue();
 					lotoEnDetail.leaguename = e.getLeaguename();
+					lotoEnDetail.play_method = e.getPlay_method();
 					lotoEnDetail.options_one=e.getOptions_one();
 					lotoEnDetail.options_two=e.getOptions_two();
 					lotoEnDetail.options_three=e.getOptions_three();

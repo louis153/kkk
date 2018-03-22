@@ -172,7 +172,7 @@ public class Game_Controller {
 		PrintWriter out = null;
 		
 		try {
-			out = new PrintWriter(response.getOutputStream());// 发送请求参数
+			out = response.getWriter();//new PrintWriter(response.getOutputStream());// 发送请求参数
 	        out.print(str);//使用url编码
 	        // flush输出流的缓冲	        
 	        out.flush();
