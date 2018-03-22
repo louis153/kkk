@@ -63,8 +63,8 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 		ReturnValue<LotoEnData> rv = new ReturnValue<LotoEnData>();
 		rv.setData(new LotoEnData());
 		logger.info("loto_en_list开始调用查看话题竞猜列表接口doJsonMethod------>");
-		String electronic_code = jsonRequest.get("electronic_code").toString().trim();
-		//String lang = jsonRequest.get("lang").toString().trim();
+		String electronic_code = request_LtGameLogic.getFeeType();
+		String lang = request_LtGameLogic.getLang();
 		List<T_LOTO_EN_ETH> ethlst = null;
 		List<T_LOTO_EN_GTO> gtolst = null;
 		List<T_LOTO_EN_UZ> uzlst = null;

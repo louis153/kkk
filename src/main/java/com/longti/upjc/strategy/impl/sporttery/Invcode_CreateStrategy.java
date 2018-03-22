@@ -33,7 +33,7 @@ public class Invcode_CreateStrategy implements IMethodStrategy {
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
 		ReturnValue<String> rv = new ReturnValue<String>();
 		logger.info("create_invcode开始调用生成邀请码接口doJsonMethod------>");
-		String user_pin = jsonRequest.get("user_pin").toString().trim();
+		String user_pin = request_LtGameLogic.getUserPin();
 		String first_time = jsonRequest.get("first_time").toString().trim();
 		String invitation_code = getInvcode();//随机生成六位邀请码
 		T_LOTO_INVCODE t_loto_invcode = new T_LOTO_INVCODE();

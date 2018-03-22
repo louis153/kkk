@@ -51,7 +51,6 @@ public class LoginStrategy implements IMethodStrategy {
 		Request_LtGameLogic invcode_Request=new Request_LtGameLogic(request_LtGameLogic);
 		JSONObject invcodeJSON=new JSONObject();
 		invcodeJSON.put("method","create_invcode");
-		invcodeJSON.put("user_pin", invcode_Request.getUserPin());
 		invcodeJSON.put("first_time", first_time);		
 		invcode_Request.setGameRequest(invcodeJSON.toJSONString());
 		JSONObject jsonRV=JSONObject.parseObject(invcode_CreateStrategy.doJsonMethod(invcode_Request, invcodeJSON));

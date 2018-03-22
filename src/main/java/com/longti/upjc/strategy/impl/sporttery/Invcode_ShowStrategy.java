@@ -37,7 +37,7 @@ public class Invcode_ShowStrategy implements IMethodStrategy {
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
 		ReturnValue<String> rv = new ReturnValue<String>();
 		logger.info("show_invcode开始调用判断是否显示绑定邀请码接口doJsonMethod------>");
-		String user_pin = jsonRequest.get("user_pin").toString().trim();
+		String user_pin = request_LtGameLogic.getUserPin();
 		T_LOTO_INVCODE t_loto_invcode = new T_LOTO_INVCODE();
 		t_loto_invcode.setUser_pin(user_pin);
 		List<T_LOTO_INVCODE> invList = null;
