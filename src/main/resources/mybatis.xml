@@ -21,6 +21,11 @@
         <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E_ETH" alias="T_LOTO_SIS_E_ETH"></typeAlias>
         <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E_GTO" alias="T_LOTO_SIS_E_GTO"></typeAlias>
         <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E_UZ" alias="T_LOTO_SIS_E_UZ"></typeAlias>
+        <!-- 多语言 -->
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_LEAGUENAME_LANG" alias="TAB_LEAGUENAME_LANG"></typeAlias>
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_TEAMNAME_LANG" alias="TAB_TEAMNAME_LANG"></typeAlias>
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_PLAYMETHOD_LANG" alias="TAB_PLAYMETHOD_LANG"></typeAlias>
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_OPTIONS_LANG" alias="TAB_OPTIONS_LANG"></typeAlias> 
         
         <!-- 竞彩比赛日 -->
         <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_E" alias="T_LOTO_E"></typeAlias>
@@ -57,6 +62,11 @@
         <mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_E_ETH.xml" />
         <mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_E_GTO.xml" />
         <mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_SIS_E_UZ.xml" />
+         <!-- 多语言 -->
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_LEAGUENAME_LANG.xml" />
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_TEAMNAME_LANG.xml" />
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_PLAYMETHOD_LANG.xml" />
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_OPTIONS_LANG.xml" />
         
         <!-- 竞彩比赛日 -->  
         <mapper resource="com/longti/upjc/sporttery/mapping/LOTO_F.xml" />

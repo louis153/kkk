@@ -13,17 +13,17 @@
  and t.invitation_code=#{invitation_code}
 </if>
 </where>
-order by firstlogin_time
+order by t.firstlogin_time
     </select>
     
     <select id = "selectT_USER_INVCODECount" resultType="int" parameterType="T_USER_INVCODE">
 		SELECT count(*) from t_user_invcode
         <where>
 <if test="user_pin != null">
- and t.user_pin=#{user_pin}
+ and user_pin=#{user_pin}
 </if>
 <if test="invitation_code != null">
- and t.invitation_code=#{invitation_code}
+ and invitation_code=#{invitation_code}
 </if>
 </where>
 order by firstlogin_time

@@ -12,6 +12,12 @@
 <if test="issue != null and issue != ''">
  and e.issue=#{issue}
 </if>
+<if test="status != null and status != ''">
+ and e.status=#{status}
+</if>
+<if test="mnl_bet != null and mnl_bet != ''">
+ and e.mnl_bet=#{mnl_bet}
+</if>
 <if test="issues != null">
  and e.issue in 
  <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
@@ -20,7 +26,7 @@
 </if>
  and NOW() BETWEEN e.sale_time AND e.endtime
 </where>
-order by sort
+order by e.sort
 
         <if test = "row_start != null and page_size != null" >
         limit ${row_start},${page_size}
@@ -32,6 +38,12 @@ order by sort
         <where>
 <if test="issue != null and issue != ''">
  and issue=#{issue}
+</if>
+<if test="status != null and status != ''">
+ and e.status=#{status}
+</if>
+<if test="mnl_bet != null and mnl_bet != ''">
+ and e.mnl_bet=#{mnl_bet}
 </if>
 <if test="issues != null">
  and issue in 
