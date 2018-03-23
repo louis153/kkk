@@ -29,7 +29,7 @@ public interface T_USER_INVCODEService {
     /**
      * 修改
      */
-    public int updateT_USER_INVCODE(T_USER_INVCODE t_user_invcode) throws Exception;
+    public int updateT_USER_INVCODE(T_USER_INVCODE t_user_invcode,String gto) throws Exception;
     /**
      * 批量修改
      */

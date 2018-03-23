@@ -29,6 +29,8 @@ public class Invcode_InputStrategy implements IMethodStrategy {
 	protected final transient static Logger logger = LoggerFactory.getLogger(Invcode_InputStrategy.class);
 	@Autowired
 	private T_USER_INVCODEService userINVCODEService;
+	@Autowired
+	private GtoBindStrategy gtoBindStrategy;
 	
 	@Override
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
@@ -50,6 +52,17 @@ public class Invcode_InputStrategy implements IMethodStrategy {
                 	List<T_USER_INVCODE> bindinvList = userINVCODEService.selectT_USER_INVCODEList(t_user_bindinvcode);
                 	if(bindinvList.size()>0){               		
                 		t_user_bindinvcode = bindinvList.get(0);
+                		logger.info("绑定邀请码接口调用获取GTO奖励个数接口开始----->");
+            			JSONObject jsonRV=get_bindgto(request_LtGameLogic);
+            			if(jsonRV.getString("status").equals(ErrorMessage.SUCCESS.getCode())==false){
+            				rv.setStatus(jsonRV.getString("status"));
+            				rv.setMessage(jsonRV.getString("message"));
+            				logger.info("绑定邀请码接口调用获取GTO奖励个数接口失败----->"+jsonRV.getString("message"));
+            				return JSONObject.toJSONString(rv);
+            			}	
+            			JSONObject data = jsonRV.getJSONObject("data");
+    					String gto = data.getString("gto");
+            			logger.info("绑定邀请码接口调用获取GTO奖励个数接口成功----->");	
                 		if(1==t_user_bindinvcode.getIs_bind()){
                 			if(t_user_invcode.getInvitation_code().equals(t_user_bindinvcode.getBind_invitation_code())){
                 				rv.setStatus(ErrorMessage.MUTUALBIND_INVCODE.getCode());
@@ -59,7 +72,7 @@ public class Invcode_InputStrategy implements IMethodStrategy {
                 				t_user_invcode.setBind_user_pin(t_user_bindinvcode.getUser_pin());
                 				t_user_invcode.setBind_invitation_code(invitation_code);
                 				t_user_invcode.setBind_time(new Date());
-                				userINVCODEService.updateT_USER_INVCODE(t_user_invcode);
+                				userINVCODEService.updateT_USER_INVCODE(t_user_invcode,gto);              				
                 				rv.setStatus(ErrorMessage.SUCCESS.getCode());
                     			rv.setMessage(ErrorMessage.SUCCESS.getMessage());
                     			logger.info("绑定邀请码成功----->");
@@ -69,7 +82,7 @@ public class Invcode_InputStrategy implements IMethodStrategy {
                 			t_user_invcode.setBind_user_pin(t_user_bindinvcode.getUser_pin());
                 			t_user_invcode.setBind_invitation_code(invitation_code);
                 			t_user_invcode.setBind_time(new Date());
-            				userINVCODEService.updateT_USER_INVCODE(t_user_invcode);
+            				userINVCODEService.updateT_USER_INVCODE(t_user_invcode,gto);
                 			rv.setStatus(ErrorMessage.SUCCESS.getCode());
                 			rv.setMessage(ErrorMessage.SUCCESS.getMessage());
                 			logger.info("绑定邀请码成功----->");
@@ -93,5 +106,15 @@ public class Invcode_InputStrategy implements IMethodStrategy {
 			logger.info("绑定邀请码失败----->");
 		}
 		return JSONObject.toJSONString(rv);
+	}
+	
+	
+	private JSONObject get_bindgto(Request_LtGameLogic request_LtGameLogic) throws Exception{
+		Request_LtGameLogic invcode_Request=new Request_LtGameLogic(request_LtGameLogic);
+		JSONObject invcodeJSON=new JSONObject();
+		invcodeJSON.put("method","bind_gto_amount");	
+		invcode_Request.setGameRequest(invcodeJSON.toJSONString());
+		JSONObject jsonRV=JSONObject.parseObject(gtoBindStrategy.doJsonMethod(invcode_Request, invcodeJSON));
+		return jsonRV;
 	}
 }

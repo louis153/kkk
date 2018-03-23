@@ -2,7 +2,7 @@
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.T_USER">
 	<select id = "selectT_USERList" resultType="T_USER" parameterType="T_USER">
-		SELECT user_pin,user_token,nick_name,first_time,land_time from t_user
+		SELECT user_pin,user_token,nick_name,first_time,land_time,award_gto from t_user
         <where>
 <if test="user_pin != null">
  and user_pin=#{user_pin}
@@ -77,7 +77,7 @@ VALUES
     </insert>
     <update id="update" parameterType="T_USER">
     <![CDATA[
-        UPDATE t_user set user_pin=#{user_pin},user_token=#{user_token},nick_name=#{nick_name},first_time=#{first_time},land_time=#{land_time}
+        UPDATE t_user set user_pin=#{user_pin},user_token=#{user_token},nick_name=#{nick_name},first_time=#{first_time},land_time=#{land_time},award_gto=#{award_gto}
 		WHERE  user_pin=#{user_pin} 
 	]]>
     </update>

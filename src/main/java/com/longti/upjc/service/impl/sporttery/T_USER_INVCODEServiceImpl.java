@@ -3,7 +3,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.longti.upjc.dao.sporttery.T_USERDao;
 import com.longti.upjc.dao.sporttery.T_USER_INVCODEDao;
+import com.longti.upjc.entity.sporttery.T_USER;
 import com.longti.upjc.entity.sporttery.T_USER_INVCODE;
 import com.longti.upjc.service.sporttery.T_USER_INVCODEService;
 
@@ -15,7 +17,9 @@ import com.longti.upjc.service.sporttery.T_USER_INVCODEService;
 public class T_USER_INVCODEServiceImpl implements T_USER_INVCODEService  {
 	@Autowired
 	private T_USER_INVCODEDao T_USER_INVCODEDao;
-   
+	@Autowired
+	private T_USERDao t_userDao;
+	
 	/**
 	 * 条件查询
 	 */
@@ -43,7 +47,12 @@ public class T_USER_INVCODEServiceImpl implements T_USER_INVCODEService  {
     /**
      * 修改
      */
-    public int updateT_USER_INVCODE(T_USER_INVCODE t_user_invcode) throws Exception{
+    public int updateT_USER_INVCODE(T_USER_INVCODE t_user_invcode,String gto) throws Exception{
+    	T_USER t_user = new T_USER();
+		t_user.setUser_pin(t_user_invcode.getUser_pin());
+		t_user = t_userDao.selectT_USERList(t_user).get(0);
+		t_user.setAward_gto(Integer.parseInt(gto));
+		t_userDao.updateT_USER(t_user);//更新奖励GTO
     	return T_USER_INVCODEDao.updateT_USER_INVCODE(t_user_invcode);
     }
     /**
