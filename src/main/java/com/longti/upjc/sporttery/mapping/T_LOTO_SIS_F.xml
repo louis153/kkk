@@ -4,9 +4,9 @@
 	<select id = "selectT_LOTO_SIS_FList" resultType="T_LOTO_SIS_F" parameterType="T_LOTO_SIS_F">
 		SELECT issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d from 
 		<choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose> 
         <where>
 <if test="issue != null">
@@ -28,9 +28,9 @@ order by issue
     <select id = "selectT_LOTO_SIS_FCount" resultType="int" parameterType="T_LOTO_SIS_F">
 		SELECT count(*) from 
 		<choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose> 
         <where>
 <if test="issue != null">
@@ -49,9 +49,9 @@ order by issue
     <insert id="save" parameterType="T_LOTO_SIS_F">
     <![CDATA[INSERT INTO]]> 
         <choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose> 
     <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
 VALUES(#{issue},#{had_h},#{had_d},#{had_a},#{had_h_d},#{had_d_d},#{had_a_d})
@@ -60,9 +60,9 @@ VALUES(#{issue},#{had_h},#{had_d},#{had_a},#{had_h_d},#{had_d_d},#{had_a_d})
     <insert id="save_sis" parameterType="T_LOTO_SIS_F">
     <![CDATA[INSERT INTO]]>
         <choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose> 
     <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d) VALUES (#{issue},#{had_h},#{had_d},#{had_a},#{had_h_d},#{had_d_d},#{had_a_d})  
 ON DUPLICATE KEY UPDATE had_h=had_h+#{had_h},had_d=had_d+#{had_d},had_a=had_a+#{had_a},had_h_d=had_h_d+#{had_h_d},had_d_d=had_d_d+#{had_d_d},had_a_d=had_a_d+#{had_a_d};    
@@ -71,9 +71,9 @@ ON DUPLICATE KEY UPDATE had_h=had_h+#{had_h},had_d=had_d+#{had_d},had_a=had_a+#{
     <insert id="saveList" parameterType="java.util.List">
     <![CDATA[INSERT INTO]]>
         <choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose> 
     <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
 VALUES
@@ -85,18 +85,18 @@ VALUES
     <update id="update" parameterType="T_LOTO_SIS_F">
     <![CDATA[UPDATE]]> 
         <choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose> 
     <![CDATA[set issue=#{issue},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},had_h_d=#{had_h_d},had_d_d=#{had_d_d},had_a_d=#{had_a_d} WHERE issue=#{issue}]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
     <![CDATA[REPLACE INTO]]> 
         <choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose>
     <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
     VALUES
@@ -108,9 +108,9 @@ VALUES
     <delete id="delete" parameterType="T_LOTO_SIS_F">
     <![CDATA[DELETE FROM]]> 
         <choose>  
-	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
-	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
-	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	        <when test="electronic_code=='ETH'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_f_uz</when>   
 	    </choose> 
     <![CDATA[WHERE  issue=#{issue}]]>
     </delete>

@@ -4,13 +4,13 @@
     <select id = "selectV_SALEDAYList" resultType="V_SALEDAY" parameterType="V_SALEDAY">
 		select * from (select distinct left(issue,8) AS saleday,sum(case when status=1 then 1 else 0 end) match_count,sum(case when issue=#{rem_issue} then 1 else 0 end) rem_count from
 	<choose>
-		<when test="electronic_code=='eth'.toString()">
+		<when test="electronic_code=='ETH'.toString()">
 			t_loto_fn_eth
 		</when>
-		<when test="electronic_code=='gto'.toString()">
+		<when test="electronic_code=='GTO'.toString()">
 			t_loto_fn_gto
 		</when>
-		<when test="electronic_code=='uz'.toString()">
+		<when test="electronic_code=='UZ'.toString()">
 			t_loto_fn_uz
 		</when>		
 		<otherwise>

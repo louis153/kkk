@@ -157,7 +157,7 @@ VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
         <![CDATA[(#{v.id},#{v.order_id},#{v.user_pin},#{v.issue},#{v.vsteam},#{v.vsresult},#{v.bet_fee},#{v.win_fee},#{v.create_time},#{v.bet_type},#{v.bet_info},#{v.bet_status},#{v.prize_status},#{v.prize_type},#{v.prize_cancel_time},#{v.order_source},#{v.match_result},#{v.memo},#{v.options_one},#{v.options_two},#{v.options_three},#{play_method},#{leaguename}) ]]>
-    </foreach>
+	</foreach>
     </insert>
     <update id="update" parameterType="LOTO_ORDER">
     <![CDATA[

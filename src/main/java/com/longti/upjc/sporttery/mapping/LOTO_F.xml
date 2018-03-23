@@ -4,9 +4,9 @@
 	<select id = "selectLOTO_FList" resultType="LOTO_F" parameterType="LOTO_F">
 		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename from 
 		<choose>  
-          <when test="electronic_code=='eth'.toString()">t_loto_f_eth</when>  
-          <when test="electronic_code=='gto'.toString()">t_loto_f_gto</when>
-          <when test="electronic_code=='uz'.toString()">t_loto_f_uz</when>   
+          <when test="electronic_code=='ETH'.toString()">t_loto_f_eth</when>  
+          <when test="electronic_code=='GTO'.toString()">t_loto_f_gto</when>
+          <when test="electronic_code=='UZ'.toString()">t_loto_f_uz</when>   
         </choose>	
         <where>
 <if test="issue != null">
@@ -74,9 +74,9 @@ order by issue
     <select id = "selectLOTO_FCount" resultType="int" parameterType="LOTO_F">
 		SELECT count(*) from 
 		<choose>  
-          <when test="electronic_code=='eth'.toString()">t_loto_f_eth</when>  
-          <when test="electronic_code=='gto'.toString()">t_loto_f_gto</when>
-          <when test="electronic_code=='uz'.toString()">t_loto_f_uz</when>   
+          <when test="electronic_code=='ETH'.toString()">t_loto_f_eth</when>  
+          <when test="electronic_code=='GTO'.toString()">t_loto_f_gto</when>
+          <when test="electronic_code=='UZ'.toString()">t_loto_f_uz</when>   
         </choose>	
         <where>
 <if test="issue != null">
@@ -142,9 +142,9 @@ order by issue
     <insert id="save" parameterType="LOTO_F">
     <![CDATA[INSERT INTO]]>
         <choose>  
-          <when test="electronic_code=='eth'.toString()">t_loto_f_eth</when>  
-          <when test="electronic_code=='gto'.toString()">t_loto_f_gto</when>
-          <when test="electronic_code=='uz'.toString()">t_loto_f_uz</when>   
+          <when test="electronic_code=='ETH'.toString()">t_loto_f_eth</when>  
+          <when test="electronic_code=='GTO'.toString()">t_loto_f_gto</when>
+          <when test="electronic_code=='UZ'.toString()">t_loto_f_uz</when>   
         </choose>	
     <![CDATA[(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguenam)
 VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_half_result},#{guest_half_result},#{home_full_result},#{guest_full_result},#{had},#{cg_had},#{had_h},#{had_d},#{had_a},#{had_h_0},#{had_d_0},#{had_a_0},#{status},#{leaguename})
@@ -153,9 +153,9 @@ VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{h
     <insert id="saveList" parameterType="java.util.List">
     <![CDATA[INSERT INTO]]> 
         <choose>  
-          <when test="electronic_code=='eth'.toString()">t_loto_f_eth</when>  
-          <when test="electronic_code=='gto'.toString()">t_loto_f_gto</when>
-          <when test="electronic_code=='uz'.toString()">t_loto_f_uz</when>   
+          <when test="electronic_code=='ETH'.toString()">t_loto_f_eth</when>  
+          <when test="electronic_code=='GTO'.toString()">t_loto_f_gto</when>
+          <when test="electronic_code=='UZ'.toString()">t_loto_f_uz</when>   
         </choose>	
     <![CDATA[(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename)
 VALUES
@@ -167,9 +167,9 @@ VALUES
     <update id="update" parameterType="LOTO_F">
     <![CDATA[UPDATE]]> 
         <choose>  
-          <when test="electronic_code=='eth'.toString()">t_loto_f_eth</when>  
-          <when test="electronic_code=='gto'.toString()">t_loto_f_gto</when>
-          <when test="electronic_code=='uz'.toString()">t_loto_f_uz</when>   
+          <when test="electronic_code=='ETH'.toString()">t_loto_f_eth</when>  
+          <when test="electronic_code=='GTO'.toString()">t_loto_f_gto</when>
+          <when test="electronic_code=='UZ'.toString()">t_loto_f_uz</when>   
         </choose>	 
     <![CDATA[set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_half_result=#{home_half_result},guest_half_result=#{guest_half_result},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},had=#{had},cg_had=#{cg_had},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},had_h_0=#{had_h_0},had_d_0=#{had_d_0},had_a_0=#{had_a_0},status=#{status},leaguename=#{leaguename}
 		WHERE  issue=#{issue} 
@@ -178,9 +178,9 @@ VALUES
     <insert id="updateList" parameterType="java.util.List">
     <![CDATA[REPLACE INTO]]>
         <choose>  
-          <when test="electronic_code=='eth'.toString()">t_loto_f_eth</when>  
-          <when test="electronic_code=='gto'.toString()">t_loto_f_gto</when>
-          <when test="electronic_code=='uz'.toString()">t_loto_f_uz</when>   
+          <when test="electronic_code=='ETH'.toString()">t_loto_f_eth</when>  
+          <when test="electronic_code=='GTO'.toString()">t_loto_f_gto</when>
+          <when test="electronic_code=='UZ'.toString()">t_loto_f_uz</when>   
         </choose>	
     <![CDATA[(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename)
     VALUES
@@ -192,9 +192,9 @@ VALUES
     <delete id="delete" parameterType="LOTO_F">
     <![CDATA[DELETE FROM]]> 
         <choose>  
-          <when test="electronic_code=='eth'.toString()">t_loto_f_eth</when>  
-          <when test="electronic_code=='gto'.toString()">t_loto_f_gto</when>
-          <when test="electronic_code=='uz'.toString()">t_loto_f_uz</when>   
+          <when test="electronic_code=='ETH'.toString()">t_loto_f_eth</when>  
+          <when test="electronic_code=='GTO'.toString()">t_loto_f_gto</when>
+          <when test="electronic_code=='UZ'.toString()">t_loto_f_uz</when>   
         </choose>
     <![CDATA[WHERE  issue=#{issue}]]>
     </delete>    
