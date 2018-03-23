@@ -2,7 +2,12 @@
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_SIS_E">
 	<select id = "selectT_LOTO_SIS_EList" resultType="T_LOTO_SIS_E" parameterType="T_LOTO_SIS_E">
-		SELECT issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d from t_loto_sis_e
+		SELECT issue,one,two,three,one_d,two_d,three_d,one_p,two_p,three_p from 
+		<choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose> 
         <where>
 <if test="issue != null">
  and issue=#{issue}
@@ -13,17 +18,23 @@
     #{issue}
  </foreach>
 </if>
-<if test="mnl_h != null">
- and mnl_h=#{mnl_h}
+<if test="one != null">
+ and one=#{one}
 </if>
-<if test="mnl_a != null">
- and mnl_a=#{mnl_a}
+<if test="two != null">
+ and two=#{two}
 </if>
-<if test="mnl_h_d != null">
- and mnl_h_d=#{mnl_h_d}
+<if test="three != null">
+ and three=#{three}
 </if>
-<if test="mnl_a_d != null">
- and mnl_a_d=#{mnl_a_d}
+<if test="one_d != null">
+ and one_d=#{one_d}
+</if>
+<if test="two_d != null">
+ and two_d=#{two_d}
+</if>
+<if test="three_d != null">
+ and three_d=#{three_d}
 </if>
 </where>
 order by issue
@@ -33,7 +44,12 @@ order by issue
         </if>
     </select>
     <select id = "selectT_LOTO_SIS_ECount" resultType="int" parameterType="T_LOTO_SIS_E">
-		SELECT count(*) from t_loto_sis_e
+		SELECT count(*) from 
+		<choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose> 
         <where>
 <if test="issue != null">
  and issue=#{issue}
@@ -44,62 +60,96 @@ order by issue
     #{issue}
  </foreach>
 </if>
-<if test="mnl_h != null">
- and mnl_h=#{mnl_h}
+<if test="one != null">
+ and one=#{one}
 </if>
-<if test="mnl_a != null">
- and mnl_a=#{mnl_a}
+<if test="two != null">
+ and two=#{two}
 </if>
-<if test="mnl_h_d != null">
- and mnl_h_d=#{mnl_h_d}
+<if test="three != null">
+ and three=#{three}
 </if>
-<if test="mnl_a_d != null">
- and mnl_a_d=#{mnl_a_d}
+<if test="one_d != null">
+ and one_d=#{one_d}
+</if>
+<if test="two_d != null">
+ and two_d=#{two_d}
+</if>
+<if test="three_d != null">
+ and three_d=#{three_d}
 </if>
 </where>
 order by issue
        
     </select>
     <insert id="save" parameterType="T_LOTO_SIS_E">
-    <![CDATA[
-        INSERT INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d)
-VALUES(#{issue},#{mnl_h},#{mnl_a},#{mnl_h_d},#{mnl_a_d})
+    <![CDATA[INSERT INTO]]>
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose> 
+    <![CDATA[(issue,electronic_code,one,two,three,one_d,two_d,three_d,one_p,two_p,three_p)
+VALUES(#{issue},#{electronic_code},#{one},#{two},#{three},#{one_d},#{two_d},#{three_d},#{one_p},#{two_p},#{three_p})
 	]]>
     </insert>
     <insert id="saveList" parameterType="java.util.List">
-    <![CDATA[
-        INSERT INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d)
+    <![CDATA[INSERT INTO]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose> 
+    <![CDATA[(issue,electronic_code,one,two,three,one_d,two_d,three_d,one_p,two_p,three_p)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.issue},#{v.mnl_h},#{v.mnl_a},#{v.mnl_h_d},#{v.mnl_a_d}) ]]>
+        <![CDATA[(#{v.issue},#{v.electronic_code},#{v.one},#{v.two},#{v.three},#{v.one_d},#{v.two_d},#{v.three_d},#{v.one_p},#{v.two_p},#{v.three_p}) ]]>
     </foreach>
     </insert>
     <update id="update" parameterType="T_LOTO_SIS_E">
-    <![CDATA[
-        UPDATE t_loto_sis_e set issue=#{issue},mnl_h=#{mnl_h},mnl_a=#{mnl_a},mnl_h_d=#{mnl_h_d},mnl_a_d=#{mnl_a_d}
+    <![CDATA[UPDATE]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose>  
+    <![CDATA[set issue=#{issue},electronic_code=#{electronic_code},one=#{one},two=#{two},three=#{three},one_d=#{one_d},two_d=#{two_d},three_d=#{three_d},one_p=#{one_p},two_p=#{two_p},three_p=#{three_p}
 		WHERE  issue=#{issue} 
 	]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
-    <![CDATA[
-        REPLACE INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d)
+    <![CDATA[REPLACE INTO]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose>  
+    <![CDATA[(issue,electronic_code,one,two,three,one_d,two_d,three_d,one_p,two_p,three_p)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.issue},#{v.mnl_h},#{v.mnl_a},#{v.mnl_h_d},#{v.mnl_a_d}) ]]>
+        <![CDATA[(#{v.issue},#{v.electronic_code},#{v.one},#{v.two},#{v.three},#{v.one_d},#{v.two_d},#{v.three_d},#{v.one_p},#{v.two_p},#{v.three_p}) ]]>
     </foreach>
     </insert>
     <delete id="delete" parameterType="T_LOTO_SIS_E">
-    <![CDATA[
-        DELETE FROM t_loto_sis_e WHERE  issue=#{issue} 
-	]]>
-    </delete>    
+    <![CDATA[DELETE FROM]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose>   
+    <![CDATA[WHERE  issue=#{issue}]]>
+    </delete> 
     <insert id="save_sis" parameterType="T_LOTO_SIS_E">
-    <![CDATA[
-        INSERT INTO t_loto_sis_e(issue,mnl_h,mnl_a,mnl_h_d,mnl_a_d) VALUES (#{issue},#{mnl_h},#{mnl_a},#{mnl_h_d},#{mnl_a_d})  
-ON DUPLICATE KEY UPDATE mnl_h=mnl_h+#{mnl_h},mnl_a=mnl_a+#{mnl_a},mnl_h_d=mnl_h_d+#{mnl_h_d},mnl_a_d=mnl_a_d+#{mnl_a_d};    
+    <![CDATA[INSERT INTO]]>
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_e_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_e_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_e_uz</when>   
+	    </choose> 
+    <![CDATA[(issue,one,two,three,one_d,two_d,three_d) VALUES (#{issue},#{one},#{two},#{three},#{one_d},#{two_d},#{three_d},#{one_p},#{two_p},#{three_p})  
+ON DUPLICATE KEY UPDATE one=one+#{one},two=two+#{two},three=three+#{three},one_d=one_d+#{one_d},two_d=two_d+#{two_d},three_d=three_d+#{three_d},one_p=one_p+#{one_p},two_p=two_p+#{two_p},three_p=three_p+#{three_p};    
 	]]>
-    </insert>
-   
+    </insert>   
 </mapper > 

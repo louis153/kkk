@@ -2,7 +2,12 @@
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_SIS_F">
 	<select id = "selectT_LOTO_SIS_FList" resultType="T_LOTO_SIS_F" parameterType="T_LOTO_SIS_F">
-		SELECT issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d from t_loto_sis_f
+		SELECT issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d from 
+		<choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose> 
         <where>
 <if test="issue != null">
  and issue=#{issue}
@@ -21,7 +26,12 @@ order by issue
         </if>
     </select>
     <select id = "selectT_LOTO_SIS_FCount" resultType="int" parameterType="T_LOTO_SIS_F">
-		SELECT count(*) from t_loto_sis_f
+		SELECT count(*) from 
+		<choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose> 
         <where>
 <if test="issue != null">
  and issue=#{issue}
@@ -37,20 +47,35 @@ order by issue
        
     </select>
     <insert id="save" parameterType="T_LOTO_SIS_F">
-    <![CDATA[
-        INSERT INTO t_loto_sis_f(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
+    <![CDATA[INSERT INTO]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose> 
+    <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
 VALUES(#{issue},#{had_h},#{had_d},#{had_a},#{had_h_d},#{had_d_d},#{had_a_d})
 	]]>
     </insert>
     <insert id="save_sis" parameterType="T_LOTO_SIS_F">
-    <![CDATA[
-        INSERT INTO t_loto_sis_f(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d) VALUES (#{issue},#{had_h},#{had_d},#{had_a},#{had_h_d},#{had_d_d},#{had_a_d})  
+    <![CDATA[INSERT INTO]]>
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose> 
+    <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d) VALUES (#{issue},#{had_h},#{had_d},#{had_a},#{had_h_d},#{had_d_d},#{had_a_d})  
 ON DUPLICATE KEY UPDATE had_h=had_h+#{had_h},had_d=had_d+#{had_d},had_a=had_a+#{had_a},had_h_d=had_h_d+#{had_h_d},had_d_d=had_d_d+#{had_d_d},had_a_d=had_a_d+#{had_a_d};    
 	]]>
     </insert>
     <insert id="saveList" parameterType="java.util.List">
-    <![CDATA[
-        INSERT INTO t_loto_sis_f(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
+    <![CDATA[INSERT INTO]]>
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose> 
+    <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
@@ -58,14 +83,22 @@ VALUES
     </foreach>
     </insert>
     <update id="update" parameterType="T_LOTO_SIS_F">
-    <![CDATA[
-        UPDATE t_loto_sis_f set issue=#{issue},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},had_h_d=#{had_h_d},had_d_d=#{had_d_d},had_a_d=#{had_a_d}
-		WHERE  issue=#{issue} 
-	]]>
+    <![CDATA[UPDATE]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose> 
+    <![CDATA[set issue=#{issue},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},had_h_d=#{had_h_d},had_d_d=#{had_d_d},had_a_d=#{had_a_d} WHERE issue=#{issue}]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
-    <![CDATA[
-        REPLACE INTO t_loto_sis_f(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
+    <![CDATA[REPLACE INTO]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose>
+    <![CDATA[(issue,had_h,had_d,had_a,had_h_d,had_d_d,had_a_d)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
@@ -73,9 +106,13 @@ VALUES
     </foreach>
     </insert>
     <delete id="delete" parameterType="T_LOTO_SIS_F">
-    <![CDATA[
-        DELETE FROM t_loto_sis_f WHERE  issue=#{issue} 
-	]]>
+    <![CDATA[DELETE FROM]]> 
+        <choose>  
+	        <when test="electronic_code=='eth'.toString()">t_loto_sis_f_eth</when>  
+	        <when test="electronic_code=='gto'.toString()">t_loto_sis_f_gto</when>
+	        <when test="electronic_code=='uz'.toString()">t_loto_sis_f_uz</when>   
+	    </choose> 
+    <![CDATA[WHERE  issue=#{issue}]]>
     </delete>
     
 </mapper > 

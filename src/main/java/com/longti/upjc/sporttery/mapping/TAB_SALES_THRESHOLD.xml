@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD">
+	<select id = "selectTAB_SALES_THRESHOLDList" resultType="TAB_SALES_THRESHOLD" parameterType="TAB_SALES_THRESHOLD">
+		SELECT id,currency,xnpktze,xssx_min,xssx_max,single_lottery_max,single_match_max from tab_sales_threshold
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="currency != null">
+ and currency = #{currency}
+</if>
+<if test="xnpktze != null">
+ and xnpktze=#{xnpktze}
+</if>
+<if test="xssx_min != null">
+ and xssx_min=#{xssx_min}
+</if>
+<if test="xssx_max != null">
+ and xssx_max=#{xssx_max}
+</if>
+<if test="single_lottery_max != null">
+ and single_lottery_max=#{single_lottery_max}
+</if>
+<if test="single_match_max != null">
+ and single_match_max=#{single_match_max}
+</if>
+</where>
+order by id
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    <select id = "selectTAB_SALES_THRESHOLDCount" resultType="int" parameterType="TAB_SALES_THRESHOLD">
+		SELECT count(*) from tab_sales_threshold
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="currency != null">
+ and currency = #{currency}
+</if>
+<if test="xnpktze != null">
+ and xnpktze=#{xnpktze}
+</if>
+<if test="xssx_min != null">
+ and xssx_min=#{xssx_min}
+</if>
+<if test="xssx_max != null">
+ and xssx_max=#{xssx_max}
+</if>
+<if test="single_lottery_max != null">
+ and single_lottery_max=#{single_lottery_max}
+</if>
+<if test="single_match_max != null">
+ and single_match_max=#{single_match_max}
+</if>
+</where>
+order by id
+       
+    </select>
+    <insert id="save" parameterType="TAB_SALES_THRESHOLD">
+    <![CDATA[
+        INSERT INTO tab_sales_threshold(id,currency,xnpktze,xssx_min,xssx_max,single_lottery_max,single_match_max)
+VALUES(#{id},#{currency},#{xnpktze},#{xssx_min},#{xssx_max},#{single_lottery_max},#{single_match_max})
+	]]>
+    </insert>
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO tab_sales_threshold(id,currency,xnpktze,xssx_min,xssx_max,single_lottery_max,single_match_max)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.currency},#{v.xnpktze},#{v.xssx_min},#{v.xssx_max},#{v.single_lottery_max},#{v.single_match_max}) ]]>
+    </foreach>
+    </insert>
+    <update id="update" parameterType="TAB_SALES_THRESHOLD">
+    <![CDATA[
+        UPDATE tab_sales_threshold set id=#{id},currency=#{currency},xnpktze=#{xnpktze},xssx_min=#{xssx_min},xssx_max=#{xssx_max},single_lottery_max=#{single_lottery_max},single_match_max=#{single_match_max}
+		WHERE  id=#{id} 
+	]]>
+    </update>
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO tab_sales_threshold(id,currency,xnpktze,xssx_min,xssx_max,single_lottery_max,single_match_max)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.currency},#{v.xnpktze},#{v.xssx_min},#{v.xssx_max},#{v.single_lottery_max},#{v.single_match_max}) ]]>
+    </foreach>
+    </insert>
+    <delete id="delete" parameterType="TAB_SALES_THRESHOLD">
+    <![CDATA[
+        DELETE FROM tab_sales_threshold WHERE  id=#{id} 
+	]]>
+    </delete>    
+</mapper > 

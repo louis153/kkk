@@ -1,11 +1,10 @@
 package com.longti.upjc.service.sporttery;
 import java.util.List;
-
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
 
 
 /**
- * 电子竞猜比赛信息service
+ * 话题信息service
  */
 public interface T_LOTO_EService {
 	

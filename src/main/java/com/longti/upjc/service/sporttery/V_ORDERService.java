@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
-import com.longti.upjc.entity.sporttery.T_QUOTATION_CONTROL;
+import com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 
 
@@ -30,7 +30,7 @@ public interface V_ORDERService {
     /**
      * 添加(带事物处理）
      */
-    public int insertV_ORDER(V_ORDER v_order,List<LOTO_ORDER> lst_loto_order,HashMap<String, Boolean> canChangeOdd,List<String> canBet, T_QUOTATION_CONTROL qutation) throws Exception;
+    public int insertV_ORDER(V_ORDER v_order,List<LOTO_ORDER> lst_loto_order,HashMap<String, Boolean> canChangeOdd,List<String> canBet, TAB_SALES_THRESHOLD tab_SALES_THRESHOLD) throws Exception;
 
     /**
      * 批量添加

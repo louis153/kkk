@@ -2,14 +2,24 @@
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.LOTO_FN">
     <select id = "selectRemFN" resultType="LOTO_F" parameterType="LOTO_F">
-    select issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,is_recommend,status,leaguename,letcount,had_bet from t_loto_fn 
+    select issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,had_bet from 
+    <choose>  
+        <when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+        <when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+        <when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+    </choose> 
 where endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
   and (had_bet=1 )
 order by endtime aSC
 LIMIT 0,1 
     </select>
 	<select id = "selectLOTO_FNList" resultType="LOTO_F" parameterType="LOTO_F">
-		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,is_recommend,status,leaguename,letcount,had_bet from t_loto_fn
+		SELECT issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,had_bet from 
+		<choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+    	</choose> 
         <where>
 <if test="issue != null and issue != ''">
  and issue = #{issue}
@@ -87,7 +97,12 @@ order by starttime
         </if>
     </select>
     <select id = "selectLOTO_FNCount" resultType="int" parameterType="LOTO_F">
-		SELECT count(*) from LOTO_FN
+		SELECT count(*) from 
+		<choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+    	</choose> 
         <where>
 <if test="issue != null">
  and issue=#{issue}
@@ -160,14 +175,24 @@ order by issue
        
     </select>
     <insert id="save" parameterType="LOTO_F">
-    <![CDATA[
-        INSERT INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,is_recommend,status,leaguename,letcount,had_bet)
+    <![CDATA[INSERT INTO]]>
+    <choose>  
+      	<when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+       	<when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+       	<when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+    </choose> 
+    <![CDATA[(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,had_bet)
 VALUES(#{issue},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_half_result},#{guest_half_result},#{home_full_result},#{guest_full_result},#{had},#{cg_had},#{had_h},#{had_d},#{had_a},#{had_h_0},#{had_d_0},#{had_a_0},#{status},#{leaguename},#{had_bet})
 	]]>
     </insert>
     <insert id="saveList" parameterType="java.util.List">
-    <![CDATA[
-        INSERT INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,had_bet)
+    <![CDATA[INSERT INTO]]> 
+        <choose>  
+	      	<when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+	       	<when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+	       	<when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+	    </choose> 
+    <![CDATA[(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,had_bet)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
@@ -175,25 +200,39 @@ VALUES
     </foreach>
     </insert>
     <update id="update" parameterType="LOTO_F">
-    <![CDATA[
-        UPDATE t_loto_fn set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_half_result=#{home_half_result},guest_half_result=#{guest_half_result},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},had=#{had},cg_had=#{cg_had},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},
+    <![CDATA[UPDATE]]> 
+        <choose>  
+	      	<when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+	       	<when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+	       	<when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+	    </choose>  
+    <![CDATA[set issue=#{issue},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_half_result=#{home_half_result},guest_half_result=#{guest_half_result},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},had=#{had},cg_had=#{cg_had},had_h=#{had_h},had_d=#{had_d},had_a=#{had_a},
         had_h_0=#{had_h_0},had_d_0=#{had_d_0},had_a_0=#{had_a_0},status=#{status},leaguename=#{leaguename},had_bet=#{had_bet}
 		WHERE  issue=#{issue} 
 	]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
-    <![CDATA[
-        REPLACE INTO t_loto_fn(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,letcount,had_bet)
+    <![CDATA[REPLACE INTO]]> 
+        <choose>  
+	      	<when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+	       	<when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+	       	<when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+	    </choose>  
+    <![CDATA[(issue,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_half_result,guest_half_result,home_full_result,guest_full_result,had,cg_had,had_h,had_d,had_a,had_h_0,had_d_0,had_a_0,status,leaguename,had_bet)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.had_h},#{v.had_d},#{v.had_a},had_h_0=#{v.had_h_0},had_d_0=#{v.had_d_0},had_a_0=#{v.had_a_0},#{v.status},#{v.leaguename},#{v.letcount},#{v.had_bet}) ]]>
+        <![CDATA[(#{v.issue},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_half_result},#{v.guest_half_result},#{v.home_full_result},#{v.guest_full_result},#{v.had},#{v.cg_had},#{v.had_h},#{v.had_d},#{v.had_a},had_h_0=#{v.had_h_0},had_d_0=#{v.had_d_0},had_a_0=#{v.had_a_0},#{v.status},#{v.leaguename},#{v.had_bet}) ]]>
     </foreach>
     </insert>
     <delete id="delete" parameterType="LOTO_F">
-    <![CDATA[
-        DELETE FROM t_loto_fn WHERE  issue=#{issue} 
-	]]>
+    <![CDATA[DELETE FROM]]> 
+        <choose>  
+	      	<when test="electronic_code=='eth'.toString()">t_loto_fn_eth</when>  
+	       	<when test="electronic_code=='gto'.toString()">t_loto_fn_gto</when>
+	       	<when test="electronic_code=='uz'.toString()">t_loto_fn_uz</when>   
+	    </choose>  
+	<![CDATA[WHERE  issue=#{issue}]]>
     </delete>
     <delete id="clear">
     <![CDATA[

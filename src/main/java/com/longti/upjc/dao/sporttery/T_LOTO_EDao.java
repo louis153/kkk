@@ -1,11 +1,10 @@
 package com.longti.upjc.dao.sporttery;
 import java.util.List;
-
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
 
 
 /**
- * 电子竞猜比赛信息dao
+ * 话题信息dao
  */
 public interface T_LOTO_EDao {
 	

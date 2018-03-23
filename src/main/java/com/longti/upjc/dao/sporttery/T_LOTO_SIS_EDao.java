@@ -1,6 +1,5 @@
 package com.longti.upjc.dao.sporttery;
 import java.util.List;
-
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_E;
 
 
@@ -40,11 +39,11 @@ public interface T_LOTO_SIS_EDao {
      * 删除
      */
     public int deleteT_LOTO_SIS_E(T_LOTO_SIS_E t_loto_sis_e) throws Exception;
+
+	public int saveSis(T_LOTO_SIS_E t_loto_sis_e);
     
     
-    /**
-     * 统计保存
-     */
-    public int saveSis(T_LOTO_SIS_E t_LOTO_SIS_E)throws Exception;
-   
+
+
+	
 }

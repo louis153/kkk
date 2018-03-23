@@ -2,7 +2,7 @@
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.LOTO_ORDER">
 	<select id = "selectLOTO_ORDERList" resultType="LOTO_ORDER" parameterType="LOTO_ORDER">
-		SELECT id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo from t_loto_order
+		SELECT id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo,option,play_method,leaguename from t_loto_order
         <where>
 <if test="id != null">
  and id=#{id}
@@ -146,32 +146,32 @@ order by id
     </select>
     <insert id="save" parameterType="LOTO_ORDER">
     <![CDATA[
-        INSERT INTO t_loto_order(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo)
-VALUES(#{id},#{order_id},#{user_pin},#{issue},#{vsteam},#{vsresult},#{bet_fee},#{win_fee},#{create_time},#{bet_type},#{bet_info},#{bet_status},#{prize_status},#{prize_type},#{prize_cancel_time},#{order_source},#{memo})
+        INSERT INTO t_loto_order(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo,option,play_method,leaguename)
+VALUES(#{id},#{order_id},#{user_pin},#{issue},#{vsteam},#{vsresult},#{bet_fee},#{win_fee},#{create_time},#{bet_type},#{bet_info},#{bet_status},#{prize_status},#{prize_type},#{prize_cancel_time},#{order_source},#{memo},#{option},#{play_method},#{leaguename})
 	]]>
     </insert>
     <insert id="saveList" parameterType="java.util.List">
     <![CDATA[
-        INSERT INTO t_loto_order(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo)
+        INSERT INTO t_loto_order(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo,option,play_method,leaguename)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.id},#{v.order_id},#{v.user_pin},#{v.issue},#{v.vsteam},#{v.vsresult},#{v.bet_fee},#{v.win_fee},#{v.create_time},#{v.bet_type},#{v.bet_info},#{v.bet_status},#{v.prize_status},#{v.prize_type},#{v.prize_cancel_time},#{v.order_source},#{v.memo}) ]]>
+        <![CDATA[(#{v.id},#{v.order_id},#{v.user_pin},#{v.issue},#{v.vsteam},#{v.vsresult},#{v.bet_fee},#{v.win_fee},#{v.create_time},#{v.bet_type},#{v.bet_info},#{v.bet_status},#{v.prize_status},#{v.prize_type},#{v.prize_cancel_time},#{v.order_source},#{v.memo},#{option},#{play_method},#{leaguename}) ]]>
     </foreach>
     </insert>
     <update id="update" parameterType="LOTO_ORDER">
     <![CDATA[
-        UPDATE t_loto_order set id=#{id},order_id=#{order_id},user_pin=#{user_pin},issue=#{issue},vsteam=#{vsteam},vsresult=#{vsresult},bet_fee=#{bet_fee},win_fee=#{win_fee},create_time=#{create_time},bet_type=#{bet_type},bet_info=#{bet_info},bet_status=#{bet_status},prize_status=#{prize_status},prize_type=#{prize_type},prize_cancel_time=#{prize_cancel_time},order_source=#{order_source},memo=#{memo}
+        UPDATE t_loto_order set id=#{id},order_id=#{order_id},user_pin=#{user_pin},issue=#{issue},vsteam=#{vsteam},vsresult=#{vsresult},bet_fee=#{bet_fee},win_fee=#{win_fee},create_time=#{create_time},bet_type=#{bet_type},bet_info=#{bet_info},bet_status=#{bet_status},prize_status=#{prize_status},prize_type=#{prize_type},prize_cancel_time=#{prize_cancel_time},order_source=#{order_source},memo=#{memo},option=#{option},play_method=#{play_method},leaguename=#{leaguename}
 		WHERE  id=#{id} 
 	]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
     <![CDATA[
-        REPLACE INTO t_loto_order(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo)
+        REPLACE INTO t_loto_order(id,order_id,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,memo,option,play_method,leaguename)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.id},#{v.order_id},#{v.user_pin},#{v.issue},#{v.vsteam},#{v.vsresult},#{v.bet_fee},#{v.win_fee},#{v.create_time},#{v.bet_type},#{v.bet_info},#{v.bet_status},#{v.prize_status},#{v.prize_type},#{v.prize_cancel_time},#{v.order_source},#{v.memo}) ]]>
+        <![CDATA[(#{v.id},#{v.order_id},#{v.user_pin},#{v.issue},#{v.vsteam},#{v.vsresult},#{v.bet_fee},#{v.win_fee},#{v.create_time},#{v.bet_type},#{v.bet_info},#{v.bet_status},#{v.prize_status},#{v.prize_type},#{v.prize_cancel_time},#{v.order_source},#{v.memo},#{option},#{play_method},#{leaguename}) ]]>
     </foreach>
     </insert>
     <delete id="delete" parameterType="LOTO_ORDER">

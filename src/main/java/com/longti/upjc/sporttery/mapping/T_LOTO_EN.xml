@@ -1,128 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_EN">
-    <select id = "selectRemEN" resultType="T_LOTO_E" parameterType="T_LOTO_E">
-    select e.issue,e.match_mode,e.game_name,e.starttime,e.endtime,e.home_team_name,e.guest_team_name,e.home_team_id,
-e.guest_team_id,e.home_full_result,e.guest_full_result,e.cg_mnl,e.init_h,e.init_a,e.mnl,e.mnl_h,e.mnl_a,e.status,
-e.leaguename,e.available,e.is_recommend,e.is_hot,m.img_name,e.mnl_bet from t_loto_en e
-left join t_game t on e.game_name=t.game_name 
-left join t_imagemap m on t.pic_id=m.pro_id
-where e.endtime > DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s')
-  and e.mnl_bet=1
-  and (e.is_hot=1 or e.is_recommend=1)
-order by e.is_hot desc,e.is_recommend DESC,e.endtime aSC
-LIMIT 0,1 
-    </select>
-	<select id = "selectT_LOTO_ENList" resultType="T_LOTO_E" parameterType="T_LOTO_E">
-		SELECT e.issue,e.match_mode,e.game_name,e.starttime,e.endtime,e.home_team_name,e.guest_team_name,e.home_team_id,
-e.guest_team_id,e.home_full_result,e.guest_full_result,e.cg_mnl,e.init_h,e.init_a,e.mnl,e.mnl_h,e.mnl_a,e.status,
-e.leaguename,e.available,e.is_recommend,e.is_hot,m.img_name,e.mnl_bet from t_loto_en e
-left join t_game t on e.game_name=t.game_name 
-left join t_imagemap m on t.pic_id=m.pro_id
-        <where>
-<if test="issue != null">
- and e.issue=#{issue}
-</if>
-<if test="startIssue != null">
-  <![CDATA[ and endtime>#{startIssue}]]>
-</if>
-<if test="endIssue != null">
-  <![CDATA[ and endtime<#{endIssue}]]>
-</if>
-<if test="match_mode != null">
- and e.match_mode = #{match_mode}
-</if>
-<if test="game_name != null">
- and e.game_name = #{game_name}
-</if>
-<if test="starttime != null">
- and e.starttime = #{starttime}
-</if>
-<if test="endtime != null">
- and e.endtime > #{endtime}
-</if>
-<if test="home_team_name != null">
- and e.home_team_name = #{home_team_name}
-</if>
-<if test="guest_team_name != null">
- and e.guest_team_name = #{guest_team_name}
-</if>
-<if test="home_team_id != null">
- and e.home_team_id = #{home_team_id}
-</if>
-<if test="guest_team_id != null">
- and e.guest_team_id = #{guest_team_id}
-</if>
-<if test="home_full_result != null">
- and home_full_result = #{home_full_result}
-</if>
-<if test="guest_full_result != null">
- and guest_full_result = #{guest_full_result}
-</if>
-<if test="cg_mnl != null">
- and cg_mnl = #{cg_mnl}
-</if>
-<if test="init_h != null">
- and init_h = #{init_h}
-</if>
-<if test="init_a != null">
- and init_a = #{init_a}
-</if>
-<if test="mnl != null">
- and mnl = #{mnl}
-</if>
-<if test="mnl_h != null">
- and mnl_h = #{mnl_h}
-</if>
-<if test="mnl_a != null">
- and mnl_a = #{mnl_a}
-</if>
-<if test="mnl_bet != null">
- and mnl_bet = #{mnl_bet}
-</if>
-<if test="status != null">
- and status=#{status}
-</if>
-<if test="leaguename != null">
- and leaguename = #{leaguename}
-</if>
-<if test="available != null">
- and available=#{available}
-</if>
-<if test="is_recommend != null">
- and is_recommend=#{is_recommend}
-</if>
-<if test="is_hot != null">
- and is_hot=#{is_hot}
-</if>
-and available=1
-</where>
-order by endtime
-
-        <if test = "row_start != null and page_size != null" >
-        limit ${row_start},${page_size}
-        </if>
-    </select>
-    <select id = "selectT_LOTO_ENCount" resultType="int" parameterType="T_LOTO_E">
-		SELECT count(*) from t_loto_en
+    <select id = "selectT_LOTO_EList" resultType="T_LOTO_E" parameterType="T_LOTO_E">
+		SELECT issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max from 
+		<choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_en_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_en_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_en_uz</when>   
+    	</choose> 		
         <where>
 <if test="issue != null">
  and issue=#{issue}
 </if>
-<if test="startIssue != null">
-  <![CDATA[ and issue>#{startIssue}]]>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
 </if>
-<if test="endIssue != null">
-  <![CDATA[ and issue<#{endIssue}]]>
-</if>
-<if test="match_mode != null">
- and match_mode = #{match_mode}
-</if>
-<if test="game_name != null">
- and game_name = #{game_name}
+<if test="play_method != null">
+ and play_method = #{play_method}
 </if>
 <if test="starttime != null">
  and starttime = #{starttime}
+</if>
+<if test="sale_time != null">
+ and sale_time = #{sale_time}
 </if>
 <if test="endtime != null">
  and endtime = #{endtime}
@@ -133,35 +36,26 @@ order by endtime
 <if test="guest_team_name != null">
  and guest_team_name = #{guest_team_name}
 </if>
-<if test="home_team_id != null">
- and home_team_id = #{home_team_id}
+<if test="options_one != null">
+ and options_one = #{options_one}
 </if>
-<if test="guest_team_id != null">
- and guest_team_id = #{guest_team_id}
+<if test="options_two != null">
+ and options_two = #{options_two}
 </if>
-<if test="home_full_result != null">
- and home_full_result = #{home_full_result}
+<if test="options_three != null">
+ and options_three = #{options_three}
 </if>
-<if test="guest_full_result != null">
- and guest_full_result = #{guest_full_result}
+<if test="cg != null">
+ and cg = #{cg}
 </if>
-<if test="cg_mnl != null">
- and cg_mnl = #{cg_mnl}
+<if test="odds_one != null">
+ and odds_one = #{odds_one}
 </if>
-<if test="init_h != null">
- and init_h = #{init_h}
+<if test="odds_two != null">
+ and odds_two = #{odds_two}
 </if>
-<if test="init_a != null">
- and init_a = #{init_a}
-</if>
-<if test="mnl != null">
- and mnl = #{mnl}
-</if>
-<if test="mnl_h != null">
- and mnl_h = #{mnl_h}
-</if>
-<if test="mnl_a != null">
- and mnl_a = #{mnl_a}
+<if test="odds_three != null">
+ and odds_three = #{odds_three}
 </if>
 <if test="status != null">
  and status=#{status}
@@ -172,49 +66,216 @@ order by endtime
 <if test="available != null">
  and available=#{available}
 </if>
-<if test="is_recommend != null">
- and is_recommend=#{is_recommend}
+<if test="mnl_bet != null">
+ and mnl_bet=#{mnl_bet}
 </if>
-<if test="is_hot != null">
- and is_hot=#{is_hot}
+<if test="create_time != null">
+ and date(create_time)=date(#{create_time})
+</if>
+<if test="start_create_time != null and end_create_time != null ">
+ and create_time between #{start_create_time} and #{end_create_time}
+</if>
+<if test="update_time != null">
+ and date(update_time)=date(#{update_time})
+</if>
+<if test="start_update_time != null and end_update_time != null ">
+ and update_time between #{start_update_time} and #{end_update_time}
+</if>
+<if test="compensate_min != null">
+ and compensate_min = #{compensate_min}
+</if>
+<if test="compensate_max != null">
+ and compensate_max = #{compensate_max}
+</if>
+<if test="single_lottery_max != null">
+ and single_lottery_max = #{single_lottery_max}
+</if>
+<if test="single_match_max != null">
+ and single_match_max = #{single_match_max}
+</if>
+<if test="sort != null">
+ and sort=#{sort}
+</if>
+<if test="lottery_type != null">
+ and lottery_type=#{lottery_type}
+</if>
+<if test="return_min != null">
+ and return_min = #{return_min}
+</if>
+<if test="return_max != null">
+ and return_max = #{return_max}
+</if>
+</where>
+order by issue
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    <select id = "selectT_LOTO_ECount" resultType="int" parameterType="T_LOTO_E">
+		SELECT count(*) from 
+		<choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+    	</choose> 
+        <where>
+<if test="issue != null">
+ and issue=#{issue}
+</if>
+<if test="issues != null">
+ and issue in 
+ <foreach collection="issues" item="issue" index="index" open="(" close=")" separator=",">
+    #{issue}
+ </foreach>
+</if>
+<if test="play_method != null">
+ and play_method = #{play_method}
+</if>
+<if test="starttime != null">
+ and starttime = #{starttime}
+</if>
+<if test="sale_time != null">
+ and sale_time = #{sale_time}
+</if>
+<if test="endtime != null">
+ and endtime = #{endtime}
+</if>
+<if test="home_team_name != null">
+ and home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null">
+ and guest_team_name = #{guest_team_name}
+</if>
+<if test="options_one != null">
+ and options_one = #{options_one}
+</if>
+<if test="options_two != null">
+ and options_two = #{options_two}
+</if>
+<if test="options_three != null">
+ and options_three = #{options_three}
+</if>
+<if test="cg != null">
+ and cg = #{cg}
+</if>
+<if test="odds_one != null">
+ and odds_one = #{odds_one}
+</if>
+<if test="odds_two != null">
+ and odds_two = #{odds_two}
+</if>
+<if test="odds_three != null">
+ and odds_three = #{odds_three}
+</if>
+<if test="status != null">
+ and status=#{status}
+</if>
+<if test="leaguename != null">
+ and leaguename = #{leaguename}
+</if>
+<if test="available != null">
+ and available=#{available}
+</if>
+<if test="mnl_bet != null">
+ and mnl_bet=#{mnl_bet}
+</if>
+<if test="create_time != null">
+ and date(create_time)=date(#{create_time})
+</if>
+<if test="start_create_time != null and end_create_time != null ">
+ and create_time between #{start_create_time} and #{end_create_time}
+</if>
+<if test="update_time != null">
+ and date(update_time)=date(#{update_time})
+</if>
+<if test="start_update_time != null and end_update_time != null ">
+ and update_time between #{start_update_time} and #{end_update_time}
+</if>
+<if test="compensate_min != null">
+ and compensate_min = #{compensate_min}
+</if>
+<if test="compensate_max != null">
+ and compensate_max = #{compensate_max}
+</if>
+<if test="single_lottery_max != null">
+ and single_lottery_max = #{single_lottery_max}
+</if>
+<if test="single_match_max != null">
+ and single_match_max = #{single_match_max}
+</if>
+<if test="sort != null">
+ and sort=#{sort}
+</if>
+<if test="lottery_type != null">
+ and lottery_type=#{lottery_type}
+</if>
+<if test="return_min != null">
+ and return_min = #{return_min}
+</if>
+<if test="return_max != null">
+ and return_max = #{return_max}
 </if>
 </where>
 order by issue
        
     </select>
     <insert id="save" parameterType="T_LOTO_E">
-    <![CDATA[
-        INSERT INTO t_loto_en(issue,match_mode,game_name,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_mnl,init_h,init_a,mnl,mnl_h,mnl_a,status,leaguename,available,is_recommend,is_hot,mnl_bet)
-VALUES(#{issue},#{match_mode},#{game_name},#{starttime},#{endtime},#{home_team_name},#{guest_team_name},#{home_team_id},#{guest_team_id},#{home_full_result},#{guest_full_result},#{cg_mnl},#{init_h},#{init_a},#{mnl},#{mnl_h},#{mnl_a},#{status},#{leaguename},#{available},#{is_recommend},#{is_hot},#{mnl_bet})
+    <![CDATA[INSERT INTO]]> 
+        <choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_en_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_en_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_en_uz</when>   
+    	</choose> 
+    <![CDATA[(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
+VALUES(#{issue},#{play_method},#{starttime},#{sale_time},#{endtime},#{home_team_name},#{guest_team_name},#{options_one},#{options_two},#{options_three},#{cg},#{odds_one},#{odds_two},#{odds_three},#{status},#{leaguename},#{available},#{mnl_bet},#{create_time},#{update_time},#{compensate_min},#{compensate_max},#{single_lottery_max},#{single_match_max},#{sort},#{lottery_type},#{return_min},#{return_max})
 	]]>
     </insert>
     <insert id="saveList" parameterType="java.util.List">
-    <![CDATA[
-        INSERT INTO t_loto_en(issue,match_mode,game_name,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_mnl,init_h,init_a,mnl,mnl_h,mnl_a,status,leaguename,available,is_recommend,is_hot,mnl_bet)
+    <![CDATA[INSERT INTO]]> 
+        <choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_en_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_en_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_en_uz</when>   
+    	</choose> 
+    <![CDATA[(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.issue},#{v.match_mode},#{v.game_name},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_mnl},#{v.init_h},#{v.init_a},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.status},#{v.leaguename},#{v.available},#{v.is_recommend},#{v.is_hot},#{v.mnl_bet}) ]]>
+        <![CDATA[(#{v.issue},#{v.play_method},#{v.starttime},#{v.sale_time},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.options_one},#{v.options_two},#{v.options_three},#{v.cg},#{v.odds_one},#{v.odds_two},#{v.odds_three},#{v.status},#{v.leaguename},#{v.available},#{v.mnl_bet},#{v.create_time},#{v.update_time},#{v.compensate_min},#{v.compensate_max},#{v.single_lottery_max},#{v.single_match_max},#{v.sort},#{v.lottery_type},#{v.return_min},#{v.return_max}) ]]>
     </foreach>
     </insert>
     <update id="update" parameterType="T_LOTO_E">
-    <![CDATA[
-        UPDATE t_loto_en set issue=#{issue},match_mode=#{match_mode},game_name=#{game_name},starttime=#{starttime},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},home_team_id=#{home_team_id},guest_team_id=#{guest_team_id},home_full_result=#{home_full_result},guest_full_result=#{guest_full_result},cg_mnl=#{cg_mnl},init_h=#{init_h},init_a=#{init_a},mnl=#{mnl},mnl_h=#{mnl_h},mnl_a=#{mnl_a},status=#{status},leaguename=#{leaguename},available=#{available},is_recommend=#{is_recommend},is_hot=#{is_hot},mnl_bet=#{mnl_bet}
+    <![CDATA[UPDATE]]>
+        <choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_en_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_en_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_en_uz</when>   
+    	</choose>  
+    <![CDATA[set issue=#{issue},play_method=#{play_method},starttime=#{starttime},sale_time=#{sale_time},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},options_one=#{options_one},options_two=#{options_two},options_three=#{options_three},cg=#{cg},odds_one=#{odds_one},odds_two=#{odds_two},odds_three=#{odds_three},status=#{status},leaguename=#{leaguename},available=#{available},mnl_bet=#{mnl_bet},create_time=#{create_time},update_time=#{update_time},compensate_min=#{compensate_min},compensate_max=#{compensate_max},single_lottery_max=#{single_lottery_max},single_match_max=#{single_match_max},sort=#{sort},lottery_type=#{lottery_type},return_min=#{return_min},return_max=#{return_max}
 		WHERE  issue=#{issue} 
 	]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
-    <![CDATA[
-        REPLACE INTO t_loto_en(issue,match_mode,game_name,starttime,endtime,home_team_name,guest_team_name,home_team_id,guest_team_id,home_full_result,guest_full_result,cg_mnl,init_h,init_a,mnl,mnl_h,mnl_a,status,leaguename,available,is_recommend,is_hot,mnl_bet)
+    <![CDATA[REPLACE INTO]]> 
+        <choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_en_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_en_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_en_uz</when>   
+    	</choose>  
+    <![CDATA[(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.issue},#{v.match_mode},#{v.game_name},#{v.starttime},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.home_team_id},#{v.guest_team_id},#{v.home_full_result},#{v.guest_full_result},#{v.cg_mnl},#{v.init_h},#{v.init_a},#{v.mnl},#{v.mnl_h},#{v.mnl_a},#{v.status},#{v.leaguename},#{v.available},#{v.is_recommend},#{v.is_hot},#{v.mnl_bet}) ]]>
+        <![CDATA[(#{v.issue},#{v.play_method},#{v.starttime},#{v.sale_time},#{v.endtime},#{v.home_team_name},#{v.guest_team_name},#{v.options_one},#{v.options_two},#{v.options_three},#{v.cg},#{v.odds_one},#{v.odds_two},#{v.odds_three},#{v.status},#{v.leaguename},#{v.available},#{v.mnl_bet},#{v.create_time},#{v.update_time},#{v.compensate_min},#{v.compensate_max},#{v.single_lottery_max},#{v.single_match_max},#{v.sort},#{v.lottery_type},#{v.return_min},#{v.return_max}) ]]>
     </foreach>
     </insert>
     <delete id="delete" parameterType="T_LOTO_E">
-    <![CDATA[
-        DELETE FROM t_loto_en WHERE  issue=#{issue} 
-	]]>
-    </delete>    
+    <![CDATA[DELETE FROM]]> 
+        <choose>  
+        	<when test="electronic_code=='eth'.toString()">t_loto_en_eth</when>  
+        	<when test="electronic_code=='gto'.toString()">t_loto_en_gto</when>
+        	<when test="electronic_code=='uz'.toString()">t_loto_en_uz</when>   
+    	</choose>   
+    <![CDATA[WHERE  issue=#{issue}]]>
+    </delete>     
 </mapper > 

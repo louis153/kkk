@@ -17,6 +17,7 @@ public class LOTO_ORDER implements Serializable {
 	private static final long serialVersionUID = -5007265541484529987L;
 	private Integer id; //编号
     private String order_id; //投注编号
+    private String electronic_code;
     private String user_pin; //用户pin
     private String issue; //期号
     private String vsteam; //对阵信息
@@ -37,6 +38,11 @@ public class LOTO_ORDER implements Serializable {
     private String order_source; //来源
     private String position;//频道
     private String memo; //备注
+    private String options_one;//选项1
+    private String options_two;//选项2
+    private String options_three;//选项3
+    private String play_method;//话题标题
+    private String leaguename;//比赛名称
     private Integer row_start;//开始行
     private Integer page_size;//每页行数
 
@@ -188,6 +194,43 @@ public class LOTO_ORDER implements Serializable {
 	}
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	
+	public String getPlay_method() {
+		return play_method;
+	}
+	public void setPlay_method(String play_method) {
+		this.play_method = play_method;
+	}
+	public String getLeaguename() {
+		return leaguename;
+	}
+	public void setLeaguename(String leaguename) {
+		this.leaguename = leaguename;
+	}
+	public String getElectronic_code() {
+		return electronic_code;
+	}
+	public void setElectronic_code(String electronic_code) {
+		this.electronic_code = electronic_code;
+	}
+	public String getOptions_one() {
+		return options_one;
+	}
+	public void setOptions_one(String options_one) {
+		this.options_one = options_one;
+	}
+	public String getOptions_two() {
+		return options_two;
+	}
+	public void setOptions_two(String options_two) {
+		this.options_two = options_two;
+	}
+	public String getOptions_three() {
+		return options_three;
+	}
+	public void setOptions_three(String options_three) {
+		this.options_three = options_three;
 	}
 
 	

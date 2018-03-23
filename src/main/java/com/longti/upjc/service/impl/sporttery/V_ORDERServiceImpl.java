@@ -1,6 +1,5 @@
 package com.longti.upjc.service.impl.sporttery;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
+import com.ibm.icu.math.BigDecimal;
 import com.longti.upjc.dao.sporttery.LOTO_ENDao;
 import com.longti.upjc.dao.sporttery.LOTO_FNDao;
 import com.longti.upjc.dao.sporttery.LOTO_ORDERDao;
@@ -18,17 +17,13 @@ import com.longti.upjc.dao.sporttery.T_LOTO_SIS_FDao;
 import com.longti.upjc.dao.sporttery.V_ORDERDao;
 import com.longti.upjc.entity.sporttery.LOTO_F;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
+import com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD;
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_F;
-import com.longti.upjc.entity.sporttery.T_QUOTATION_CONTROL;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.service.sporttery.V_ORDERService;
 import com.longti.upjc.sp.SPQ;
-import com.longti.upjc.util.DateUtils;
-import com.longti.upjc.util.IOUtils;
-import com.longti.upjc.util.Md5;
-import com.longti.upjc.util.PostUtils;
 import com.longti.upjc.util.StringUtil;
 import com.longti.upjc.util.jdbet.BetUtils;
 
@@ -103,7 +98,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 	}
 
 	private void updateFPs(String issue, HashMap<String, Boolean> canChangeOdd, List<String> canBet,
-			T_QUOTATION_CONTROL t_quotation_control) {
+			TAB_SALES_THRESHOLD tab_SALES_THRESHOLD) {
 		logger.info("设置足球当前投注赔率开始-->");
 
 		T_LOTO_SIS_F t_loto_sis_f = new T_LOTO_SIS_F();
@@ -131,8 +126,8 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 		}
 		loto_fn = lst_F.get(0);
 		if (lst_F.size() > 0) {
-			if (t_quotation_control.getXnpktze() != null || t_quotation_control.getXnpktze() != 0) {
-				spq.setFirstb(t_quotation_control.getXnpktze());
+			if (tab_SALES_THRESHOLD.getXnpktze() != null || tab_SALES_THRESHOLD.getXnpktze() != 0) {
+				spq.setFirstb(tab_SALES_THRESHOLD.getXnpktze());
 			}
 			double[] nowps = null;
 			boolean hasChange = false;
@@ -185,7 +180,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 
 	@Override
 	public int insertV_ORDER(V_ORDER vOrder, List<LOTO_ORDER> lstLotoOrder, HashMap<String, Boolean> canChangeOdd,
-			List<String> canBet, T_QUOTATION_CONTROL t_quotation_control) throws Exception {
+			List<String> canBet, TAB_SALES_THRESHOLD tab_SALES_THRESHOLD) throws Exception {
 
 		if (vOrder.getBet_type() == 501) {
 			loto_ORDERDao.insertLOTO_ORDER(lstLotoOrder);
@@ -221,10 +216,12 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 			} else if (t.getBet_type() == 407) {
 				T_LOTO_SIS_E t_loto_sis_e = new T_LOTO_SIS_E();
 				t_loto_sis_e.setIssue(t.getIssue());
-				t_loto_sis_e.setMnl_h(t.getBet_info().startsWith("mnl_h") ? 1 : 0);
-				t_loto_sis_e.setMnl_a(t.getBet_info().startsWith("mnl_a") ? 1 : 0);
-				t_loto_sis_e.setMnl_h_d(t.getBet_info().startsWith("mnl_h") ? t.getBet_fee() : 0);
-				t_loto_sis_e.setMnl_a_d(t.getBet_info().startsWith("mnl_a") ? t.getBet_fee() : 0);
+				t_loto_sis_e.setOne(t.getBet_info().startsWith("odds_one") ? 1L : 0L);
+				t_loto_sis_e.setTwo(t.getBet_info().startsWith("odds_two") ? 1L : 0L);
+				t_loto_sis_e.setThree(t.getBet_info().startsWith("odds_three") ? 1L : 0L);
+				t_loto_sis_e.setOne_d(t.getBet_info().startsWith("odds_one") ? t.getBet_fee() : 0L);
+				t_loto_sis_e.setTwo_d(t.getBet_info().startsWith("odds_two") ? t.getBet_fee() : 0L);
+				t_loto_sis_e.setThree_d(t.getBet_info().startsWith("odds_three") ? t.getBet_fee() : 0L);
 				this.t_LOTO_SIS_EDao.saveSis(t_loto_sis_e);
 			}
 		}
@@ -245,10 +242,10 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 			throw new Exception("调用亚创支付接口失败");
 		}
 
-		if (vOrder.getBet_type() == 301 || vOrder.getBet_type() == 305) {
-			updateFPs(vOrder.getIssume(), canChangeOdd, canBet, t_quotation_control);
-		} else {
-			///updateDPs(vOrder.getIssume(), canChangeOdd, canBet);
+		if (vOrder.getBet_type() == 301 ) {
+			updateFPs(vOrder.getIssume(), canChangeOdd, canBet, tab_SALES_THRESHOLD);
+		} else if(vOrder.getBet_type()==501){
+			updateDPs(vOrder.getIssume(), canChangeOdd, canBet);
 		}
 
 		return 0;
@@ -261,8 +258,14 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 		loto_en.setIssue(issume);
 		List<T_LOTO_E> lst_LOTO_E = loto_ENDao.selectLOTO_ENList(loto_en);
 		if (lst_LOTO_E.size() > 0) {
-			if (canBet.indexOf(issume + "|407") >= 0 || lst_LOTO_E.get(0).getMnl_h().equals("1.01")
-					|| lst_LOTO_E.get(0).getMnl_a().equals("1.01")) {
+			BigDecimal odds_one=new BigDecimal(lst_LOTO_E.get(0).getOdds_one());
+			BigDecimal odds_two=new BigDecimal(lst_LOTO_E.get(0).getOdds_two());
+			BigDecimal odds_three=new BigDecimal(lst_LOTO_E.get(0).getOdds_three());			
+			
+			if (canBet.indexOf(issume + "|501") >= 0 
+					|| odds_one.compareTo(new BigDecimal("1.01"))<0
+					|| odds_two.compareTo(new BigDecimal("1.01"))<0
+					|| odds_three.compareTo(new BigDecimal("1.01"))<0) {
 				lst_LOTO_E.get(0).setMnl_bet(0);
 				loto_ENDao.updateLOTO_EN(lst_LOTO_E.get(0));
 			}

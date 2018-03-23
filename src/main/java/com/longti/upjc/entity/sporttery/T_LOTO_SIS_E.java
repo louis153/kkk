@@ -13,12 +13,17 @@ public class T_LOTO_SIS_E implements Serializable {
 
 
     private String issue; //期号
-    private String[] issues;
-    private Integer mnl_h; //投胜数量
-    private Integer mnl_a; //投负数量
-    private Integer mnl_h_d; //投注胜负胜数量
-    private Integer mnl_a_d; //投注胜负负数量
-    
+    private String[] issues;//查询的期号列表
+    private String electronic_code; //电子货币简称
+    private Long one; //投选项1数量
+    private Long two; //投选项2数量
+    private Long three; //投选项3数量
+    private Long one_d; //投选项1投注额
+    private Long two_d; //投选项2投注额
+    private Long three_d; //投选项3投注额
+    private Long one_p; //投选项1赔付额
+    private Long two_p; //投选项2赔付额
+    private Long three_p; //投选项3赔付额
     private Integer row_start;//开始行
     private Integer page_size;//每页行数
 
@@ -29,29 +34,47 @@ public class T_LOTO_SIS_E implements Serializable {
 	public void setIssue(String issue) {
 		this.issue = issue;
 	}
-    public Integer getMnl_h() {
-        return mnl_h;
+    public String getElectronic_code() {
+        return electronic_code;
 	}
-	public void setMnl_h(Integer mnl_h) {
-		this.mnl_h = mnl_h;
+	public void setElectronic_code(String electronic_code) {
+		this.electronic_code = electronic_code;
 	}
-    public Integer getMnl_a() {
-        return mnl_a;
+    public Long getOne() {
+        return one;
 	}
-	public void setMnl_a(Integer mnl_a) {
-		this.mnl_a = mnl_a;
+	public void setOne(Long one) {
+		this.one = one;
 	}
-    public Integer getMnl_h_d() {
-        return mnl_h_d;
+    public Long getTwo() {
+        return two;
 	}
-	public void setMnl_h_d(Integer mnl_h_d) {
-		this.mnl_h_d = mnl_h_d;
+	public void setTwo(Long two) {
+		this.two = two;
 	}
-    public Integer getMnl_a_d() {
-        return mnl_a_d;
+    public Long getThree() {
+        return three;
 	}
-	public void setMnl_a_d(Integer mnl_a_d) {
-		this.mnl_a_d = mnl_a_d;
+	public void setThree(Long three) {
+		this.three = three;
+	}
+    public Long getOne_d() {
+        return one_d;
+	}
+	public void setOne_d(Long one_d) {
+		this.one_d = one_d;
+	}
+    public Long getTwo_d() {
+        return two_d;
+	}
+	public void setTwo_d(Long two_d) {
+		this.two_d = two_d;
+	}
+    public Long getThree_d() {
+        return three_d;
+	}
+	public void setThree_d(Long three_d) {
+		this.three_d = three_d;
 	}
     public Integer getRow_start(){
         return row_start;
@@ -74,7 +97,24 @@ public class T_LOTO_SIS_E implements Serializable {
 	public void setIssues(String[] issues) {
 		this.issues = issues;
 	}
-	
+	public Long getOne_p() {
+		return one_p;
+	}
+	public void setOne_p(Long one_p) {
+		this.one_p = one_p;
+	}
+	public Long getTwo_p() {
+		return two_p;
+	}
+	public void setTwo_p(Long two_p) {
+		this.two_p = two_p;
+	}
+	public Long getThree_p() {
+		return three_p;
+	}
+	public void setThree_p(Long three_p) {
+		this.three_p = three_p;
+	}
 
 	
 }

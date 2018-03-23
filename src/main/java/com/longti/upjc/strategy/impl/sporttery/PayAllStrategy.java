@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.slf4j.Logger;
@@ -18,19 +19,22 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.ibm.icu.math.BigDecimal;
 import com.longti.upjc.entity.sporttery.LOTO_F;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
+import com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD;
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_F;
-import com.longti.upjc.entity.sporttery.T_QUOTATION_CONTROL;
+import com.longti.upjc.entity.sporttery.T_USER;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_FNService;
+import com.longti.upjc.service.sporttery.TAB_SALES_THRESHOLDService;
 import com.longti.upjc.service.sporttery.T_LOTO_ENService;
 import com.longti.upjc.service.sporttery.T_LOTO_SIS_EService;
 import com.longti.upjc.service.sporttery.T_LOTO_SIS_FService;
-import com.longti.upjc.service.sporttery.T_QUOTATION_CONTROLService;
+import com.longti.upjc.service.sporttery.T_USERService;
 import com.longti.upjc.service.sporttery.V_ORDERService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
@@ -56,10 +60,11 @@ public class PayAllStrategy implements IMethodStrategy {
 	@Autowired
 	private T_LOTO_SIS_EService loto_SIS_EService;
 	@Autowired
-	private T_QUOTATION_CONTROLService t_QUOTATION_CONTROLService;
+	private TAB_SALES_THRESHOLDService tab_SALES_THRESHOLDService;
 	@Autowired
 	private V_ORDERService v_orderService;
-
+	@Autowired
+	private T_USERService t_USERService;
 	public static class Odd {
 		private String odd_name;
 		private String odd_value;
@@ -98,7 +103,6 @@ public class PayAllStrategy implements IMethodStrategy {
 
 	public static class RequestData {
 		private String issue;
-		private String l;
 		private List<Odd> odds;
 
 		public String getIssue() {
@@ -109,13 +113,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			this.issue = issue;
 		}
 
-		public String getL() {
-			return l;
-		}
-
-		public void setL(String l) {
-			this.l = l;
-		}
+		
 
 		public List<Odd> getOdds() {
 			return odds;
@@ -173,11 +171,9 @@ public class PayAllStrategy implements IMethodStrategy {
 		ReturnValue<PayAll_Data> rv = new ReturnValue<>();
 		rv.setData(new PayAll_Data());
 
-		JSONArray lst = ((JSONArray) jsonRequest.get("lst"));
-		if (lst.isEmpty()) {
-			rv.setStatus(ErrorMessage.NO_REC.getCode());
-			rv.setMessage(ErrorMessage.NO_REC.getMessage());
-
+		JSONArray lst_rem = ((JSONArray) jsonRequest.get("lst_rem"));
+		if (lst_rem==null||lst_rem.isEmpty()) {
+			rv.setMess(ErrorMessage.NO_REC);
 			logger.info("调用篮球支付接口失败----->");
 			return JSONObject.toJSONString(rv);
 		}
@@ -189,12 +185,17 @@ public class PayAllStrategy implements IMethodStrategy {
 			channel = jsonRequest.get("order_source").toString();// 获取渠道标记
 		}
 		List<String> sbFalse = new ArrayList<String>();
-		for (Object positionObj : lst) {
+		for (Object positionObj : lst_rem) {
 			String position = ((JSONObject) positionObj).get("position").toString();
 			switch (position) {
 			case "2":
-				payFoot(rv, sbFalse, channel, ((JSONObject) positionObj).getJSONArray("lst_rem"), request_LtGameLogic.getUserPin(),
-						jsonRequest.get("user_pin").toString());
+				T_USER t_USER=new T_USER();
+				List<T_USER> lsUsers=t_USERService.selectT_USERList(t_USER);
+				if(lsUsers.isEmpty()==false){
+					t_USER=lsUsers.get(0);
+				}
+				payFoot(rv, sbFalse, channel, ((JSONObject) positionObj).getJSONArray("lst"), request_LtGameLogic.getUserPin(),
+						t_USER.getNick_name(),request_LtGameLogic.getFeeType());
 				if (rv.getStatus() != null && rv.getStatus().equals(ErrorMessage.SUCCESS.getCode()) == false) {
 					return JSONObject.toJSONString(rv);
 				}
@@ -211,14 +212,12 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 
 		if (sbFalse.size() > 0) {
-			rv.setStatus(ErrorMessage.FAIL.getCode());
-			rv.setStatus(ErrorMessage.FAIL.getMessage());
+			rv.setMess(ErrorMessage.FAIL);
 
 			logger.info("调用支付接口失败----->");
 			return JSONObject.toJSONString(rv);
 		} else {
-			rv.setStatus(ErrorMessage.SUCCESS.getCode());
-			rv.setMessage(ErrorMessage.SUCCESS.getMessage());
+			rv.setMess(ErrorMessage.SUCCESS);
 			logger.info("调用支付接口成功----->");
 			return JSONObject.toJSONString(rv);
 		}
@@ -226,21 +225,26 @@ public class PayAllStrategy implements IMethodStrategy {
 
 	// 判断是否可以计算新赔率
 	private void checkCanChangeOdd(HashMap<String, Boolean> canChangeOdd, String issue, Integer type, double new_sum,
-			double oldSum, int dcxssx_s) {
+			double oldSum, long dcxssx_s) {
 		double per10 = dcxssx_s / 10;
 		canChangeOdd.put(issue + "|" + type, Math.floor(oldSum / per10) != Math.floor(new_sum / per10));
 	}
 
 	// 判断是否达到销售限额
-	private void checkCanBet(List<String> canBet, String issue, Integer type, double new_sum, int dcxssx_s) {
+	private void checkCanBet(List<String> canBet, String issue, Integer type, long new_sum, long dcxssx_s) {
 		if (new_sum >= dcxssx_s) {
 			canBet.add(issue + "|" + type);
 		}
 	}
 
 	private void payFoot(ReturnValue<PayAll_Data> rv, List<String> sbFalse, String channel, JSONArray lst_rem,
-			String userPin, String user_pin) throws Exception {
+			String userPin, String nickName,String electronic_code) throws Exception {
 
+		if(lst_rem.size()==0){
+			rv.setMess(ErrorMessage.FAIL);
+			logger.info("调用足球支付接口失败----->投注信息不能为[]");
+			return;
+		}
 		String[] sbIssues = new String[lst_rem.size()];
 
 		HashMap<String, RequestData> jsonMatchs = new HashMap<String, RequestData>();
@@ -248,27 +252,23 @@ public class PayAllStrategy implements IMethodStrategy {
 		for (Object rem : lst_rem) {
 			RequestData requestData = new RequestData();
 			if(rem==null){
-				rv.setStatus(ErrorMessage.FAIL.getCode());
-				rv.setMessage(ErrorMessage.FAIL.getMessage());
+				rv.setMess(ErrorMessage.FAIL);
 				logger.info("调用足球支付接口失败----->投注信息不能为[]");
 				return;
 			}
 			if(((JSONObject) rem).containsKey("issue")==false){
-				rv.setStatus(ErrorMessage.FAIL.getCode());
-				rv.setMessage(ErrorMessage.FAIL.getMessage());
+				rv.setMess(ErrorMessage.FAIL);
 				logger.info("调用足球支付接口失败----->投注信息不能为[]");
 				return;
 			}
 			requestData.setIssue(((JSONObject) rem).get("issue").toString());
-			requestData.setL(((JSONObject) rem).get("l").toString());
 			List<Odd> odds = new ArrayList<Odd>();
 			JSONArray jsonOdds = ((JSONObject) rem).getJSONArray("odds");
 			for (Object jOdd : jsonOdds) {	
 				if(((JSONObject) jOdd).get("odd_name").equals("hh")==false
 				&& ((JSONObject) jOdd).get("odd_name").equals("hd")==false
 				&& ((JSONObject) jOdd).get("odd_name").equals("ha")==false){
-					rv.setStatus(ErrorMessage.FAIL.getCode());
-					rv.setMessage(ErrorMessage.FAIL.getMessage());
+					rv.setMess(ErrorMessage.FAIL);
 					logger.info("调用足球支付接口失败----->投注信息不正确"+((JSONObject) jOdd).get("odd_name").toString());
 					return;
 				}
@@ -292,16 +292,17 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 
 		LOTO_F qryF = new LOTO_F();
-
-		qryF.setIssues(sbIssues);
+		qryF.setElectronic_code(electronic_code);
+		if(sbIssues.length>0){
+			qryF.setIssues(sbIssues);
+		}
 		qryF.setHad_bet(1);
 		qryF.setEndtime(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));
 		List<LOTO_F> loto_Fs = lotoFNService.selectLOTO_FNList(qryF);
 
 		for (LOTO_F b : loto_Fs) {
 			if (b.getStatus() == 99) {
-				rv.setStatus(ErrorMessage.CANCEL.getCode());
-				rv.setMessage(ErrorMessage.CANCEL.getMessage());
+				rv.setMess(ErrorMessage.CANCEL);
 				endMatchs.clear();
 				endMatchs.add(b.getIssue());
 				rv.getData().setEndmatchs(endMatchs);
@@ -315,38 +316,57 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 
 		if (endMatchs.isEmpty() == false) {
-
-			rv.setStatus(ErrorMessage.END_MATCH.getCode());
-			rv.setMessage(ErrorMessage.END_MATCH.getMessage());
+			rv.setMess(ErrorMessage.END_MATCH);
 			rv.getData().setEndmatchs(endMatchs);
 			return;
 		}
-
+		
+		TAB_SALES_THRESHOLD tab_SALES_THRESHOLD = new TAB_SALES_THRESHOLD();
+		tab_SALES_THRESHOLD.setCurrency(electronic_code);
+		tab_SALES_THRESHOLD = tab_SALES_THRESHOLDService.selectTAB_SALES_THRESHOLDList(tab_SALES_THRESHOLD).get(0);
+		
 		// 判断玩法是否已经到达赔率下线----->开始
+		Long sum_cost = 0L;//本次总投注额
 		for (LOTO_F f : loto_Fs) {
 			String issue = f.getIssue();
 			RequestData m = jsonMatchs.get(issue);
+			
 			for (Odd odd : m.odds) {
 				if (odd.getOdd_name().equals("hh") || odd.getOdd_name().equals("ha")
 						|| odd.getOdd_name().equals("hd")) {
-					if (StringUtil.isEmpty(f.getHad_h())||f.getHad_h().equals("1.01") || f.getHad_d().equals("1.01") || f.getHad_a().equals("1.01")) {
-						rv.setStatus(ErrorMessage.END_SELL.getCode());
-						rv.setMessage(ErrorMessage.END_SELL.getMessage());
+					sum_cost+=(long)Double.parseDouble(odd.getOdd_cost());
+					if (StringUtil.isEmpty(f.getHad_h())
+					  ||new BigDecimal(f.getHad_h()).compareTo(new BigDecimal("1.01"))<0 
+					  ||new BigDecimal(f.getHad_d()).compareTo(new BigDecimal("1.01"))<0
+					  ||new BigDecimal(f.getHad_a()).compareTo(new BigDecimal("1.01"))<0) {
+						rv.setMess(ErrorMessage.END_SELL);
 						endMatchs.clear();
 						endMatchs.add(f.getIssue());
 						rv.getData().setEndmatchs(endMatchs);
 						return;
 					}
 					if (f.getHad_bet()==0) {
-						rv.setStatus(ErrorMessage.ERR_OVERFLOW.getCode());
-						rv.setMessage(ErrorMessage.ERR_OVERFLOW.getMessage());
+						rv.setMess(ErrorMessage.ERR_OVERFLOW);
 						endMatchs.clear();
 						endMatchs.add(f.getIssue());
 						rv.getData().setEndmatchs(endMatchs);
 						return;
 					}
+					
+					if(Long.parseLong(odd.getOdd_cost())>tab_SALES_THRESHOLD.getSingle_match_max()){
+						rv.setMess(ErrorMessage.ERR_OVERMATCH);
+						endMatchs.clear();				
+						rv.getData().setEndmatchs(endMatchs);
+						return;
+					}
 				}
 				
+			}
+			if(sum_cost>tab_SALES_THRESHOLD.getSingle_lottery_max()){
+				rv.setMess(ErrorMessage.ERR_OVERFLOW);
+				endMatchs.clear();				
+				rv.getData().setEndmatchs(endMatchs);
+				return;
 			}
 		}
 		// 判断玩法是否已经到达赔率下线----->结束
@@ -354,6 +374,7 @@ public class PayAllStrategy implements IMethodStrategy {
 		// 判断玩法是否已经到达限额----->开始
 
 		T_LOTO_SIS_F qry_sis_f = new T_LOTO_SIS_F();
+		qry_sis_f.setElectronic_code(electronic_code);
 		qry_sis_f.setIssues(sbIssues);
 		List<T_LOTO_SIS_F> lsT_LOTO_SIS_F = loto_SIS_FService.selectT_LOTO_SIS_FList(qry_sis_f);
 
@@ -379,16 +400,14 @@ public class PayAllStrategy implements IMethodStrategy {
 		HashMap<String, Boolean> canChangeOdd = new HashMap<String, Boolean>();
 		List<String> canBet = new ArrayList<String>();
 
-		T_QUOTATION_CONTROL quotation_control = new T_QUOTATION_CONTROL();
-		quotation_control.setId(2);
-		quotation_control = t_QUOTATION_CONTROLService.selectT_QUOTATION_CONTROLList(quotation_control).get(0);
+		
 		for (T_LOTO_SIS_F sis_f : lsT_LOTO_SIS_F) {
 			
 			
 
 			String issue = sis_f.getIssue();
 			RequestData m = jsonMatchs.get(issue);
-			int h_cost = 0;
+			long h_cost = 0;
 			for (Odd odd : m.getOdds()) {
 				if (odd.getOdd_name().equals("hh") || odd.getOdd_name().equals("hd")
 						|| odd.getOdd_name().equals("ha")) {
@@ -398,15 +417,12 @@ public class PayAllStrategy implements IMethodStrategy {
 			if (h_cost != 0) {
 				checkCanChangeOdd(canChangeOdd, issue, 301,
 						sis_f.getHad_h_d() + sis_f.getHad_d_d() + sis_f.getHad_a_d() + h_cost,
-						sis_f.getHad_h_d() + sis_f.getHad_d_d() + sis_f.getHad_a_d(), quotation_control.getDcxssx_s());
+						sis_f.getHad_h_d() + sis_f.getHad_d_d() + sis_f.getHad_a_d(), tab_SALES_THRESHOLD.getXssx_min());
 				checkCanBet(canBet, issue, 301, sis_f.getHad_h_d() + sis_f.getHad_d_d() + sis_f.getHad_a_d() + h_cost,
-						quotation_control.getDcxssx_s());
+						tab_SALES_THRESHOLD.getXssx_min());
 
-				if (sis_f.getHad_h_d() + sis_f.getHad_d_d() + sis_f.getHad_a_d() + h_cost > quotation_control
-						.getDcxssx_e()) {
-					rv.setStatus(ErrorMessage.ERR_OVERFLOW.getCode());
-					rv.setMessage(ErrorMessage.ERR_OVERFLOW.getMessage());
-
+				if (sis_f.getHad_h_d() + sis_f.getHad_d_d() + sis_f.getHad_a_d() + h_cost > tab_SALES_THRESHOLD.getXssx_max()) {
+					rv.setMess(ErrorMessage.ERR_OVERFLOW);
 					endMatchs.clear();
 					endMatchs.add(sis_f.getIssue());
 					rv.getData().setEndmatchs(endMatchs);
@@ -471,9 +487,9 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setCreate_time(nowDate);
 				loto_ORDER.setPrize_status(1);
 				loto_ORDER.setPrize_type(1);
-
+				loto_ORDER.setElectronic_code(electronic_code);
 				loto_ORDER.setUser_pin(userPin);
-				loto_ORDER.setMemo(user_pin);
+				loto_ORDER.setMemo(nickName);
 				loto_ORDER.setVsteam(f.getHome_team_name() + "vs" + f.getGuest_team_name());
 				loto_ORDER.setWin_fee((int)Math.round(loto_ORDER.getBet_fee() * oddv));
 				loto_ORDER.setPrize_cancel_time(DateUtils.getDateToStr("1900-1-1"));
@@ -494,7 +510,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			vOrder.setVsteam(f.getHome_team_name() + "vs" + f.getGuest_team_name());
 			vOrder.setIssume(issue);
 			try {
-				v_orderService.insertV_ORDER(vOrder, lstTemp, canChangeOdd, canBet,quotation_control);
+				v_orderService.insertV_ORDER(vOrder, lstTemp, canChangeOdd, canBet,tab_SALES_THRESHOLD);
 			} catch (Exception e) {// 事物中的处理错误必须已异常的方式返回
 				sbFalse.add(vOrder.getVsteam());
 			}
@@ -514,27 +530,24 @@ public class PayAllStrategy implements IMethodStrategy {
 		for (Object rem : lst_rem) {
 			RequestData requestData = new RequestData();
 			if(rem==null){
-				rv.setStatus(ErrorMessage.FAIL.getCode());
-				rv.setMessage(ErrorMessage.FAIL.getMessage());
-				logger.info("调用电竞支付接口失败----->投注信息不能为[]");
+				rv.setMess(ErrorMessage.FAIL);
+				logger.info("调用话题支付接口失败----->投注信息不能为[]");
 				return;
 			}
 			if(((JSONObject) rem).containsKey("issue")==false){
-				rv.setStatus(ErrorMessage.FAIL.getCode());
-				rv.setMessage(ErrorMessage.FAIL.getMessage());
-				logger.info("调用电竞支付接口失败----->投注信息不能为[]");
+				rv.setMess(ErrorMessage.FAIL);
+				logger.info("调用话题支付接口失败----->投注信息不能为[]");
 				return;
 			}
 			requestData.setIssue(((JSONObject) rem).get("issue").toString());
-			requestData.setL("0");
 			List<Odd> odds = new ArrayList<Odd>();
 			JSONArray jsonOdds = ((JSONObject) rem).getJSONArray("odds");
 			for (Object jOdd : jsonOdds) {
-				if(((JSONObject) jOdd).get("odd_name").equals("mh")==false
-				&& ((JSONObject) jOdd).get("odd_name").equals("ma")==false){
-							rv.setStatus(ErrorMessage.FAIL.getCode());
-							rv.setMessage(ErrorMessage.FAIL.getMessage());
-							logger.info("调用足球支付接口失败----->投注信息不正确"+((JSONObject) jOdd).get("odd_name").toString());
+				if(((JSONObject) jOdd).get("odd_name").equals("odds_one")==false
+				&& ((JSONObject) jOdd).get("odd_name").equals("odds_two")==false
+				&& ((JSONObject) jOdd).get("odd_name").equals("odds_three")==false){
+							rv.setMess(ErrorMessage.FAIL);
+							logger.info("调用话题支付接口失败----->投注信息不正确"+((JSONObject) jOdd).get("odd_name").toString());
 							return;
 						}
 				odds.add(new Odd(
@@ -560,11 +573,11 @@ public class PayAllStrategy implements IMethodStrategy {
 		qryE.setIssues(sbIssues);
 		qryE.setEndtime(DateUtils.getDateToStr(new Date(), "yyyy-MM-dd HH:mm:ss"));
 		List<T_LOTO_E> loto_Es = lotoENService.selectT_LOTO_ENList(qryE);
-
+		Map<String, T_LOTO_E> mapEs=new HashMap<String,T_LOTO_E>();
 		for (T_LOTO_E e : loto_Es) {
+			mapEs.put(e.getIssue(), e);
 			if (e.getStatus() == 99) {
-				rv.setStatus(ErrorMessage.CANCEL.getCode());
-				rv.setMessage(ErrorMessage.CANCEL.getMessage());
+				rv.setMess(ErrorMessage.CANCEL);
 				endMatchs.clear();
 				endMatchs.add(e.getIssue());
 				rv.getData().setEndmatchs(endMatchs);
@@ -578,9 +591,7 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 
 		if (endMatchs.isEmpty() == false) {
-
-			rv.setStatus(ErrorMessage.END_MATCH.getCode());
-			rv.setMessage(ErrorMessage.END_MATCH.getMessage());
+			rv.setMess(ErrorMessage.END_MATCH);
 			rv.getData().setEndmatchs(endMatchs);
 			return;
 		}
@@ -589,20 +600,39 @@ public class PayAllStrategy implements IMethodStrategy {
 		for (T_LOTO_E e : loto_Es) {
 			String issue = e.getIssue();
 			RequestData m = jsonMatchs.get(issue);
+			Long sumCost=0L;
 			if (m != null) {
+				BigDecimal minOdd=new BigDecimal("1.01");
 				for (Odd odd : m.odds) {
-					if (odd.getOdd_name().equals("mh") || odd.getOdd_name().equals("ma")) {
-						if (StringUtil.isEmpty(e.getMnl_h())||e.getMnl_h().equals("1.01") || e.getMnl_a().equals("1.01")) {
-							rv.setStatus(ErrorMessage.END_SELL.getCode());
-							rv.setMessage(ErrorMessage.END_SELL.getMessage());
+					if (odd.getOdd_name().equals("odds_one") || odd.getOdd_name().equals("odds_two")|| odd.getOdd_name().equals("odds_three")) {
+						sumCost+=Long.parseLong(odd.getOdd_cost());
+						BigDecimal odds_one=new BigDecimal("0");
+						BigDecimal odds_two=new BigDecimal("0");;
+						BigDecimal odds_three=new BigDecimal("0");
+						if(StringUtil.isEmpty(e.getOdds_one())==false){
+							odds_one=new BigDecimal(e.getOdds_one());
+							odds_two=new BigDecimal(e.getOdds_two());
+							odds_three=new BigDecimal(e.getOdds_three());
+						}
+						
+						if (StringUtil.isEmpty(e.getOdds_one())||odds_one.compareTo(minOdd)<0||odds_two.compareTo(minOdd)<0 || odds_three.compareTo(minOdd)<0) {
+							rv.setMess(ErrorMessage.END_SELL);
 							endMatchs.clear();
 							endMatchs.add(e.getIssue());
 							rv.getData().setEndmatchs(endMatchs);
 							return;
 						}
+						
 						if (e.getMnl_bet()==0) {
-							rv.setStatus(ErrorMessage.ERR_OVERFLOW.getCode());
-							rv.setMessage(ErrorMessage.ERR_OVERFLOW.getMessage());
+							rv.setMess(ErrorMessage.ERR_OVERFLOW);
+							endMatchs.clear();
+							endMatchs.add(e.getIssue());
+							rv.getData().setEndmatchs(endMatchs);
+							return;
+						}
+						
+						if(Long.parseLong(odd.getOdd_cost())>(long)(Double.parseDouble(e.getSingle_match_max())*1000000)){
+							rv.setMess(ErrorMessage.ERR_OVERMATCH);
 							endMatchs.clear();
 							endMatchs.add(e.getIssue());
 							rv.getData().setEndmatchs(endMatchs);
@@ -610,6 +640,13 @@ public class PayAllStrategy implements IMethodStrategy {
 						}
 					}
 				}
+			}
+			if(sumCost>(long)(Double.parseDouble(e.getSingle_lottery_max())*1000000)){
+				rv.setMess(ErrorMessage.ERR_OVERFLOW);
+				endMatchs.clear();
+				endMatchs.add(e.getIssue());
+				rv.getData().setEndmatchs(endMatchs);
+				return;
 			}
 		}
 
@@ -634,35 +671,38 @@ public class PayAllStrategy implements IMethodStrategy {
 		for(String iss:lsIssues){
 			T_LOTO_SIS_E sis_E=new T_LOTO_SIS_E();
 			sis_E.setIssue(iss);			
-			sis_E.setMnl_h(0);
-			sis_E.setMnl_h_d(0);
-			sis_E.setMnl_a(0);
-			sis_E.setMnl_a_d(0);
+			sis_E.setOne(0L);
+			sis_E.setOne_d(0L);
+			sis_E.setTwo(0L);
+			sis_E.setTwo_d(0L);
+			sis_E.setThree(0L);
+			sis_E.setThree_d(0L);
 			lsT_LOTO_SIS_E.add(sis_E);
 		}
-		T_QUOTATION_CONTROL quotation_control = new T_QUOTATION_CONTROL();
-		quotation_control.setId(4);
-		quotation_control = t_QUOTATION_CONTROLService.selectT_QUOTATION_CONTROLList(quotation_control).get(0);
+		
 		for (T_LOTO_SIS_E sis_e : lsT_LOTO_SIS_E) {			
 
 			String issue = sis_e.getIssue();
 			RequestData m = jsonMatchs.get(issue);
-			int m_cost = 0;
-			for (Odd odd : m.getOdds()) {
-				if (odd.getOdd_name().equals("mh") || odd.getOdd_name().equals("ma")) {
-					m_cost += (int)Double.parseDouble(odd.getOdd_cost());
+			long m_cost=0;
+			for (Odd odd : m.getOdds()) {				
+				if (odd.getOdd_name().equals("odds_one") ){
+					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
 				}
-
+				if (odd.getOdd_name().equals("odds_two")){
+					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+				}
+				if (odd.getOdd_name().equals("odds_three")){
+					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+				}
 			}
 			if (m_cost != 0) {
-				checkCanChangeOdd(canChangeOdd, issue, 407, sis_e.getMnl_h_d() + sis_e.getMnl_a_d() + m_cost,
-						sis_e.getMnl_h_d() + sis_e.getMnl_a_d(), quotation_control.getDcxssx_s());
-				checkCanBet(canBet, issue, 407, sis_e.getMnl_h_d() + sis_e.getMnl_a_d() + m_cost,
-						quotation_control.getDcxssx_s());
+				
+				checkCanBet(canBet, issue, 501, sis_e.getOne_p()+sis_e.getTwo_p()+sis_e.getThree_p()+ m_cost,
+						(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*1000000));
 
-				if (sis_e.getMnl_h_d() + sis_e.getMnl_a_d() + m_cost > quotation_control.getDcxssx_e()) {
-					rv.setStatus(ErrorMessage.ERR_OVERFLOW.getCode());
-					rv.setMessage(ErrorMessage.ERR_OVERFLOW.getMessage());
+				if (sis_e.getOne_p()+sis_e.getTwo_p()+sis_e.getThree_p()+ m_cost > (long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*1000000)) {
+					rv.setMess(ErrorMessage.ERR_OVERFLOW);
 
 					endMatchs.clear();
 					endMatchs.add(sis_e.getIssue());
@@ -692,21 +732,29 @@ public class PayAllStrategy implements IMethodStrategy {
 				String bet_info = "";
 				String key = odd.getOdd_name();
 
-				if (key.equals("mh")) {
-					bet_type = "407";
-					bet_info = "mnl_h|" + e.getMnl_h();
-					if (StringUtil.isEmpty(e.getMnl_h())) {// 如果赔率为空，设置投注赔率为1
+				if (key.equals("odds_one")) {
+					bet_type = "501";
+					bet_info = "odds_one|" + e.getOdds_one();
+					if (StringUtil.isEmpty(e.getOdds_one())) {// 如果赔率为空，设置投注赔率为1
 						oddv = 1;
 					} else {
-						oddv = Double.parseDouble(e.getMnl_h());
+						oddv = Double.parseDouble(e.getOdds_one());
 					}
-				} else if (key.equals("ma")) {
-					bet_type = "407";
-					bet_info = "mnl_a|" + e.getMnl_a();
-					if (StringUtil.isEmpty(e.getMnl_a())) {// 如果赔率为空，设置投注赔率为1
+				} else if (key.equals("odds_two")) {
+					bet_type = "501";
+					bet_info = "odds_two|" + e.getOdds_two();
+					if (StringUtil.isEmpty(e.getOdds_two())) {// 如果赔率为空，设置投注赔率为1
 						oddv = 1;
 					} else {
-						oddv = Double.parseDouble(e.getMnl_a());
+						oddv = Double.parseDouble(e.getOdds_two());
+					}
+				} else if (key.equals("odds_three")) {
+					bet_type = "501";
+					bet_info = "odds_three|" + e.getOdds_three();
+					if (StringUtil.isEmpty(e.getOdds_three())) {// 如果赔率为空，设置投注赔率为1
+						oddv = 1;
+					} else {
+						oddv = Double.parseDouble(e.getOdds_three());
 					}
 				}
 
@@ -744,7 +792,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			vOrder.setVsteam(e.getHome_team_name() + "vs" + e.getGuest_team_name());
 			vOrder.setIssume(issue);
 			try {
-				v_orderService.insertV_ORDER(vOrder, lstTemp, canChangeOdd, canBet,quotation_control);
+				v_orderService.insertV_ORDER(vOrder, lstTemp, canChangeOdd, canBet,null);
 				v_orderService.updateDPs(vOrder.getIssume(), canChangeOdd, canBet);
 			} catch (Exception e1) {// 事物中的处理错误必须已异常的方式返回
 				sbFalse.add(vOrder.getVsteam());

@@ -27,7 +27,8 @@ public class ErrorMessage {
 	
 	public static ErrInfo END_SELL=new ErrInfo("000009", "比赛已停止销售，请重新选择");
 	public static ErrInfo ERR_OVERFLOW=new ErrInfo("000010","投注超出上限，请重新选择" );
-	
+	public static ErrInfo ERR_OVERMATCH=new ErrInfo("000011","单个玩法投注超出上限，请重新选择" );
+		
 	public static ErrInfo OVER_INVCODE=new ErrInfo("300000", "绑定邀请码超24小时");
 	public static ErrInfo BINDED_INVCODE=new ErrInfo("300001", "已绑定邀请码");
 	public static ErrInfo MUTUALBIND_INVCODE=new ErrInfo("300002", "两个用户不能相互绑定邀请码，请重新填写");

@@ -2,14 +2,13 @@ package com.longti.upjc.service.impl.sporttery;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.longti.upjc.dao.sporttery.T_LOTO_EDao;
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
+import com.longti.upjc.dao.sporttery.T_LOTO_EDao;
 import com.longti.upjc.service.sporttery.T_LOTO_EService;
 
 
 /**
- * 电子竞猜比赛信息serviceImpl
+ * 话题信息serviceImpl
  */
 @Service
 public class T_LOTO_EServiceImpl implements T_LOTO_EService  {

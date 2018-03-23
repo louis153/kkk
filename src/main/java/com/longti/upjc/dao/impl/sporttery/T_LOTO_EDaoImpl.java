@@ -1,14 +1,13 @@
 package com.longti.upjc.dao.impl.sporttery;
 import java.util.List;
 import org.springframework.stereotype.Repository;
-
 import com.longti.upjc.dao.impl.BaseDaoImpl;
-import com.longti.upjc.dao.sporttery.T_LOTO_EDao;
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
+import com.longti.upjc.dao.sporttery.T_LOTO_EDao;
 
 
 /**
- * 电子竞猜比赛信息daoImpl
+ * 话题信息daoImpl
  */
 @Repository
 public class T_LOTO_EDaoImpl extends BaseDaoImpl<T_LOTO_E> implements T_LOTO_EDao  {

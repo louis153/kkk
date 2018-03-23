@@ -1,10 +1,9 @@
 package com.longti.upjc.dao.impl.sporttery;
 import java.util.List;
 import org.springframework.stereotype.Repository;
-
 import com.longti.upjc.dao.impl.BaseDaoImpl;
-import com.longti.upjc.dao.sporttery.T_LOTO_SIS_EDao;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_E;
+import com.longti.upjc.dao.sporttery.T_LOTO_SIS_EDao;
 
 
 /**
@@ -58,12 +57,12 @@ public class T_LOTO_SIS_EDaoImpl extends BaseDaoImpl<T_LOTO_SIS_E> implements T_
     public int deleteT_LOTO_SIS_E(T_LOTO_SIS_E t_loto_sis_e) throws Exception{
         return getSqlSession().delete("com.longti.upjc.entity.sporttery.T_LOTO_SIS_E.delete",t_loto_sis_e);
     }
-    /**
-     * 按统计保存
-     */
-    @Override
-	public int saveSis(T_LOTO_SIS_E t_loto_sis_e) throws Exception {
-		return getSqlSession().delete("com.longti.upjc.entity.sporttery.T_LOTO_SIS_E.save_sis",t_loto_sis_e);
+
+	@Override
+	public int saveSis(T_LOTO_SIS_E t_loto_sis_e) {
+		return getSqlSession().delete("com.tengcai.vims.entity.sporttery.T_LOTO_SIS_E.save_sis",t_loto_sis_e);
 	}
-   
+
+
+	
 }

@@ -16,6 +16,7 @@ public class LOTO_F implements Serializable {
 	private static final long serialVersionUID = 8549423862211941476L;
 	private String issue; //比赛编号
 	private String[] issues;
+	private String electronic_code;
     private String StartIssue;//查询开始销售编号
     private String EndIssue;//查询结束销售编号
     private String starttime; //比赛开始时间
@@ -39,12 +40,10 @@ public class LOTO_F implements Serializable {
 	private String had_d_0; //平初始值
     private String had_a_0; //负初始值
     
-    private Integer is_recommend; //推荐 1推荐 0 不推荐
     private Integer status; //比赛状态,1进行中2已派奖3已开奖99取消
     private String leaguename; //比赛名称
     private Integer row_start;//开始行
     private Integer page_size;//每页行数
-    private Integer letcount;//让球
 
     private Integer is_hot;//热点
     private Integer had_bet;
@@ -147,12 +146,7 @@ public class LOTO_F implements Serializable {
 		this.had_a = had_a;
 	}
     
-    public Integer getIs_recommend() {
-        return is_recommend;
-	}
-	public void setIs_recommend(Integer is_recommend) {
-		this.is_recommend = is_recommend;
-	}
+    	
     public Integer getStatus() {
         return status;
 	}
@@ -180,12 +174,7 @@ public class LOTO_F implements Serializable {
     public void setPage_size(Integer page_size){
         this.page_size=page_size;
     }
-	public Integer getLetcount() {
-		return letcount;
-	}
-	public void setLetcount(Integer letcount) {
-		this.letcount = letcount;
-	}
+	
 	public String[] getIssues() {
 		return issues;
 	}
@@ -236,6 +225,12 @@ public class LOTO_F implements Serializable {
 	}
 	public void setHad_bet(Integer had_bet) {
 		this.had_bet = had_bet;
+	}
+	public String getElectronic_code() {
+		return electronic_code;
+	}
+	public void setElectronic_code(String electronic_code) {
+		this.electronic_code = electronic_code;
 	}
 	
 	
