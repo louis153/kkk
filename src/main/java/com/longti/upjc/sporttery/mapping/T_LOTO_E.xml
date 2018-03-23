@@ -4,9 +4,9 @@
 	<select id = "selectT_LOTO_EList" resultType="T_LOTO_E" parameterType="T_LOTO_E">
 		SELECT issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max from 
 		<choose>  
-        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
     	</choose> 		
         <where>
 <if test="issue != null">
@@ -108,9 +108,9 @@ order by issue
     <select id = "selectT_LOTO_ECount" resultType="int" parameterType="T_LOTO_E">
 		SELECT count(*) from 
 		<choose>  
-        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
     	</choose> 
         <where>
 <if test="issue != null">
@@ -210,9 +210,9 @@ order by issue
     <insert id="save" parameterType="T_LOTO_E">
     <![CDATA[INSERT INTO]]> 
         <choose>  
-        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
     	</choose> 
     <![CDATA[(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
 VALUES(#{issue},#{play_method},#{starttime},#{sale_time},#{endtime},#{home_team_name},#{guest_team_name},#{options_one},#{options_two},#{options_three},#{cg},#{odds_one},#{odds_two},#{odds_three},#{status},#{leaguename},#{available},#{mnl_bet},#{create_time},#{update_time},#{compensate_min},#{compensate_max},#{single_lottery_max},#{single_match_max},#{sort},#{lottery_type},#{return_min},#{return_max})
@@ -221,9 +221,9 @@ VALUES(#{issue},#{play_method},#{starttime},#{sale_time},#{endtime},#{home_team_
     <insert id="saveList" parameterType="java.util.List">
     <![CDATA[INSERT INTO]]> 
         <choose>  
-        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
     	</choose> 
     <![CDATA[(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
 VALUES
@@ -235,9 +235,9 @@ VALUES
     <update id="update" parameterType="T_LOTO_E">
     <![CDATA[UPDATE]]>
         <choose>  
-        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
     	</choose>  
     <![CDATA[set issue=#{issue},play_method=#{play_method},starttime=#{starttime},sale_time=#{sale_time},endtime=#{endtime},home_team_name=#{home_team_name},guest_team_name=#{guest_team_name},options_one=#{options_one},options_two=#{options_two},options_three=#{options_three},cg=#{cg},odds_one=#{odds_one},odds_two=#{odds_two},odds_three=#{odds_three},status=#{status},leaguename=#{leaguename},available=#{available},mnl_bet=#{mnl_bet},create_time=#{create_time},update_time=#{update_time},compensate_min=#{compensate_min},compensate_max=#{compensate_max},single_lottery_max=#{single_lottery_max},single_match_max=#{single_match_max},sort=#{sort},lottery_type=#{lottery_type},return_min=#{return_min},return_max=#{return_max}
 		WHERE  issue=#{issue} 
@@ -246,9 +246,9 @@ VALUES
     <insert id="updateList" parameterType="java.util.List">
     <![CDATA[REPLACE INTO]]> 
         <choose>  
-        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
     	</choose>  
     <![CDATA[(issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max)
     VALUES
@@ -260,9 +260,9 @@ VALUES
     <delete id="delete" parameterType="T_LOTO_E">
     <![CDATA[DELETE FROM]]> 
         <choose>  
-        	<when test="electronic_code=='eth'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='gto'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='uz'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
     	</choose>   
     <![CDATA[WHERE  issue=#{issue}]]>
     </delete>    

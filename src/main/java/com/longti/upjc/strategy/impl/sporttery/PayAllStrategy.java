@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,8 @@ public class PayAllStrategy implements IMethodStrategy {
 	private V_ORDERService v_orderService;
 	@Autowired
 	private T_USERService t_USERService;
+	@Autowired
+	private LangListStrategy langListStrategy;
 	public static class Odd {
 		private String odd_name;
 		private String odd_value;
@@ -195,7 +198,7 @@ public class PayAllStrategy implements IMethodStrategy {
 					t_USER=lsUsers.get(0);
 				}
 				payFoot(rv, sbFalse, channel, ((JSONObject) positionObj).getJSONArray("lst"), request_LtGameLogic.getUserPin(),
-						t_USER.getNick_name(),request_LtGameLogic.getFeeType());
+						t_USER.getNick_name(),request_LtGameLogic.getFeeType(),request_LtGameLogic.getLang());
 				if (rv.getStatus() != null && rv.getStatus().equals(ErrorMessage.SUCCESS.getCode()) == false) {
 					return JSONObject.toJSONString(rv);
 				}
@@ -236,9 +239,89 @@ public class PayAllStrategy implements IMethodStrategy {
 			canBet.add(issue + "|" + type);
 		}
 	}
+	public static class LangObj{
+		public String issue;
+		public String leaguename;
+		public String home_team_name;
+		public String guest_team_name;
+		public String play_method;
+		public String options_one;
+		public String options_two;
+		public String options_three;
 
+	}
+	private Map<String,LangObj> getLangMap(Request_LtGameLogic request_LtGameLogic,List<LangObj> lstLang) throws Exception{
+		
+		
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("lst", lstLang);
+		request_LtGameLogic.setGameRequest(jsonObject.toJSONString());
+		String rvStr=langListStrategy.doJsonMethod(request_LtGameLogic, jsonObject);
+		JSONObject 	rv=(JSONObject)JSONObject.parse(rvStr);
+		Map<String,LangObj> mapRv=new HashMap<String,LangObj>();
+		if(rv.get("state").equals("000000")){
+			JSONArray lst= (JSONArray)rv.get("lst");
+			
+			
+			for(Object o:lst){
+				LangObj langObj=new LangObj();
+				langObj.issue=((JSONObject)o).get("issue").toString();
+				langObj.guest_team_name=((JSONObject)o).get("guest_team_name").toString();
+				langObj.home_team_name=((JSONObject)o).get("home_team_name").toString();
+				langObj.leaguename=((JSONObject)o).get("leaguename").toString();
+				langObj.options_one=((JSONObject)o).get("options_one").toString();
+				langObj.options_three=((JSONObject)o).get("options_three").toString();
+				langObj.options_two=((JSONObject)o).get("options_two").toString();
+				langObj.play_method=((JSONObject)o).get("play_method").toString();
+				mapRv.put(langObj.issue,langObj);
+				
+			}
+			return mapRv;
+ 
+		}else{
+			for(LangObj o:lstLang){
+				mapRv.put(o.issue, o);
+			}
+			return mapRv;
+		}
+		
+	}
+	
+	private void changeFsLang(List<LOTO_F> loto_Fs,String feeType,String lang,String userPin) throws Exception{
+		Request_LtGameLogic request_LtGameLogic=new Request_LtGameLogic();
+		request_LtGameLogic.setExt("");
+		request_LtGameLogic.setFeeType(feeType);
+		request_LtGameLogic.setGameId(500L);
+		request_LtGameLogic.setGameSource(1);
+		request_LtGameLogic.setTranType(0);
+		request_LtGameLogic.setLang(lang);		
+		request_LtGameLogic.setUserPin(userPin);
+		request_LtGameLogic.setUserToken("");
+		List<LangObj> lstLang=new ArrayList<LangObj>();
+		for(LOTO_F f:loto_Fs){
+			LangObj langObj=new LangObj();
+			langObj.guest_team_name=f.getGuest_team_name();
+			langObj.home_team_name=f.getHome_team_name();
+			langObj.issue=f.getIssue();
+			langObj.leaguename=f.getLeaguename();
+			langObj.options_one="";
+			langObj.options_three="";
+			langObj.options_two="";
+			langObj.play_method="";
+			lstLang.add(langObj);
+		}
+		Map<String,LangObj> mapLang= getLangMap(request_LtGameLogic,lstLang);
+		for(LOTO_F f:loto_Fs){
+			if(mapLang.containsKey(f.getIssue())){
+				LangObj langObj=mapLang.get(f.getIssue());
+				f.setGuest_team_name(langObj.guest_team_name);
+				f.setHome_team_name(langObj.home_team_name);
+				f.setLeaguename(langObj.leaguename);				
+			}
+		}
+	}
 	private void payFoot(ReturnValue<PayAll_Data> rv, List<String> sbFalse, String channel, JSONArray lst_rem,
-			String userPin, String nickName,String electronic_code) throws Exception {
+			String userPin, String nickName,String electronic_code,String lang) throws Exception {
 
 		if(lst_rem.size()==0){
 			rv.setMess(ErrorMessage.FAIL);
@@ -300,6 +383,7 @@ public class PayAllStrategy implements IMethodStrategy {
 		qryF.setEndtime(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));
 		List<LOTO_F> loto_Fs = lotoFNService.selectLOTO_FNList(qryF);
 
+		changeFsLang(loto_Fs,electronic_code,lang, userPin);
 		for (LOTO_F b : loto_Fs) {
 			if (b.getStatus() == 99) {
 				rv.setMess(ErrorMessage.CANCEL);
@@ -493,6 +577,8 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setVsteam(f.getHome_team_name() + "vs" + f.getGuest_team_name());
 				loto_ORDER.setWin_fee((int)Math.round(loto_ORDER.getBet_fee() * oddv));
 				loto_ORDER.setPrize_cancel_time(DateUtils.getDateToStr("1900-1-1"));
+				loto_ORDER.setOptions_one("");
+				loto_ORDER.setLeaguename(f.getLeaguename());
 				loto_ORDER.setOrder_source(channel);
 				loto_ORDER.setVsresult("");
 				lstTemp.add(loto_ORDER);
