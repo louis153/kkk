@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
-import com.longti.upjc.entity.sporttery.T_LOTO_INVCODE;
+import com.longti.upjc.entity.sporttery.T_USER_INVCODE;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
-import com.longti.upjc.service.sporttery.T_LOTO_INVCODEService;
+import com.longti.upjc.service.sporttery.T_USER_INVCODEService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.ReturnValue;
@@ -34,22 +34,22 @@ public class BindInvcode_GetStrategy implements IMethodStrategy {
 	
 	protected final transient static Logger logger = LoggerFactory.getLogger(BindInvcode_GetStrategy.class);
 	@Autowired
-	private T_LOTO_INVCODEService lotoINVCODEService;
+	private T_USER_INVCODEService userINVCODEService;
 	
 	@Override
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
 		ReturnValue<LotoBindInvcodeDetail> rv = new ReturnValue<LotoBindInvcodeDetail>();
 		logger.info("get_bindinvcode开始调用获取绑定邀请码接口doJsonMethod------>");
-		String user_pin = jsonRequest.get("user_pin").toString().trim();
-		T_LOTO_INVCODE t_loto_invcode = new T_LOTO_INVCODE();
-		t_loto_invcode.setUser_pin(user_pin);
-		List<T_LOTO_INVCODE> invList = null;
+		String user_pin = request_LtGameLogic.getUserPin();
+		T_USER_INVCODE t_user_invcode = new T_USER_INVCODE();
+		t_user_invcode.setUser_pin(user_pin);
+		List<T_USER_INVCODE> invList = null;
 		try {	
-			invList = lotoINVCODEService.selectT_LOTO_INVCODEList(t_loto_invcode);
+			invList = userINVCODEService.selectT_USER_INVCODEList(t_user_invcode);
 			if(invList.size()>0){
-				t_loto_invcode = invList.get(0);     	
+				t_user_invcode = invList.get(0);     	
             	LotoBindInvcodeDetail lotoBindInvcodeDetail = new LotoBindInvcodeDetail();
-            	lotoBindInvcodeDetail.bindinvitation_code = t_loto_invcode.getBind_invitation_code();
+            	lotoBindInvcodeDetail.bindinvitation_code = t_user_invcode.getBind_invitation_code();
             	lotoBindInvcodeDetail.gto = "";
             	lotoBindInvcodeDetail.eth = "";
             	lotoBindInvcodeDetail.uz = "";

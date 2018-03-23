@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
-    <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_INVCODE">
-	<select id = "selectT_LOTO_INVCODEList" resultType="T_LOTO_INVCODE" parameterType="T_LOTO_INVCODE">
+    <mapper namespace="com.longti.upjc.entity.sporttery.T_USER_INVCODE">
+	<select id = "selectT_USER_INVCODEList" resultType="T_USER_INVCODE" parameterType="T_USER_INVCODE">
 		SELECT 
 		    t.user_pin,t.invitation_code,t.firstlogin_time,t.is_bind,t.bind_user_pin,t.bind_invitation_code,t.bind_time
-		from t_loto_invcode t
+		from t_user_invcode t
         <where>
 <if test="user_pin != null">
  and t.user_pin=#{user_pin}
@@ -13,33 +13,33 @@
  and t.invitation_code=#{invitation_code}
 </if>
 </where>
-order by firstlogin_time
+order by t.firstlogin_time
     </select>
     
-    <select id = "selectT_LOTO_INVCODECount" resultType="int" parameterType="T_LOTO_INVCODE">
-		SELECT count(*) from t_loto_invcode
+    <select id = "selectT_USER_INVCODECount" resultType="int" parameterType="T_USER_INVCODE">
+		SELECT count(*) from t_user_invcode
         <where>
 <if test="user_pin != null">
- and t.user_pin=#{user_pin}
+ and user_pin=#{user_pin}
 </if>
 <if test="invitation_code != null">
- and t.invitation_code=#{invitation_code}
+ and invitation_code=#{invitation_code}
 </if>
 </where>
 order by firstlogin_time
        
     </select>
     
-    <insert id="save" parameterType="T_LOTO_INVCODE">
+    <insert id="save" parameterType="T_USER_INVCODE">
     <![CDATA[
-        INSERT INTO t_loto_invcode(user_pin,invitation_code,firstlogin_time,is_bind,bind_user_pin,bind_invitation_code,bind_time)
+        INSERT INTO t_user_invcode(user_pin,invitation_code,firstlogin_time,is_bind,bind_user_pin,bind_invitation_code,bind_time)
 VALUES(#{user_pin},#{invitation_code},#{firstlogin_time},#{is_bind},#{bind_user_pin},#{bind_invitation_code},#{bind_time})
 	]]>
     </insert>
     
     <insert id="saveList" parameterType="java.util.List">
     <![CDATA[
-        INSERT INTO t_loto_invcode(user_pin,invitation_code,firstlogin_time,isbind,bind_user_pin,bind_invitation_code,bind_time)
+        INSERT INTO t_user_invcode(user_pin,invitation_code,firstlogin_time,isbind,bind_user_pin,bind_invitation_code,bind_time)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
@@ -47,16 +47,16 @@ VALUES
     </foreach>
     </insert>
     
-    <update id="update" parameterType="T_LOTO_INVCODE">
+    <update id="update" parameterType="T_USER_INVCODE">
     <![CDATA[
-        UPDATE t_loto_invcode set user_pin=#{user_pin},invitation_code=#{invitation_code},firstlogin_time=#{firstlogin_time},is_bind=#{is_bind},bind_user_pin=#{bind_user_pin},bind_invitation_code=#{bind_invitation_code},bind_time=#{bind_time}
+        UPDATE t_user_invcode set user_pin=#{user_pin},invitation_code=#{invitation_code},firstlogin_time=#{firstlogin_time},is_bind=#{is_bind},bind_user_pin=#{bind_user_pin},bind_invitation_code=#{bind_invitation_code},bind_time=#{bind_time}
 		WHERE  user_pin=#{user_pin} 
 	]]>
     </update>
     
     <insert id="updateList" parameterType="java.util.List">
     <![CDATA[
-        REPLACE INTO t_loto_invcode(user_pin,invitation_code,firstlogin_time,is_bind,bind_user_pin,bind_invitation_code,bind_time)
+        REPLACE INTO t_user_invcode(user_pin,invitation_code,firstlogin_time,is_bind,bind_user_pin,bind_invitation_code,bind_time)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
@@ -64,9 +64,9 @@ VALUES
     </foreach>
     </insert>
     
-    <delete id="delete" parameterType="T_LOTO_INVCODE">
+    <delete id="delete" parameterType="T_USER_INVCODE">
     <![CDATA[
-        DELETE FROM t_loto_invcode WHERE  user_pin=#{user_pin} 
+        DELETE FROM t_user_invcode WHERE  user_pin=#{user_pin} 
 	]]>
     </delete>    
 </mapper > 

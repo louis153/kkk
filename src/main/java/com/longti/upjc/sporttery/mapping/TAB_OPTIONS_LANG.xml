@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.TAB_OPTIONS_LANG">
+    <select id = "selectTAB_OPTIONS_LANGMap" resultType="java.util.HashMap" parameterType="TAB_OPTIONS_LANG">
+        SELECT t.key,t.value from tab_options_lang t
+        <where>
+<if test="lang != null">
+ and t.lang=#{lang}
+</if>
+</where>
+    </select>
+    
+    
+	<select id = "selectTAB_OPTIONS_LANGList" resultType="TAB_OPTIONS_LANG" parameterType="TAB_OPTIONS_LANG">
+		SELECT t.id,t.lang,t.key,t.value from tab_options_lang t
+        <where>
+<if test="lang != null">
+ and t.lang=#{lang}
+</if>
+</where>
+    </select>
+    
+    <select id = "selectTAB_OPTIONS_LANGCount" resultType="int" parameterType="TAB_OPTIONS_LANG">
+		SELECT count(*) from tab_options_lang
+        <where>
+<if test="lang != null">
+ and lang=#{lang}
+</if>
+</where>
+    </select>
+    
+    <insert id="save" parameterType="TAB_OPTIONS_LANG">
+    <![CDATA[
+        INSERT INTO tab_options_lang(id,lang,key,value)
+VALUES(#{id},#{lang},#{key},#{value})
+	]]>
+    </insert>
+    
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO tab_options_lang(id,lang,key,value)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.lang},#{v.key},#{v.value}) ]]>
+    </foreach>
+    </insert>
+    
+    <update id="update" parameterType="TAB_OPTIONS_LANG">
+    <![CDATA[
+        UPDATE tab_options_lang set id=#{id},lang=#{lang},key=#{key},value=#{value}
+		WHERE  lang=#{lang} 
+	]]>
+    </update>
+    
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO tab_options_lang(id,lang,key,value)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.lang},#{v.key},#{v.value})) ]]>
+    </foreach>
+    </insert>
+    
+    <delete id="delete" parameterType="TAB_OPTIONS_LANG">
+    <![CDATA[
+        DELETE FROM tab_options_lang WHERE  lang=#{lang} 
+	]]>
+    </delete>    
+</mapper > 

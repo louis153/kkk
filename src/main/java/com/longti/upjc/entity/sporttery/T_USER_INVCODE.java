@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * 用户绑定邀请码entity
  */
-public class T_LOTO_INVCODE  implements Serializable {
+public class T_USER_INVCODE  implements Serializable {
 
 	/**
 	 * 

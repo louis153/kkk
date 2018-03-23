@@ -10,14 +10,14 @@
  and t.currency_type=#{currency_type}
 </if>
 </where>
-order by id
+order by t.id
     </select>
     
     <select id = "selectTAB_CHIPCount" resultType="int" parameterType="TAB_CHIP">
 		SELECT count(*) from tab_chip
         <where>
 <if test="currency_type != null">
- and t.currency_type=#{currency_type}
+ and currency_type=#{currency_type}
 </if>
 </where>
 order by id

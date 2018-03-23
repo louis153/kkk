@@ -14,7 +14,7 @@
  </foreach>
 </if>
 </where>
-order by issue
+order by e.issue
 
         <if test = "row_start != null and page_size != null" >
         limit ${row_start},${page_size}

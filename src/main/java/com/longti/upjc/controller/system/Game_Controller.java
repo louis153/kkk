@@ -68,7 +68,7 @@ public class Game_Controller {
 		try {
 		   try {
 			   
-			   strJson=(org.apache.commons.io.IOUtils.toString(is));
+			   strJson=(org.apache.commons.io.IOUtils.toString(is,"UTF-8"));
 			   
 		   } catch (IOException e) {
 			   logger.info("调用gameLogic接口失败----->");
@@ -88,10 +88,11 @@ public class Game_Controller {
 		request_LtGameLogic.setGameSource(Integer.valueOf(jsonObject.get("gameSource").toString()));
 		request_LtGameLogic.setUserPin(jsonObject.getString("userPin"));
 		request_LtGameLogic.setUserToken(jsonObject.getString("userToken"));
+		request_LtGameLogic.setLang(jsonObject.getString("lang").toString());
 		Response_LtGameLogic response_LtGameLogic=new Response_LtGameLogic();
 				
 		try {
-			String gameRequest=java.net.URLDecoder.decode(request_LtGameLogic.getGameRequest(), "utf-8");
+			String gameRequest=java.net.URLDecoder.decode(request_LtGameLogic.getGameRequest(), "UTF-8");
 			logger.info("游戏逻辑gameLogic接收到的请求信息----->："+gameRequest,gameRequest);
 			
 			JSONObject jsonRequest=JSONObject.parseObject(gameRequest);
@@ -172,7 +173,7 @@ public class Game_Controller {
 		PrintWriter out = null;
 		
 		try {
-			out = new PrintWriter(response.getOutputStream());// 发送请求参数
+			out = response.getWriter();//new PrintWriter(response.getOutputStream());// 发送请求参数
 	        out.print(str);//使用url编码
 	        // flush输出流的缓冲	        
 	        out.flush();

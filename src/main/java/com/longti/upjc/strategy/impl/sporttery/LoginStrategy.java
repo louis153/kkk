@@ -21,7 +21,7 @@ import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.ReturnValue;
 
 /**
- * 蓝球支付
+ * 登录
  * 
  * @return
  */
@@ -47,7 +47,6 @@ public class LoginStrategy implements IMethodStrategy {
 		Request_LtGameLogic invcode_Request=new Request_LtGameLogic(request_LtGameLogic);
 		JSONObject invcodeJSON=new JSONObject();
 		invcodeJSON.put("method","create_invcode");
-		invcodeJSON.put("user_pin", invcode_Request.getUserPin());
 		invcodeJSON.put("first_time", first_time);		
 		invcode_Request.setGameRequest(invcodeJSON.toJSONString());
 		JSONObject jsonRV=JSONObject.parseObject(invcode_CreateStrategy.doJsonMethod(invcode_Request, invcodeJSON));
@@ -55,7 +54,7 @@ public class LoginStrategy implements IMethodStrategy {
 	}
 	@Override
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
-		logger.info("pay开始调用支付接口doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
+		logger.info("login开始调用登录接口doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
 		
 		ReturnValue<Login_Data> rv = new ReturnValue<>();
 		rv.setData(new Login_Data());

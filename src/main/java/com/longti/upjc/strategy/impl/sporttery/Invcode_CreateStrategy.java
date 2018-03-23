@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson.JSONObject;
-import com.longti.upjc.entity.sporttery.T_LOTO_INVCODE;
+import com.longti.upjc.entity.sporttery.T_USER_INVCODE;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
-import com.longti.upjc.service.sporttery.T_LOTO_INVCODEService;
+import com.longti.upjc.service.sporttery.T_USER_INVCODEService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
@@ -27,22 +27,25 @@ public class Invcode_CreateStrategy implements IMethodStrategy {
 	
 	protected final transient static Logger logger = LoggerFactory.getLogger(Invcode_CreateStrategy.class);
 	@Autowired
-	private T_LOTO_INVCODEService lotoINVCODEService;
+	private T_USER_INVCODEService userINVCODEService;
 	
 	@Override
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
 		ReturnValue<String> rv = new ReturnValue<String>();
 		logger.info("create_invcode开始调用生成邀请码接口doJsonMethod------>");
-		String user_pin = jsonRequest.get("user_pin").toString().trim();
+		String user_pin = request_LtGameLogic.getUserPin();
 		String first_time = jsonRequest.get("first_time").toString().trim();
 		String invitation_code = getInvcode();//随机生成六位邀请码
-		T_LOTO_INVCODE t_loto_invcode = new T_LOTO_INVCODE();
-		t_loto_invcode.setUser_pin(user_pin);
-		t_loto_invcode.setInvitation_code(invitation_code);
-		t_loto_invcode.setFirstlogin_time(DateUtils.getStrToDate(first_time,"yyyy-MM-dd HH:mm:ss"));
-		t_loto_invcode.setIs_bind(0);
+		T_USER_INVCODE t_user_invcode = new T_USER_INVCODE();
+		t_user_invcode.setUser_pin(user_pin);
+		t_user_invcode.setInvitation_code(invitation_code);
+		t_user_invcode.setFirstlogin_time(DateUtils.getStrToDate(first_time,"yyyy-MM-dd HH:mm:ss"));
+		t_user_invcode.setIs_bind(0);
+		t_user_invcode.setBind_user_pin("");
+		t_user_invcode.setBind_invitation_code("");
+		t_user_invcode.setBind_time(null);
 		try {	
-			lotoINVCODEService.insertT_LOTO_INVCODE(t_loto_invcode);
+			userINVCODEService.insertT_USER_INVCODE(t_user_invcode);
 			rv.setStatus(ErrorMessage.SUCCESS.getCode());
 			rv.setMessage(ErrorMessage.SUCCESS.getMessage());
 			logger.info("生成邀请码成功----->");
