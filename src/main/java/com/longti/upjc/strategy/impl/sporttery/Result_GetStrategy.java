@@ -4,6 +4,7 @@
  */
 package com.longti.upjc.strategy.impl.sporttery;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.ReturnValue;
+import com.longti.upjc.util.StringUtil;
 
 /**
  *查看竞猜详情
@@ -83,6 +85,9 @@ public class Result_GetStrategy implements IMethodStrategy{
 		String order_id = jsonRequest.get("id").toString();
 		LOTO_ORDER lotoOrder = new LOTO_ORDER();
 		lotoOrder.setId(Integer.parseInt(order_id));
+		if (StringUtil.isEmpty(request_LtGameLogic.getFeeType()) == false) {
+			lotoOrder.setElectronic_code(request_LtGameLogic.getFeeType());
+		}
 		T_USER t_USER=new T_USER();
 		t_USER.setUser_pin(request_LtGameLogic.getUserPin());
 		List<T_USER> lsT_USERs=t_userService.selectT_USERList(t_USER);
@@ -96,7 +101,10 @@ public class Result_GetStrategy implements IMethodStrategy{
 			if (lstLotoOrder.isEmpty() == false) {
 				lotoOrder = lstLotoOrder.get(0);
 				rv.setMess(ErrorMessage.SUCCESS);
-				rv.getData().bet_fee = lotoOrder.getBet_fee().toString();
+				BigDecimal multi = new BigDecimal(1000000);
+				BigDecimal bet_fee = new BigDecimal(lotoOrder.getBet_fee()).divide(multi, 6, BigDecimal.ROUND_HALF_UP);
+				BigDecimal win_fee = new BigDecimal(lotoOrder.getWin_fee()).divide(multi, 6, BigDecimal.ROUND_HALF_UP);
+				rv.getData().bet_fee = bet_fee.toString();
 				rv.getData().bet_status = lotoOrder.getBet_status().toString();
 				rv.getData().create_time = (lotoOrder.getCreate_time() == null ? ""
 						: DateUtils.getDateToStr(lotoOrder.getCreate_time(), "yyyy-MM-dd HH:mm:ss"));
@@ -110,9 +118,9 @@ public class Result_GetStrategy implements IMethodStrategy{
 				rv.getData().prize_status = lotoOrder.getPrize_status().toString();
 				rv.getData().user_name=t_USER.getNick_name();
 				if (lotoOrder.getBet_status() == 2) {
-					rv.getData().win_fee = lotoOrder.getWin_fee().toString();
+					rv.getData().win_fee = win_fee.toString();
 				} else if (lotoOrder.getBet_status() == 4) {
-					rv.getData().win_fee = lotoOrder.getBet_fee().toString();
+					rv.getData().win_fee = bet_fee.toString();
 				} else {
 					rv.getData().win_fee = "0";
 				}
