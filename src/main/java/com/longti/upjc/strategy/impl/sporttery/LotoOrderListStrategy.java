@@ -44,6 +44,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 		public String user_pin; //用户pin
 		public String home_team_name; //主队
 		public String guest_team_name;//客队
+		public String vsteam;//对阵
 		public String win_fee; //奖金,0表示未中奖
 	}
 	public static class LOTO_ORDERData{
@@ -125,9 +126,10 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 				loto_ORDERDetail.id=(loto_ORDER.getId().toString());
 				loto_ORDERDetail.prize_status=(loto_ORDER.getPrize_status().toString());
 				loto_ORDERDetail.user_pin=(loto_ORDER.getUser_pin());
-				String[] team_names=loto_ORDER.getVsteam().split("vs");
-				loto_ORDERDetail.home_team_name=(team_names[0]);
-				loto_ORDERDetail.guest_team_name=(team_names[1]);
+//				String[] team_names=loto_ORDER.getVsteam().split("vs");
+//				loto_ORDERDetail.home_team_name=(team_names[0]);
+//				loto_ORDERDetail.guest_team_name=(team_names[1]);
+				loto_ORDERDetail.vsteam = loto_ORDER.getVsteam();
 				if(loto_ORDER.getBet_status()==2){
 					loto_ORDERDetail.win_fee=(win_fee.toString());
 				}else if(loto_ORDER.getBet_status()==4){
