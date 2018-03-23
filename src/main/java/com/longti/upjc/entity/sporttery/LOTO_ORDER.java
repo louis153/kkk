@@ -37,6 +37,7 @@ public class LOTO_ORDER implements Serializable {
     private Date end_prize_cancel_time; //结束派奖(取消)时间
     private String order_source; //来源
     private String position;//频道
+    private String match_result;//赛果（话题结果）
     private String memo; //备注
     private String options_one;//选项1
     private String options_two;//选项2
@@ -168,7 +169,13 @@ public class LOTO_ORDER implements Serializable {
 	public void setOrder_source(String order_source) {
 		this.order_source = order_source;
 	}
-    public String getMemo() {
+    public String getMatch_result() {
+		return match_result;
+	}
+	public void setMatch_result(String match_result) {
+		this.match_result = match_result;
+	}
+	public String getMemo() {
         return StringUtil.ifnull(memo);
 	}
 	public void setMemo(String memo) {
