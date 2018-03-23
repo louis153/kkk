@@ -44,7 +44,8 @@ public class LangUtil {
 		JSONObject 	rv=(JSONObject)JSONObject.parse(rvStr);
 		Map<String,LangObj> mapRv=new HashMap<String,LangObj>();
 		if(rv.get("status").equals("000000")){
-			JSONArray lst= (JSONArray)rv.get("lst");
+			JSONObject data=(JSONObject)rv.get("data");
+			JSONArray lst= (JSONArray)data.get("lst");
 			
 			
 			for(Object o:lst){

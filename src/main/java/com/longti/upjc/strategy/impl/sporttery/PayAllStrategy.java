@@ -263,10 +263,13 @@ public class PayAllStrategy implements IMethodStrategy {
 		Map<String,LangObj> mapLang= (new LangUtil(langListStrategy)).getLangMap(feeType,lang,userPin,lstLang);
 		for(LOTO_F f:loto_Fs){
 			if(mapLang.containsKey(f.getIssue())){
-				LangObj langObj=mapLang.get(f.getIssue());
-				f.setGuest_team_name(langObj.guest_team_name);
-				f.setHome_team_name(langObj.home_team_name);
-				f.setLeaguename(langObj.leaguename);				
+					LangObj langObj=mapLang.get(f.getIssue());
+				if(langObj.guest_team_name.isEmpty()==false)
+					f.setGuest_team_name(langObj.guest_team_name);
+				if(langObj.home_team_name.isEmpty()==false)
+					f.setHome_team_name(langObj.home_team_name);
+				if(langObj.leaguename.isEmpty()==false)
+					f.setLeaguename(langObj.leaguename);				
 			}
 		}
 	}
@@ -289,12 +292,19 @@ public class PayAllStrategy implements IMethodStrategy {
 		for(T_LOTO_E e:loto_Es){
 			if(mapLang.containsKey(e.getIssue())){
 				LangObj langObj=mapLang.get(e.getIssue());
+				if(langObj.guest_team_name.isEmpty()==false)
 				e.setGuest_team_name(langObj.guest_team_name);
+				if(langObj.home_team_name.isEmpty()==false)
 				e.setHome_team_name(langObj.home_team_name);
+				if(langObj.leaguename.isEmpty()==false)
 				e.setLeaguename(langObj.leaguename);
+				if(langObj.options_one.isEmpty()==false)
 				e.setOptions_one(langObj.options_one);
+				if(langObj.options_three.isEmpty()==false)
 				e.setOptions_three(langObj.options_three);
+				if(langObj.options_two.isEmpty()==false)
 				e.setOptions_two(langObj.options_two);
+				if(langObj.play_method.isEmpty()==false)
 				e.setPlay_method(langObj.play_method);				
 			}
 		}

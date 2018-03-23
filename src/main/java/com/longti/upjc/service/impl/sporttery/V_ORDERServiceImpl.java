@@ -228,7 +228,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 
 		logger.info("开始调用支付接口");
 		String password="";
-		String betResult = BetUtils.Bet(vOrder.getUser_pin(),vOrder.getElectronic_code(),vOrder.getOrder_id(),String.format("%.2f", vOrder.getBet_fee()/BetUtils.preMul),password).status;
+		String betResult = BetUtils.Bet(vOrder.getUser_pin(),vOrder.getElectronic_code(),vOrder.getOrder_id(),(new BigDecimal(vOrder.getBet_fee()/BetUtils.preMul)).toString(),password).status;
 		
 		if (betResult == null) {
 			throw new Exception("调用接口异常");
