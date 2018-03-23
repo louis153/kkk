@@ -52,7 +52,7 @@ public interface V_ORDERService {
      */
     public int deleteV_ORDER(V_ORDER v_order) throws Exception;
 
-	void updateDPs(String issume, HashMap<String, Boolean> canChangeOdd, List<String> canBet) throws Exception;
+	
     
 	
 }

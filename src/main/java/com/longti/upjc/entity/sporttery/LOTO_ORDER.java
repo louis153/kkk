@@ -46,7 +46,9 @@ public class LOTO_ORDER implements Serializable {
     private String leaguename;//比赛名称
     private Integer row_start;//开始行
     private Integer page_size;//每页行数
-
+    private String reward_fee;
+    private String reward_user_pin;
+    private String reward_bet_fee;
 
     public Integer getId() {
         return id;
@@ -238,6 +240,24 @@ public class LOTO_ORDER implements Serializable {
 	}
 	public void setOptions_three(String options_three) {
 		this.options_three = options_three;
+	}
+	public String getReward_fee() {
+		return reward_fee;
+	}
+	public void setReward_fee(String reward_fee) {
+		this.reward_fee = reward_fee;
+	}
+	public String getReward_user_pin() {
+		return reward_user_pin;
+	}
+	public void setReward_user_pin(String reward_user_pin) {
+		this.reward_user_pin = reward_user_pin;
+	}
+	public String getReward_bet_fee() {
+		return reward_bet_fee;
+	}
+	public void setReward_bet_fee(String reward_bet_fee) {
+		this.reward_bet_fee = reward_bet_fee;
 	}
 
 	

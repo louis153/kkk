@@ -24,6 +24,7 @@ import com.longti.upjc.entity.sporttery.T_LOTO_SIS_F;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.service.sporttery.V_ORDERService;
 import com.longti.upjc.sp.SPQ;
+import com.longti.upjc.util.NumberUtils;
 import com.longti.upjc.util.StringUtil;
 import com.longti.upjc.util.jdbet.BetUtils;
 
@@ -98,10 +99,11 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 	}
 
 	private void updateFPs(String issue, HashMap<String, Boolean> canChangeOdd, List<String> canBet,
-			TAB_SALES_THRESHOLD tab_SALES_THRESHOLD) {
+			TAB_SALES_THRESHOLD tab_SALES_THRESHOLD,String electronic_code) {
 		logger.info("设置足球当前投注赔率开始-->");
 
 		T_LOTO_SIS_F t_loto_sis_f = new T_LOTO_SIS_F();
+		t_loto_sis_f.setElectronic_code(electronic_code);
 		t_loto_sis_f.setIssue(issue);
 		List<T_LOTO_SIS_F> lstT_LOTO_SIS_F = null;
 		try {
@@ -117,7 +119,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 
 		LOTO_F loto_fn = new LOTO_F();
 		loto_fn.setIssue(issue);
-
+		loto_fn.setElectronic_code(electronic_code);
 		List<LOTO_F> lst_F = null;
 		try {
 			lst_F = loto_FNDao.selectLOTO_FNList(loto_fn);
@@ -125,6 +127,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 			logger.error("取得足球初始赔率出错" + e.getMessage(), e);
 		}
 		loto_fn = lst_F.get(0);
+		loto_fn.setElectronic_code(electronic_code);
 		if (lst_F.size() > 0) {
 			if (tab_SALES_THRESHOLD.getXnpktze() != null || tab_SALES_THRESHOLD.getXnpktze() != 0) {
 				spq.setFirstb(tab_SALES_THRESHOLD.getXnpktze());
@@ -162,8 +165,9 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 			
 			try {
 				if (hasChange) {
-					if (loto_fn.getHad_h().equals("1.01") || loto_fn.getHad_d().equals("1.01")
-							|| loto_fn.getHad_a().equals("1.01")) {
+					if ((new BigDecimal(loto_fn.getHad_h())).compareTo(new BigDecimal("1.01"))<0 
+					  ||(new BigDecimal(loto_fn.getHad_d())).compareTo(new BigDecimal("1.01"))<0
+					  ||(new BigDecimal(loto_fn.getHad_a())).compareTo(new BigDecimal("1.01"))<0) {
 						loto_fn.setHad_bet(0);
 					}
 					
@@ -195,6 +199,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 			if (t.getBet_type() == 301) {
 				T_LOTO_SIS_F t_loto_sis_f = new T_LOTO_SIS_F();
 				t_loto_sis_f.setIssue(t.getIssue());
+				t_loto_sis_f.setElectronic_code(vOrder.getElectronic_code());
 				t_loto_sis_f.setHad_h(t.getBet_info().startsWith("had_h") ? 1 : 0);
 				t_loto_sis_f.setHad_d(t.getBet_info().startsWith("had_d") ? 1 : 0);
 				t_loto_sis_f.setHad_a(t.getBet_info().startsWith("had_a") ? 1 : 0);
@@ -202,20 +207,10 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 				t_loto_sis_f.setHad_d_d(t.getBet_info().startsWith("had_d") ? t.getBet_fee() : 0);
 				t_loto_sis_f.setHad_a_d(t.getBet_info().startsWith("had_a") ? t.getBet_fee() : 0);
 				this.t_LOTO_SIS_FDao.saveSisT_LOTO_SIS_F(t_loto_sis_f);
-			} else if (t.getBet_type() == 305) {
-				T_LOTO_SIS_F t_loto_sis_f = new T_LOTO_SIS_F();
-				t_loto_sis_f.setIssue(t.getIssue());
-				t_loto_sis_f.setHad_h(0);
-				t_loto_sis_f.setHad_d(0);
-				t_loto_sis_f.setHad_a(0);
-				t_loto_sis_f.setHad_h_d(0);
-				t_loto_sis_f.setHad_d_d(0);
-				t_loto_sis_f.setHad_a_d(0);
-
-				this.t_LOTO_SIS_FDao.saveSisT_LOTO_SIS_F(t_loto_sis_f);
-			} else if (t.getBet_type() == 407) {
+			}else if (t.getBet_type() == 501) {
 				T_LOTO_SIS_E t_loto_sis_e = new T_LOTO_SIS_E();
 				t_loto_sis_e.setIssue(t.getIssue());
+				t_loto_sis_e.setElectronic_code(vOrder.getElectronic_code());
 				t_loto_sis_e.setOne(t.getBet_info().startsWith("odds_one") ? 1L : 0L);
 				t_loto_sis_e.setTwo(t.getBet_info().startsWith("odds_two") ? 1L : 0L);
 				t_loto_sis_e.setThree(t.getBet_info().startsWith("odds_three") ? 1L : 0L);
@@ -228,7 +223,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 
 		logger.info("开始调用支付接口");
 		String password="";
-		String betResult = BetUtils.Bet(vOrder.getUser_pin(),vOrder.getElectronic_code(),vOrder.getOrder_id(),(new BigDecimal(vOrder.getBet_fee()/BetUtils.preMul)).toString(),password).status;
+		String betResult = BetUtils.Bet(vOrder.getUser_pin(),vOrder.getElectronic_code(),vOrder.getOrder_id(),NumberUtils.longDiv(vOrder.getBet_fee(),BetUtils.preMul).toString(),password).status;
 		
 		if (betResult == null) {
 			throw new Exception("调用接口异常");
@@ -243,17 +238,16 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 		}
 
 		if (vOrder.getBet_type() == 301 ) {
-			updateFPs(vOrder.getIssume(), canChangeOdd, canBet, tab_SALES_THRESHOLD);
+			updateFPs(vOrder.getIssume(), canChangeOdd, canBet, tab_SALES_THRESHOLD,vOrder.getElectronic_code());
 		} else if(vOrder.getBet_type()==501){
-			updateDPs(vOrder.getIssume(), canChangeOdd, canBet);
+			updateDPs(vOrder.getIssume(), canChangeOdd, canBet,vOrder.getElectronic_code());
 		}
 
 		return 0;
 	}
 
 	
-	@Override
-	public void updateDPs(String issume, HashMap<String, Boolean> canChangeOdd, List<String> canBet) throws Exception {
+	public void updateDPs(String issume, HashMap<String, Boolean> canChangeOdd, List<String> canBet,String electronic_code) throws Exception {
 		T_LOTO_E loto_en = new T_LOTO_E();
 		loto_en.setIssue(issume);
 		List<T_LOTO_E> lst_LOTO_E = loto_ENDao.selectLOTO_ENList(loto_en);

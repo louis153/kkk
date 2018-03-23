@@ -88,6 +88,7 @@ public class BetUtils {
 			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
 			body.balance.ETH=jsonBalance.getString("ETH");
 			body.balance.GTO=jsonBalance.getString("GTO");
+			body.status="success";
 			rv.setBody(body);//将建json对象转换为RV_Login对象
 			
 		} catch (Exception e) {

@@ -563,6 +563,11 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setElectronic_code(electronic_code);
 				loto_ORDER.setUser_pin(userPin);
 				loto_ORDER.setMemo(nickName);
+				loto_ORDER.setMatch_result("");
+				loto_ORDER.setOptions_one("");
+				loto_ORDER.setOptions_three("");
+				loto_ORDER.setOptions_two("");
+				loto_ORDER.setPlay_method("");
 				loto_ORDER.setVsteam(f.getHome_team_name() + "vs" + f.getGuest_team_name());
 				loto_ORDER.setWin_fee((int)Math.round(loto_ORDER.getBet_fee() * oddv));
 				loto_ORDER.setPrize_cancel_time(DateUtils.getDateToStr("1900-1-1"));
@@ -574,7 +579,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				logger.info(String.format("开始调用Bet接口订单信息：order_id:%s,userPin:%s,bet_info:%s,bet_fee:%s",
 						loto_ORDER.getOrder_id(), loto_ORDER.getUser_pin(), bet_info, loto_ORDER.getBet_fee()));
 			}
-
+			vOrder.setElectronic_code(electronic_code);
 			vOrder.setBet_status(1);
 			vOrder.setBet_type(Integer.parseInt(bet_type));
 			vOrder.setCreate_time(DateUtils.getDateToStr(nowDate, "yyyy-MM-dd HH:mm:ss"));
@@ -874,7 +879,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			vOrder.setIssume(issue);
 			try {
 				v_orderService.insertV_ORDER(vOrder, lstTemp, canChangeOdd, canBet,null);
-				v_orderService.updateDPs(vOrder.getIssume(), canChangeOdd, canBet);
+				
 			} catch (Exception e1) {// 事物中的处理错误必须已异常的方式返回
 				sbFalse.add(vOrder.getVsteam());
 			}

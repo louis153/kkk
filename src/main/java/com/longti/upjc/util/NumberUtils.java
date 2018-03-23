@@ -1,5 +1,7 @@
 package com.longti.upjc.util;
 
+import java.math.BigDecimal;
+
 /**
  * <p>Title:NumberUtils</p>
  * <p>描述:</p>
@@ -15,5 +17,10 @@ public final class NumberUtils {
 			hour_array[i] = hourfrom + i;
 		}
 		return hour_array;
+	}
+	public static BigDecimal longDiv(long a,long b){
+		BigDecimal a1=new BigDecimal(String.valueOf(a)+".00");
+		BigDecimal b1=new BigDecimal(String.valueOf(b)+".00");
+		return a1.divide(b1);
 	}
 }
