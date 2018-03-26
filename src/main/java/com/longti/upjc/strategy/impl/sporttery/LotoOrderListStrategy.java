@@ -4,7 +4,6 @@
  */
 package com.longti.upjc.strategy.impl.sporttery;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +19,10 @@ import com.longti.upjc.service.sporttery.LOTO_ORDERService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
+import com.longti.upjc.util.NumberUtils;
 import com.longti.upjc.util.ReturnValue;
 import com.longti.upjc.util.StringUtil;
+import com.longti.upjc.util.jdbet.BetUtils;
 
 /**
  *我的投注
@@ -69,15 +70,15 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 		
 		if (jsonRequest.containsKey("page_index")) {
 			page_index = Integer.parseInt(jsonRequest.get("page_index").toString());
-		}		
+		}
+		if (jsonRequest.containsKey("position")) {
+			lotoOrder.setPosition(jsonRequest.get("position").toString());
+		}
 		if (StringUtil.isEmpty(request_LtGameLogic.getFeeType()) == false) {
 			lotoOrder.setElectronic_code(request_LtGameLogic.getFeeType());
 		}
 		if (StringUtil.isEmpty(request_LtGameLogic.getUserPin()) == false) {
 			lotoOrder.setUser_pin(request_LtGameLogic.getUserPin());
-		}
-		if(StringUtil.isEmpty(jsonRequest.get("channel_code"))==false){
-			lotoOrder.setOrder_source(jsonRequest.get("channel_code").toString());;
 		}
 		if(StringUtil.isEmpty(jsonRequest.get("bet_status"))==false){
 			lotoOrder.setBet_status(Integer.parseInt(jsonRequest.get("bet_status").toString()));
@@ -113,10 +114,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 			lst = this.loto_ORDERService.selectLOTO_ORDERList(lotoOrder);
 			for(LOTO_ORDER loto_ORDER:lst){
 				LOTO_ORDERDetail loto_ORDERDetail=new LOTO_ORDERDetail();
-				BigDecimal multi = new BigDecimal(1000000);
-				BigDecimal bet_fee = new BigDecimal(loto_ORDER.getBet_fee()).divide(multi, 6, BigDecimal.ROUND_HALF_UP);
-				BigDecimal win_fee = new BigDecimal(loto_ORDER.getWin_fee()).divide(multi, 6, BigDecimal.ROUND_HALF_UP);
-				loto_ORDERDetail.bet_fee=(bet_fee.toString());
+				loto_ORDERDetail.bet_fee=(NumberUtils.longDiv(loto_ORDER.getBet_fee(),BetUtils.preMul).toString());
 				loto_ORDERDetail.bet_status=(loto_ORDER.getBet_status().toString());
 				loto_ORDERDetail.bet_type=(loto_ORDER.getBet_type().toString());
 				loto_ORDERDetail.create_time=(DateUtils.getDateToStr(loto_ORDER.getCreate_time(),"yyyy-MM-dd HH:mm:ss"));
@@ -131,9 +129,9 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 //				loto_ORDERDetail.guest_team_name=(team_names[1]);
 				loto_ORDERDetail.vsteam = loto_ORDER.getVsteam();
 				if(loto_ORDER.getBet_status()==2){
-					loto_ORDERDetail.win_fee=(win_fee.toString());
+					loto_ORDERDetail.win_fee=(NumberUtils.longDiv(loto_ORDER.getWin_fee(),BetUtils.preMul).toString());
 				}else if(loto_ORDER.getBet_status()==4){
-					loto_ORDERDetail.win_fee=(bet_fee.toString());
+					loto_ORDERDetail.win_fee=(NumberUtils.longDiv(loto_ORDER.getBet_fee(),BetUtils.preMul).toString());
 				}else{
 					loto_ORDERDetail.win_fee="0";
 				}				

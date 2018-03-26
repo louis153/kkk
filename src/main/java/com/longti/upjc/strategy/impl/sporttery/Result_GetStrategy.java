@@ -4,7 +4,6 @@
  */
 package com.longti.upjc.strategy.impl.sporttery;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -25,8 +24,10 @@ import com.longti.upjc.service.sporttery.T_USERService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
+import com.longti.upjc.util.NumberUtils;
 import com.longti.upjc.util.ReturnValue;
 import com.longti.upjc.util.StringUtil;
+import com.longti.upjc.util.jdbet.BetUtils;
 
 /**
  *查看竞猜详情
@@ -102,10 +103,7 @@ public class Result_GetStrategy implements IMethodStrategy{
 			if (lstLotoOrder.isEmpty() == false) {
 				lotoOrder = lstLotoOrder.get(0);
 				rv.setMess(ErrorMessage.SUCCESS);
-				BigDecimal multi = new BigDecimal(1000000);
-				BigDecimal bet_fee = new BigDecimal(lotoOrder.getBet_fee()).divide(multi, 6, BigDecimal.ROUND_HALF_UP);
-				BigDecimal win_fee = new BigDecimal(lotoOrder.getWin_fee()).divide(multi, 6, BigDecimal.ROUND_HALF_UP);
-				rv.getData().bet_fee = bet_fee.toString();
+				rv.getData().bet_fee = NumberUtils.longDiv(lotoOrder.getBet_fee(),BetUtils.preMul).toString();
 				rv.getData().bet_status = lotoOrder.getBet_status().toString();
 				rv.getData().create_time = (lotoOrder.getCreate_time() == null ? ""
 						: DateUtils.getDateToStr(lotoOrder.getCreate_time(), "yyyy-MM-dd HH:mm:ss"));
@@ -119,9 +117,9 @@ public class Result_GetStrategy implements IMethodStrategy{
 				rv.getData().prize_status = lotoOrder.getPrize_status().toString();
 				rv.getData().user_name=t_USER.getNick_name();
 				if (lotoOrder.getBet_status() == 2) {
-					rv.getData().win_fee = win_fee.toString();
+					rv.getData().win_fee = NumberUtils.longDiv(lotoOrder.getWin_fee(),BetUtils.preMul).toString();
 				} else if (lotoOrder.getBet_status() == 4) {
-					rv.getData().win_fee = bet_fee.toString();
+					rv.getData().win_fee = NumberUtils.longDiv(lotoOrder.getBet_fee(),BetUtils.preMul).toString();
 				} else {
 					rv.getData().win_fee = "0";
 				}
@@ -173,12 +171,12 @@ public class Result_GetStrategy implements IMethodStrategy{
 
 					if (lotoOrder.getBet_type() == 501) {
 						rv.getData().cg = e.getCg();
-						if (lotoOrder.getBet_info().startsWith("huat_a")) {
-							rv.getData().odd_name = lotoOrder.getOptions_one();
-						} else if (lotoOrder.getBet_info().startsWith("huat_d")) {
-							rv.getData().odd_name = lotoOrder.getOptions_two();
-						} else if (lotoOrder.getBet_info().startsWith("huat_h")) {
-							rv.getData().odd_name = lotoOrder.getOptions_three();
+						if (lotoOrder.getBet_info().startsWith("options_one")) {
+							rv.getData().odd_name = "odds_one";
+						} else if (lotoOrder.getBet_info().startsWith("options_two")) {
+							rv.getData().odd_name = "odds_two";
+						} else if (lotoOrder.getBet_info().startsWith("options_three")) {
+							rv.getData().odd_name = "odds_three";
 						}
 					}
 					rv.getData().home_full_result = "";
