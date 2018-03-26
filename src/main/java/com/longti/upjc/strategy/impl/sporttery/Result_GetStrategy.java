@@ -58,12 +58,13 @@ public class Result_GetStrategy implements IMethodStrategy{
         public String odd_value; //赔率值
         public String bet_fee; //投注金额
         public String win_fee; //奖金,0表示未中奖
+        public String reward_bet_fee;//奖励投注金额, 使用猜球系统奖励的虚拟币进行投注的金额
         public String cg; //赛果（话题结果）
         public String huat_context; //话题内容
         public String huat_result; //	竞猜结果
         public String result_context; //	结果内容
         public String electronic_code; //币种简称
-
+        
         
 	}
 
@@ -124,6 +125,7 @@ public class Result_GetStrategy implements IMethodStrategy{
 				} else {
 					rv.getData().win_fee = "0";
 				}
+				rv.getData().reward_bet_fee = lotoOrder.getReward_bet_fee();
 				rv.getData().result_context=lotoOrder.getVsresult();
 				rv.getData().electronic_code=(lotoOrder.getElectronic_code());;
 				if (lotoOrder.getBet_type() == 301 ) {
