@@ -67,6 +67,9 @@
 <if test='position != null and position=="3"'>
  and bet_type in (307,309)
 </if>
+<if test='position != null and position=="4"'>
+ and bet_type in (501)
+</if>
 </where>
 order by id desc
 
@@ -139,6 +142,9 @@ order by id desc
 </if>
 <if test='position != null and position=="3"'>
  and bet_type in (307,309)
+</if>
+<if test='position != null and position=="4"'>
+ and bet_type in (501)
 </if>
 </where>
 order by id
