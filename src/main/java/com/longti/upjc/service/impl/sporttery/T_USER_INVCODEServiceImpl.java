@@ -51,7 +51,7 @@ public class T_USER_INVCODEServiceImpl implements T_USER_INVCODEService  {
     	T_USER t_user = new T_USER();
 		t_user.setUser_pin(t_user_invcode.getUser_pin());
 		t_user = t_userDao.selectT_USERList(t_user).get(0);
-		t_user.setAward_gto(Integer.parseInt(gto));
+		t_user.setAward_gto(Long.parseLong(gto));
 		t_userDao.updateT_USER(t_user);//更新奖励GTO
     	return T_USER_INVCODEDao.updateT_USER_INVCODE(t_user_invcode);
     }

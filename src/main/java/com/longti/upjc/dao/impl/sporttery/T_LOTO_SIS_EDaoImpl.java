@@ -60,7 +60,7 @@ public class T_LOTO_SIS_EDaoImpl extends BaseDaoImpl<T_LOTO_SIS_E> implements T_
 
 	@Override
 	public int saveSis(T_LOTO_SIS_E t_loto_sis_e) {
-		return getSqlSession().delete("com.tengcai.vims.entity.sporttery.T_LOTO_SIS_E.save_sis",t_loto_sis_e);
+		return getSqlSession().insert("com.longti.upjc.entity.sporttery.T_LOTO_SIS_E.save_sis",t_loto_sis_e);
 	}
 
 

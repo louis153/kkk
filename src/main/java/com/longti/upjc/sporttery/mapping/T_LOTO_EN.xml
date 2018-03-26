@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.T_LOTO_EN">
-    <select id = "selectT_LOTO_EList" resultType="T_LOTO_E" parameterType="T_LOTO_E">
+    <select id = "selectT_LOTO_ENList" resultType="T_LOTO_E" parameterType="T_LOTO_E">
 		SELECT issue,play_method,starttime,sale_time,endtime,home_team_name,guest_team_name,options_one,options_two,options_three,cg,odds_one,odds_two,odds_three,status,leaguename,available,mnl_bet,create_time,update_time,compensate_min,compensate_max,single_lottery_max,single_match_max,sort,lottery_type,return_min,return_max from 
 		<choose>  
         	<when test="electronic_code=='ETH'.toString()">t_loto_en_eth</when>  
@@ -28,7 +28,7 @@
  and sale_time = #{sale_time}
 </if>
 <if test="endtime != null">
- and endtime = #{endtime}
+ and endtime > #{endtime}
 </if>
 <if test="home_team_name != null">
  and home_team_name = #{home_team_name}
@@ -111,7 +111,7 @@ order by issue
         limit ${row_start},${page_size}
         </if>
     </select>
-    <select id = "selectT_LOTO_ECount" resultType="int" parameterType="T_LOTO_E">
+    <select id = "selectT_LOTO_ENCount" resultType="int" parameterType="T_LOTO_E">
 		SELECT count(*) from 
 		<choose>  
         	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
@@ -138,7 +138,7 @@ order by issue
  and sale_time = #{sale_time}
 </if>
 <if test="endtime != null">
- and endtime = #{endtime}
+ and endtime > #{endtime}
 </if>
 <if test="home_team_name != null">
  and home_team_name = #{home_team_name}

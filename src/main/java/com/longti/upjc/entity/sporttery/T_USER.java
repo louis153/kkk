@@ -20,7 +20,7 @@ public class T_USER implements Serializable {
     private Date start_first_time; //开始第一次登录时间
     private Date end_first_time; //结束第一次登录时间
     private Date land_time; //本次登录时间
-    private int award_gto; //奖励的gto账户金额
+    private Long award_gto; //奖励的gto账户金额
     private Date start_land_time; //开始本次登录时间
     private Date end_land_time; //结束本次登录时间
     private Integer row_start;//开始行
@@ -69,10 +69,10 @@ public class T_USER implements Serializable {
 	public void setLand_time(Date land_time) {
 		this.land_time = land_time;
 	}
-    public int getAward_gto() {
+    public Long getAward_gto() {
 		return award_gto;
 	}
-	public void setAward_gto(int award_gto) {
+	public void setAward_gto(Long award_gto) {
 		this.award_gto = award_gto;
 	}
 	public Date getStart_land_time() {

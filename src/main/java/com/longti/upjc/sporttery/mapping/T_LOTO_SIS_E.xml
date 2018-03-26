@@ -148,8 +148,8 @@ VALUES
 	        <when test="electronic_code=='GTO'.toString()">t_loto_sis_e_gto</when>
 	        <when test="electronic_code=='UZ'.toString()">t_loto_sis_e_uz</when>   
 	    </choose> 
-    <![CDATA[(issue,one,two,three,one_d,two_d,three_d) VALUES (#{issue},#{one},#{two},#{three},#{one_d},#{two_d},#{three_d},#{one_p},#{two_p},#{three_p})  
-ON DUPLICATE KEY UPDATE one=one+#{one},two=two+#{two},three=three+#{three},one_d=one_d+#{one_d},two_d=two_d+#{two_d},three_d=three_d+#{three_d},one_p=one_p+#{one_p},two_p=two_p+#{two_p},three_p=three_p+#{three_p};    
+    <![CDATA[(issue,one,two,three,one_d,two_d,three_d,one_p,two_p,three_p) VALUES (#{issue},#{one},#{two},#{three},#{one_d},#{two_d},#{three_d},#{one_p},#{two_p},#{three_p})  
+ON DUPLICATE KEY UPDATE one=one+#{one},two=two+#{two},three=three+#{three},one_d=one_d+#{one_d},two_d=two_d+#{two_d},three_d=three_d+#{three_d},one_p=one_p+#{one_p},two_p=two_p+#{two_p},three_p=three_p+#{three_p}    
 	]]>
     </insert>   
 </mapper > 

@@ -435,12 +435,13 @@ public class PayAllStrategy implements IMethodStrategy {
 				}
 				
 			}
-			if(sum_cost>tab_SALES_THRESHOLD.getSingle_lottery_max()){
-				rv.setMess(ErrorMessage.ERR_OVERFLOW);
-				endMatchs.clear();				
-				rv.getData().setEndmatchs(endMatchs);
-				return;
-			}
+			
+		}
+		if(sum_cost>tab_SALES_THRESHOLD.getSingle_lottery_max()){
+			rv.setMess(ErrorMessage.ERR_OVERFLOW);
+			endMatchs.clear();				
+			rv.getData().setEndmatchs(endMatchs);
+			return;
 		}
 		// 判断玩法是否已经到达赔率下线----->结束
 
@@ -552,7 +553,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				LOTO_ORDER loto_ORDER = new LOTO_ORDER();
 				loto_ORDER.setIssue(issue);
 				loto_ORDER.setOrder_id(order_id);
-				loto_ORDER.setBet_fee((int)Math.round(Double.parseDouble((odd.getOdd_cost()))));
+				loto_ORDER.setBet_fee(Math.round(Double.parseDouble((odd.getOdd_cost()))));
 				vOrder.setBet_fee(vOrder.getBet_fee() + loto_ORDER.getBet_fee());
 				loto_ORDER.setBet_info(bet_info);
 				loto_ORDER.setBet_type(Integer.valueOf(bet_type));
@@ -575,6 +576,9 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setLeaguename(f.getLeaguename());
 				loto_ORDER.setOrder_source(channel);
 				loto_ORDER.setVsresult("");
+				loto_ORDER.setReward_bet_fee("");
+				loto_ORDER.setReward_fee("");
+				loto_ORDER.setReward_user_pin("");
 				lstTemp.add(loto_ORDER);
 				logger.info(String.format("开始调用Bet接口订单信息：order_id:%s,userPin:%s,bet_info:%s,bet_fee:%s",
 						loto_ORDER.getOrder_id(), loto_ORDER.getUser_pin(), bet_info, loto_ORDER.getBet_fee()));
@@ -599,7 +603,7 @@ public class PayAllStrategy implements IMethodStrategy {
 
 		}
 	}
-
+	
 	private void payDj(ReturnValue<PayAll_Data> rv, List<String> sbFalse, String channel, JSONArray lst_rem,
 			String userPin, String nickName,String electronic_code,String lang) throws Exception {
 
@@ -649,9 +653,9 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 
 		T_LOTO_E qryE = new T_LOTO_E();
-
+		qryE.setElectronic_code(electronic_code);
 		qryE.setIssues(sbIssues);
-		qryE.setEndtime(DateUtils.getDateToStr(new Date(), "yyyy-MM-dd HH:mm:ss"));
+		qryE.setEndtime(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));
 		List<T_LOTO_E> loto_Es = lotoENService.selectT_LOTO_ENList(qryE);
 		changeDjLang(loto_Es,electronic_code, lang, userPin);
 		Map<String, T_LOTO_E> mapEs=new HashMap<String,T_LOTO_E>();
@@ -739,6 +743,7 @@ public class PayAllStrategy implements IMethodStrategy {
 
 		T_LOTO_SIS_E qry_sis_e = new T_LOTO_SIS_E();
 		qry_sis_e.setIssues(sbIssues);
+		qry_sis_e.setElectronic_code(electronic_code);
 		List<T_LOTO_SIS_E> lsT_LOTO_SIS_E = loto_SIS_EService.selectT_LOTO_SIS_EList(qry_sis_e);
 		
 		List<String> lsIssues=new ArrayList<String>();
@@ -758,6 +763,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			sis_E.setTwo_d(0L);
 			sis_E.setThree(0L);
 			sis_E.setThree_d(0L);
+			sis_E.setElectronic_code(electronic_code);
 			lsT_LOTO_SIS_E.add(sis_E);
 		}
 		
@@ -779,10 +785,10 @@ public class PayAllStrategy implements IMethodStrategy {
 			}
 			if (m_cost != 0) {
 				
-				checkCanBet(canBet, issue, 501, sis_e.getOne_p()+sis_e.getTwo_p()+sis_e.getThree_p()+ m_cost,
+				checkCanBet(canBet, issue, 501, StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost,
 						(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*1000000));
 
-				if (sis_e.getOne_p()+sis_e.getTwo_p()+sis_e.getThree_p()+ m_cost > (long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*1000000)) {
+				if (StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost > (long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*1000000)) {
 					rv.setMess(ErrorMessage.ERR_OVERFLOW);
 
 					endMatchs.clear();
@@ -803,6 +809,8 @@ public class PayAllStrategy implements IMethodStrategy {
 
 			Date nowDate = new Date();
 			V_ORDER vOrder = new V_ORDER();
+			vOrder.setElectronic_code(electronic_code);
+			
 			vOrder.setBet_fee(0L);
 			String bet_type = "";
 			double oddv = 0;
@@ -815,7 +823,7 @@ public class PayAllStrategy implements IMethodStrategy {
 
 				if (key.equals("odds_one")) {
 					bet_type = "501";
-					bet_info = "odds_one|" + e.getOdds_one();
+					bet_info = "options_one|" + e.getOdds_one();
 					if (StringUtil.isEmpty(e.getOdds_one())) {// 如果赔率为空，设置投注赔率为1
 						oddv = 1;
 					} else {
@@ -823,7 +831,7 @@ public class PayAllStrategy implements IMethodStrategy {
 					}
 				} else if (key.equals("odds_two")) {
 					bet_type = "501";
-					bet_info = "odds_two|" + e.getOdds_two();
+					bet_info = "options_two|" + e.getOdds_two();
 					if (StringUtil.isEmpty(e.getOdds_two())) {// 如果赔率为空，设置投注赔率为1
 						oddv = 1;
 					} else {
@@ -831,7 +839,7 @@ public class PayAllStrategy implements IMethodStrategy {
 					}
 				} else if (key.equals("odds_three")) {
 					bet_type = "501";
-					bet_info = "odds_three|" + e.getOdds_three();
+					bet_info = "options_three|" + e.getOdds_three();
 					if (StringUtil.isEmpty(e.getOdds_three())) {// 如果赔率为空，设置投注赔率为1
 						oddv = 1;
 					} else {
@@ -842,7 +850,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				LOTO_ORDER loto_ORDER = new LOTO_ORDER();
 				loto_ORDER.setIssue(issue);
 				loto_ORDER.setOrder_id(order_id);
-				loto_ORDER.setBet_fee((int)Math.round(Double.parseDouble(odd.getOdd_cost())));
+				loto_ORDER.setBet_fee(Math.round(Double.parseDouble(odd.getOdd_cost())));
 				vOrder.setBet_fee(vOrder.getBet_fee() + loto_ORDER.getBet_fee());
 				loto_ORDER.setBet_info(bet_info);
 				loto_ORDER.setBet_type(Integer.valueOf(bet_type));
@@ -850,7 +858,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setCreate_time(nowDate);
 				loto_ORDER.setPrize_status(1);
 				loto_ORDER.setPrize_type(1);
-
+				loto_ORDER.setElectronic_code(electronic_code);
 				loto_ORDER.setUser_pin(userPin);
 				loto_ORDER.setMemo(nickName);
 				loto_ORDER.setVsteam(e.getHome_team_name() + "vs" + e.getGuest_team_name());
@@ -862,6 +870,14 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setOptions_two(e.getOptions_two());
 				loto_ORDER.setPlay_method(e.getPlay_method());
 				loto_ORDER.setLeaguename(e.getLeaguename());
+				loto_ORDER.setReward_bet_fee("");
+				loto_ORDER.setReward_fee("");
+				loto_ORDER.setReward_user_pin("");
+				loto_ORDER.setPlay_method(e.getPlay_method());
+				loto_ORDER.setOptions_one(e.getOptions_one());
+				loto_ORDER.setOptions_three(e.getOptions_three());
+				loto_ORDER.setOptions_two(e.getOptions_two());
+				loto_ORDER.setMatch_result("");
 				loto_ORDER.setVsresult("");
 				lstTemp.add(loto_ORDER);
 				logger.info(String.format("开始调用Bet接口订单信息：order_id:%s,userPin:%s,bet_info:%s,bet_fee:%s",
@@ -869,6 +885,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			}
 
 			vOrder.setBet_status(1);
+			vOrder.setElectronic_code(electronic_code);
 			vOrder.setBet_type(Integer.parseInt(bet_type));
 			vOrder.setCreate_time(DateUtils.getDateToStr(nowDate, "yyyy-MM-dd HH:mm:ss"));
 			vOrder.setOrder_id(order_id);

@@ -14,6 +14,7 @@ import com.longti.upjc.dao.sporttery.LOTO_FNDao;
 import com.longti.upjc.dao.sporttery.LOTO_ORDERDao;
 import com.longti.upjc.dao.sporttery.T_LOTO_SIS_EDao;
 import com.longti.upjc.dao.sporttery.T_LOTO_SIS_FDao;
+import com.longti.upjc.dao.sporttery.T_USERDao;
 import com.longti.upjc.dao.sporttery.V_ORDERDao;
 import com.longti.upjc.entity.sporttery.LOTO_F;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
@@ -21,6 +22,7 @@ import com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD;
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_F;
+import com.longti.upjc.entity.sporttery.T_USER;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.service.sporttery.V_ORDERService;
 import com.longti.upjc.sp.SPQ;
@@ -48,7 +50,8 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 	private LOTO_FNDao loto_FNDao;
 	@Autowired
 	private LOTO_ENDao loto_ENDao;
-
+	@Autowired
+	private T_USERDao t_USERDao;
 	/**
 	 * 条件查询
 	 */
@@ -182,6 +185,53 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 		logger.info("设置当前足球投注赔率成功结束-->");
 	}
 
+	private Long setP(String bet_odd,Long bet_fee ){		
+		BigDecimal winFee=new BigDecimal(bet_odd).multiply(new BigDecimal(bet_fee));
+		
+		return winFee.longValue()-bet_fee;
+	}
+	private long getReward_Bet_fee(List<LOTO_ORDER> lstLotoOrder) throws Exception{
+		if(lstLotoOrder.size()>0){
+			T_USER tUser=new T_USER();
+			if(lstLotoOrder.get(0).getElectronic_code().equals("GTO")==false){
+				return 0;
+			}
+			tUser.setUser_pin(lstLotoOrder.get(0).getUser_pin());
+			List<T_USER> lsT_USERs= t_USERDao.selectT_USERList(tUser);
+			if(lsT_USERs.isEmpty()){
+				return 0;
+			}
+			else{
+				tUser=lsT_USERs.get(0);
+				long awardGto=tUser.getAward_gto();
+				long sumLong=0L;
+				for(LOTO_ORDER loto_ORDER:lstLotoOrder){
+					long betFee=loto_ORDER.getBet_fee();
+					if(awardGto>0){
+						if(betFee>awardGto){
+							loto_ORDER.setReward_bet_fee(String.valueOf(awardGto));
+							sumLong+=awardGto;
+							awardGto=0L;							
+						}else{
+							awardGto-=betFee;
+							loto_ORDER.setReward_bet_fee(String.valueOf(betFee));
+							sumLong+=betFee;
+						}						
+						
+					}
+					else{
+						break;
+					}
+				}
+				tUser.setAward_gto(awardGto);
+				t_USERDao.updateT_USER(tUser);
+				return sumLong;
+			}
+		}
+		else{
+			return 0;
+		}
+	}
 	@Override
 	public int insertV_ORDER(V_ORDER vOrder, List<LOTO_ORDER> lstLotoOrder, HashMap<String, Boolean> canChangeOdd,
 			List<String> canBet, TAB_SALES_THRESHOLD tab_SALES_THRESHOLD) throws Exception {
@@ -203,9 +253,9 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 				t_loto_sis_f.setHad_h(t.getBet_info().startsWith("had_h") ? 1 : 0);
 				t_loto_sis_f.setHad_d(t.getBet_info().startsWith("had_d") ? 1 : 0);
 				t_loto_sis_f.setHad_a(t.getBet_info().startsWith("had_a") ? 1 : 0);
-				t_loto_sis_f.setHad_h_d(t.getBet_info().startsWith("had_h") ? t.getBet_fee() : 0);
-				t_loto_sis_f.setHad_d_d(t.getBet_info().startsWith("had_d") ? t.getBet_fee() : 0);
-				t_loto_sis_f.setHad_a_d(t.getBet_info().startsWith("had_a") ? t.getBet_fee() : 0);
+				t_loto_sis_f.setHad_h_d(t.getBet_info().startsWith("had_h") ?  t.getBet_fee() : 0);
+				t_loto_sis_f.setHad_d_d(t.getBet_info().startsWith("had_d") ?  t.getBet_fee() : 0);
+				t_loto_sis_f.setHad_a_d(t.getBet_info().startsWith("had_a") ?  t.getBet_fee() : 0);
 				this.t_LOTO_SIS_FDao.saveSisT_LOTO_SIS_F(t_loto_sis_f);
 			}else if (t.getBet_type() == 501) {
 				T_LOTO_SIS_E t_loto_sis_e = new T_LOTO_SIS_E();
@@ -217,26 +267,31 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 				t_loto_sis_e.setOne_d(t.getBet_info().startsWith("odds_one") ? t.getBet_fee() : 0L);
 				t_loto_sis_e.setTwo_d(t.getBet_info().startsWith("odds_two") ? t.getBet_fee() : 0L);
 				t_loto_sis_e.setThree_d(t.getBet_info().startsWith("odds_three") ? t.getBet_fee() : 0L);
+				t_loto_sis_e.setOne_p(t.getBet_info().startsWith("odds_one") ?setP(t.getBet_info().split("\\|")[1], t.getBet_fee()) : 0L);
+				t_loto_sis_e.setTwo_p(t.getBet_info().startsWith("odds_two") ? setP(t.getBet_info().split("\\|")[1],t.getBet_fee()) : 0L);
+				t_loto_sis_e.setThree_p(t.getBet_info().startsWith("odds_three") ? setP(t.getBet_info().split("\\|")[1],t.getBet_fee()) : 0L);
 				this.t_LOTO_SIS_EDao.saveSis(t_loto_sis_e);
 			}
 		}
-
+		
+		Long sumRewardBetFee=getReward_Bet_fee(lstLotoOrder);//计算GTO抵减
+		
 		logger.info("开始调用支付接口");
 		String password="";
-		String betResult = BetUtils.Bet(vOrder.getUser_pin(),vOrder.getElectronic_code(),vOrder.getOrder_id(),NumberUtils.longDiv(vOrder.getBet_fee(),BetUtils.preMul).toString(),password).status;
-		
-		if (betResult == null) {
-			throw new Exception("调用接口异常");
+		if(vOrder.getBet_fee()>sumRewardBetFee)
+		{
+			String betResult = BetUtils.Bet(vOrder.getUser_pin(),vOrder.getElectronic_code(),vOrder.getOrder_id(),NumberUtils.longDiv(vOrder.getBet_fee()-sumRewardBetFee,BetUtils.preMul).toString(),password).status;
+			if (betResult == null) {
+				throw new Exception("调用接口异常");
+			}
+			if (betResult.equals("success")) {
+				logger.info(String.format("调用亚创支付接口成功----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
+						lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
+						lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
+			} else {
+				throw new Exception("调用亚创支付接口失败");
+			}
 		}
-		if (betResult.equals("success")) {
-			logger.info(String.format("调用亚创支付接口成功----->userPin:%s bet_type:%s bet_info:%s bet_fee:%s",
-					lstLotoOrder.get(0).getUser_pin(), lstLotoOrder.get(0).getBet_type(),
-					lstLotoOrder.get(0).getBet_info(), lstLotoOrder.get(0).getBet_fee()));
-		} else {			
-
-			throw new Exception("调用亚创支付接口失败");
-		}
-
 		if (vOrder.getBet_type() == 301 ) {
 			updateFPs(vOrder.getIssume(), canChangeOdd, canBet, tab_SALES_THRESHOLD,vOrder.getElectronic_code());
 		} else if(vOrder.getBet_type()==501){
@@ -250,6 +305,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 	public void updateDPs(String issume, HashMap<String, Boolean> canChangeOdd, List<String> canBet,String electronic_code) throws Exception {
 		T_LOTO_E loto_en = new T_LOTO_E();
 		loto_en.setIssue(issume);
+		loto_en.setElectronic_code(electronic_code);
 		List<T_LOTO_E> lst_LOTO_E = loto_ENDao.selectLOTO_ENList(loto_en);
 		if (lst_LOTO_E.size() > 0) {
 			BigDecimal odds_one=new BigDecimal(lst_LOTO_E.get(0).getOdds_one());
