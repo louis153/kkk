@@ -10,6 +10,7 @@
     </choose> 
 where endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
   and (had_bet=1 )
+  and leaguename in (select match_name from tab_match_type where `show`=1)
 order by endtime aSC
 LIMIT 0,1 
     </select>

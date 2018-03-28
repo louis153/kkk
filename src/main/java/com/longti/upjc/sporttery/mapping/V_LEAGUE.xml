@@ -13,7 +13,10 @@ select leaguename,count(*) AS leaguecount, left(issue,8) as saleday from
 <if test="leaguename != null">
  and leaguename=#{leaguename}
 </if>
-<![CDATA[and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s') and (had_bet=1 )]]>
+<![CDATA[
+and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s') and (had_bet=1 )
+and leaguename in (select match_name from tab_match_type where `show`=1)
+]]>
 group by leaguename,left(issue,8) order by leaguename
     </select>
     <select id = "selectV_LEAGUECount" resultType="int" parameterType="V_LEAGUE">
@@ -28,7 +31,10 @@ where status=1) t
 <if test="leaguename != null">
  and t.leaguename=#{leaguename}
 </if>
-<![CDATA[endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')]]>
+<![CDATA[
+and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s') and (had_bet=1 )
+and leaguename in (select match_name from tab_match_type where `show`=1)
+]]>
 </where>
 order by t.leaguename
        

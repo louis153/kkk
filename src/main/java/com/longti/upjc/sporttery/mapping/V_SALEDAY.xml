@@ -17,6 +17,7 @@
 		</otherwise>
 	</choose>
 where endtime>#{endtime} and (had_bet=1 ) 
+and leaguename in (select match_name from tab_match_type where `show`=1)
 group by left(issue,8)) t where t.match_count>0 order by t.saleday         
     </select>
 	
