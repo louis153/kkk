@@ -8,6 +8,7 @@ import java.util.Date;
  */
 public class T_LOTO_EN_ETH implements Serializable {
 	
+	
 	private static final long serialVersionUID = -6980467864094686320L;
 	/**
 	 * 

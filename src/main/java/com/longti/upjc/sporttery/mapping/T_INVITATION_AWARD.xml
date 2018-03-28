@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.T_INVITATION_AWARD">
+    <select id = "sumT_INVITATION_AWARD" resultType="T_INVITATION_AWARD" parameterType="T_INVITATION_AWARD">
+        SELECT SUM(win_fee) as total,electronic_code
+        from t_invitation_award
+        <where>
+<if test="user_pin != null">
+ and user_pin=#{user_pin}
+</if>
+<if test="contributor != null">
+ and contributor=#{contributor}
+</if>
+GROUP BY electronic_code
+</where>
+    </select>
+    
+	<select id = "selectT_INVITATION_AWARDList" resultType="T_INVITATION_AWARD" parameterType="T_INVITATION_AWARD">
+		SELECT 
+		    t.id,t.user_pin,t.contributor,t.electronic_code,t.win_fee,t.create_time
+		from t_invitation_award t
+        <where>
+<if test="user_pin != null">
+ and t.user_pin=#{user_pin}
+</if>
+<if test="contributor != null">
+ and t.contributor=#{contributor}
+</if>
+</where>
+order by t.create_time
+    </select>
+    
+    <select id = "selectT_INVITATION_AWARDCount" resultType="int" parameterType="T_INVITATION_AWARD">
+		SELECT count(*) from t_invitation_award
+        <where>
+<if test="user_pin != null">
+ and user_pin=#{user_pin}
+</if>
+<if test="contributor != null">
+ and contributor=#{contributor}
+</if>
+</where>
+order by create_time
+       
+    </select>
+    
+    <insert id="save" parameterType="T_INVITATION_AWARD">
+    <![CDATA[
+        INSERT INTO t_invitation_award(id,user_pin,contributor,electronic_code,win_fee,create_time)
+VALUES(#{id},#{user_pin},#{contributor},#{electronic_code},#{win_fee},#{create_time})
+	]]>
+    </insert>
+    
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO t_invitation_award(id,user_pin,contributor,electronic_code,win_fee,create_time)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.user_pin},#{v.contributor},#{v.electronic_code},#{v.win_fee},#{v.create_time}) ]]>
+    </foreach>
+    </insert>
+    
+    <update id="update" parameterType="T_INVITATION_AWARD">
+    <![CDATA[
+        UPDATE t_invitation_award set user_pin=#{user_pin},contributor=#{contributor},electronic_code=#{electronic_code},win_fee=#{win_fee},create_time=#{create_time}
+		WHERE  id=#{id} 
+	]]>
+    </update>
+    
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO t_invitation_award(id,user_pin,contributor,electronic_code,win_fee,create_time)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.user_pin},#{v.contributor},#{v.electronic_code},#{v.win_fee},#{v.create_time})) ]]>
+    </foreach>
+    </insert>
+    
+    <delete id="delete" parameterType="T_INVITATION_AWARD">
+    <![CDATA[
+        DELETE FROM t_invitation_award WHERE  user_pin=#{user_pin} 
+	]]>
+    </delete>    
+</mapper > 

@@ -232,6 +232,5 @@ public class T_LOTO_EN_UZ implements Serializable {
 	}
 
     
-
 	
 }
