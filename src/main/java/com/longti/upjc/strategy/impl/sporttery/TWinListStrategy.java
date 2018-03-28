@@ -78,8 +78,7 @@ public class TWinListStrategy implements IMethodStrategy{
 		try {
 			lst = this.loto_ORDERService.selectLOTO_ORDERList(lotoOrder);
 			if(lst.isEmpty()){
-				rv.setStatus(ErrorMessage.NO_REC.getCode());
-				rv.setMessage(ErrorMessage.NO_REC.getMessage());				
+				rv.setMess(ErrorMessage.NO_REC);				
 			}else{
 				for(LOTO_ORDER loto_ORDER:lst){
 					WinListDetail winListDetail=new WinListDetail();					
@@ -87,12 +86,10 @@ public class TWinListStrategy implements IMethodStrategy{
 					winListDetail.setUsername(loto_ORDER.getMemo());
 					lstData.add(winListDetail);
 				}
-				rv.setStatus(ErrorMessage.SUCCESS.getCode());
-				rv.setMessage(ErrorMessage.SUCCESS.getMessage());
+				rv.setMess(ErrorMessage.SUCCESS);
 			}
 		} catch (Exception e) {
-			rv.setStatus(ErrorMessage.FAIL.getCode());
-			rv.setMessage(ErrorMessage.FAIL.getMessage());
+			rv.setMess(ErrorMessage.FAIL);
 			logger.error("查询获胜轮播列表失败----->"+e.getMessage());
 		}
 

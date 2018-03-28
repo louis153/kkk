@@ -8,10 +8,11 @@ import java.util.Date;
  */
 public class T_LOTO_EN_ETH implements Serializable {
 	
+	private static final long serialVersionUID = -6980467864094686320L;
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4055720067639549702L;
+	
 	private String issue;//比赛编号
 	private String play_method;//玩法信息
 	private String starttime;//比赛开始时间

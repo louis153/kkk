@@ -23,6 +23,9 @@ import com.ibm.icu.math.BigDecimal;
 import com.longti.upjc.entity.sporttery.LOTO_F;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
 import com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD;
+import com.longti.upjc.entity.sporttery.TAB_WARN_MESSAGE;
+import com.longti.upjc.entity.sporttery.TAB_WARN_SETTING;
+import com.longti.upjc.entity.sporttery.TAB_WARN_RECEIVE;
 import com.longti.upjc.entity.sporttery.T_LOTO_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_E;
 import com.longti.upjc.entity.sporttery.T_LOTO_SIS_F;
@@ -31,6 +34,7 @@ import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_FNService;
 import com.longti.upjc.service.sporttery.TAB_SALES_THRESHOLDService;
+import com.longti.upjc.service.sporttery.TAB_WARN_MESSAGEService;
 import com.longti.upjc.service.sporttery.T_LOTO_ENService;
 import com.longti.upjc.service.sporttery.T_LOTO_SIS_EService;
 import com.longti.upjc.service.sporttery.T_LOTO_SIS_FService;
@@ -41,7 +45,10 @@ import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.LangUtil;
 import com.longti.upjc.util.LangUtil.LangObj;
+import com.longti.upjc.util.jdbet.BetUtils;
+import com.mysql.jdbc.log.Log;
 import com.longti.upjc.util.ReturnValue;
+import com.longti.upjc.util.SmsUtils;
 import com.longti.upjc.util.StringUtil;
 
 /**
@@ -69,6 +76,10 @@ public class PayAllStrategy implements IMethodStrategy {
 	private T_USERService t_USERService;
 	@Autowired
 	private LangListStrategy langListStrategy;
+	@Autowired
+	private TAB_WARN_MESSAGEService tab_WARN_MESSAGEService;
+	
+	
 	public static class Odd {
 		private String odd_name;
 		private String odd_value;
@@ -108,7 +119,6 @@ public class PayAllStrategy implements IMethodStrategy {
 	public static class RequestData {
 		private String issue;
 		private List<Odd> odds;
-
 		public String getIssue() {
 			return issue;
 		}
@@ -170,11 +180,13 @@ public class PayAllStrategy implements IMethodStrategy {
 	}
 
 	@Override
-	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
+	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {		
 		logger.info("pay开始调用支付接口doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
 		ReturnValue<PayAll_Data> rv = new ReturnValue<>();
 		rv.setData(new PayAll_Data());
 
+		
+		
 		JSONArray lst_rem = ((JSONArray) jsonRequest.get("lst_rem"));
 		if (lst_rem==null||lst_rem.isEmpty()) {
 			rv.setMess(ErrorMessage.NO_REC);
@@ -243,7 +255,29 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 	}
 	
-	
+	// 判断是否报警
+	private TAB_WARN_SETTING tab_warn_setting=null;
+	private List<TAB_WARN_RECEIVE> lTab_WARN_RECEIVEs;
+	private void checkCanWarn(Long new_sum,Long dcxssx_s,TAB_WARN_MESSAGE tab_warn_message) throws Exception{
+		if (tab_warn_setting==null){
+			tab_warn_setting=tab_WARN_MESSAGEService.selectTAB_WARN_SETTING();
+		}
+		if(lTab_WARN_RECEIVEs==null){
+			lTab_WARN_RECEIVEs=tab_WARN_MESSAGEService.selectTAB_WARN_RECEIVEList();
+		}
+		if(tab_warn_setting!=null)
+		{
+			if(new_sum*100/dcxssx_s>tab_warn_setting.getRatio()){
+				if(tab_WARN_MESSAGEService.selectTAB_WARN_MESSAGEList(tab_warn_message).isEmpty()){
+					tab_warn_message.setEvent_desc("达到限陪额"+tab_warn_setting.getRatio()+"%");
+					tab_WARN_MESSAGEService.insertTAB_WARN_MESSAGE(tab_warn_message);
+					for(TAB_WARN_RECEIVE tab_WARN_RECEIVE: lTab_WARN_RECEIVEs){
+						SmsUtils.SendSms(tab_WARN_RECEIVE.getPhone(), "240505", new String[]{""});
+					}					
+				}
+			}
+		}
+	}
 	
 	private void changeFsLang(List<LOTO_F> loto_Fs,String feeType,String lang,String userPin) throws Exception{
 		
@@ -367,6 +401,7 @@ public class PayAllStrategy implements IMethodStrategy {
 		qryF.setElectronic_code(electronic_code);
 		if(sbIssues.length>0){
 			qryF.setIssues(sbIssues);
+			
 		}
 		qryF.setHad_bet(1);
 		qryF.setEndtime(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));
@@ -771,6 +806,7 @@ public class PayAllStrategy implements IMethodStrategy {
 
 			String issue = sis_e.getIssue();
 			RequestData m = jsonMatchs.get(issue);
+			
 			long m_cost=0;
 			for (Odd odd : m.getOdds()) {				
 				if (odd.getOdd_name().equals("odds_one") ){
@@ -784,11 +820,11 @@ public class PayAllStrategy implements IMethodStrategy {
 				}
 			}
 			if (m_cost != 0) {
-				
-				checkCanBet(canBet, issue, 501, StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost,
-						(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*1000000));
+				long new_sum=StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost;
+				long dcxssx_s=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*BetUtils.preMul);
+				checkCanBet(canBet, issue, 501,new_sum ,dcxssx_s);
 
-				if (StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost > (long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*1000000)) {
+				if (new_sum > dcxssx_s) {
 					rv.setMess(ErrorMessage.ERR_OVERFLOW);
 
 					endMatchs.clear();
@@ -796,7 +832,20 @@ public class PayAllStrategy implements IMethodStrategy {
 					rv.getData().setEndmatchs(endMatchs);
 					return;
 				}
-
+				TAB_WARN_MESSAGE tab_WARN_MESSAGE=new TAB_WARN_MESSAGE();
+				tab_WARN_MESSAGE.setCurrency(electronic_code);//'币种'
+				tab_WARN_MESSAGE.setEvent_desc("");//事件说明 例如: 选项能达到限陪额85%//插入时动态确认
+				tab_WARN_MESSAGE.setEvent_time(new Date());//事件发生时间
+				tab_WARN_MESSAGE.setGuest_team_name(mapEs.get(sis_e.getIssue()).getGuest_team_name());//客队名称
+				tab_WARN_MESSAGE.setHome_team_name(mapEs.get(sis_e.getIssue()).getHome_team_name());//主队名称
+				tab_WARN_MESSAGE.setIssue(issue);//比赛对阵编号 用于操作这场比赛使用
+				tab_WARN_MESSAGE.setMatch_name(mapEs.get(sis_e.getIssue()).getLeaguename());//赛事名称 e.g. 英超....
+				tab_WARN_MESSAGE.setPlay_method(mapEs.get(sis_e.getIssue()).getPlay_method());//玩法 e.g. 梅西上半场是否能进2个球
+				tab_WARN_MESSAGE.setProcessed(0);//是否处理过的 0 否1是
+				tab_WARN_MESSAGE.setStop_time(DateUtils.getStrToDate(mapEs.get(sis_e.getIssue()).getEndtime(),"yyyyMMddHHmmss"));//话题停售时间
+				tab_WARN_MESSAGE.setType(0);	//告警类型, 0竞猜话题		
+				
+				checkCanWarn(new_sum,dcxssx_s,tab_WARN_MESSAGE);
 			}
 
 		}

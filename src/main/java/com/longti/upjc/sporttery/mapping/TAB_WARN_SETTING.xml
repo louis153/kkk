@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.TAB_WARN_SETTING">
+	<select id = "selectTAB_WARN_SETTINGList" resultType="TAB_WARN_SETTING" parameterType="TAB_WARN_SETTING">
+		SELECT id,type,ratio,create_time from tab_warn_setting
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="type != null">
+ and type = #{type}
+</if>
+<if test="ratio != null">
+ and ratio=#{ratio}
+</if>
+<if test="create_time != null">
+ and date(create_time)=date(#{create_time})
+</if>
+<if test="start_create_time != null and end_create_time != null ">
+ and create_time between #{start_create_time} and #{end_create_time}
+</if>
+</where>
+order by id
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    
+</mapper > 

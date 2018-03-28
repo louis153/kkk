@@ -17,7 +17,7 @@ import com.longti.upjc.util.ReturnValue;
 import com.longti.upjc.util.jdbet.BetUtils;
 
 /**
- * 蓝球支付
+ * 获取余额
  * 
  * @return
  */
@@ -39,17 +39,18 @@ public class BalanceStrategy implements IMethodStrategy {
 	
 	@Override
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {
-		logger.info("pay开始调用支付接口doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
+		logger.info("pay开始调用查看余额doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
 		
 		ReturnValue<Balance_Data> rv=new ReturnValue<Balance_Data>();
 		Balance_Request balance_Request=new Balance_Request(jsonRequest);
+		balance_Request.electronic_code=request_LtGameLogic.getFeeType();
+		balance_Request.user_pin=request_LtGameLogic.getUserPin();
 		RV_Balance rv_Balance= BetUtils.Balance(balance_Request.user_pin, balance_Request.electronic_code);
-		
+		rv.setData(new Balance_Data());
 		rv.getData().balance=rv_Balance.balance;
 		
-		rv.setStatus(ErrorMessage.SUCCESS.getCode());
-		rv.setMessage(ErrorMessage.SUCCESS.getMessage());
-		logger.info("调用登录接口成功----->");
+		rv.setMess(ErrorMessage.SUCCESS);
+		logger.info("调用查看余额接口成功----->");
 		return JSONObject.toJSONString(rv);
 	}
 

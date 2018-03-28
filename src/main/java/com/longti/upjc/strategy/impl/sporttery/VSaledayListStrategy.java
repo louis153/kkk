@@ -95,14 +95,12 @@ public class VSaledayListStrategy implements IMethodStrategy{
 			}
 		} catch (Exception e) {
 			logger.error("查询首页日期栏列表失败----->");
-			rv.setStatus(ErrorMessage.FAIL.getCode());
-	        rv.setMessage(ErrorMessage.FAIL.getMessage());
+			rv.setMess(ErrorMessage.FAIL);
 			return JSONObject.toJSONString(rv);
 		}
 		
         
-        rv.setStatus(ErrorMessage.SUCCESS.getCode());
-        rv.setMessage(ErrorMessage.SUCCESS.getMessage());
+        rv.setMess(ErrorMessage.SUCCESS);
         
         logger.info("查询首页日期栏列成功----->");
 		return JSONObject.toJSONString(rv);

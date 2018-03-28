@@ -24,6 +24,7 @@ import com.longti.upjc.formdata.system.Response_LtGameLogic;
 import com.longti.upjc.service.sporttery.T_USERService;
 import com.longti.upjc.strategy.impl.sporttery.GameLogicMethodFactory;
 import com.longti.upjc.util.DateUtils;
+import com.longti.upjc.util.jdbet.BetUtils;
 
 
 
@@ -100,14 +101,13 @@ public class Game_Controller {
 			logger.info("访问的userPin:"+request_LtGameLogic.getUserPin(),request_LtGameLogic.getUserPin());
 			
 			int checkTokenFlag=0;
-			if(jsonRequest.get("method").equals("login")==false){
-				if(jsonRequest.get("method").equals("pay")||request_LtGameLogic.getTranType()==1){
-					checkTokenFlag=checkServerToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
-				}else{
-					checkTokenFlag=checkToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
-				}
-			}
 			
+			if(jsonRequest.get("method").equals("pay")||jsonRequest.get("method").equals("login")||jsonRequest.get("method").equals("get_balance")||request_LtGameLogic.getTranType()==1){
+				checkTokenFlag=checkServerToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
+			}else{
+				checkTokenFlag=checkToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
+			}
+						
 			response_LtGameLogic.setGameResponse("");
 			if(checkTokenFlag==1){				
 				response_LtGameLogic.setReturnCode(1);
@@ -140,7 +140,12 @@ public class Game_Controller {
 		OutPrintStr(outStr,response);
 	}
 	private int checkServerToken(String userPin,String userToken) throws Exception{
-		return checkToken(userPin, userToken);//正式对接时需要修改
+		if(userToken.isEmpty()){
+			return 1;
+		}
+		else{
+			return BetUtils.CheckToken(userToken).status.equals(BetUtils.TOKEN_VALID)?0:2;//正式对接时需要修改
+		}
 	}
 	private int checkToken(String userPin,String userToken) throws Exception{
 		T_USER t_user=new T_USER();

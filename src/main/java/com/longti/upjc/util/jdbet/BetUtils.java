@@ -5,33 +5,40 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSONObject;
-import com.longti.upjc.controller.system.Game_Controller;
 import com.longti.upjc.formdata.Head;
 import com.longti.upjc.formdata.Msg;
 import com.longti.upjc.formdata.sporttery.ASK_Balance;
 import com.longti.upjc.formdata.sporttery.ASK_Change;
 import com.longti.upjc.formdata.sporttery.ASK_Query;
+import com.longti.upjc.formdata.sporttery.ASK_Token;
 import com.longti.upjc.formdata.sporttery.RV_Balance;
 import com.longti.upjc.formdata.sporttery.RV_Change;
 import com.longti.upjc.formdata.sporttery.RV_Query;
+import com.longti.upjc.formdata.sporttery.RV_Token;
 import com.longti.upjc.util.IOUtils;
 import com.longti.upjc.util.PostUtils;
 
 
 public class BetUtils {
-	protected final transient static Logger logger = LoggerFactory.getLogger(Game_Controller.class);
+	protected final transient static Logger logger = LoggerFactory.getLogger(BetUtils.class);
 	public static Long preMul=1000000L;
 	public static String up_balance;
 	public static String up_change;
 	public static String up_query;
 	public static String up_appkey;
 	public static String up_appSecret;
+	public static String up_checkToken;
+	
+	public static String TOKEN_VALID="valid";
+	public static String TOKEN_INVALID="invalid";
+	
 	static{
 		up_balance=IOUtils.getConfigParam("up.balance", "up.properties");
 		up_change=IOUtils.getConfigParam("up.change", "up.properties");
 		up_query=IOUtils.getConfigParam("up.query", "up.properties");
 		up_appkey=IOUtils.getConfigParam("up.appkey", "up.properties");
 		up_appSecret=IOUtils.getConfigParam("up.appSecret", "up.properties");
+		up_checkToken=IOUtils.getConfigParam("up.checkToken", "up.properties");
 	}
 	
 	/**
@@ -158,7 +165,31 @@ public class BetUtils {
 		
 		return rv.getBody();
 	}
-	
+	public static RV_Token CheckToken(String userToken) throws Exception{
+		Msg<RV_Token> rv=new Msg<RV_Token>();
+		Msg<ASK_Token> ask=new Msg<ASK_Token>();
+		ask.setBody(new ASK_Token());
+		ask.getBody().userToken=userToken;
+		
+		
+		ask.setHead(Create_Head());
+		try {
+			String rvStr=PostUtils.doPostGZip(up_checkToken,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			JSONObject obj=JSONObject.parseObject(rvStr);
+			Head head=new Head();
+			head.setAppkey(up_appkey);
+			rv.setHead(head);
+			RV_Token body=new RV_Token();
+			body.status=((JSONObject)obj).get("status").toString();
+			rv.setBody(body);//将建json对象转换为RV_Login对象
+			
+		} catch (Exception e) {
+			logger.error("访问亚创验证用户TOKEN接口抛出服务异常 错误信息："+(e.getMessage()==null?"":e.getMessage()));
+			throw new Exception(e.getMessage());
+		}
+		
+		return rv.getBody();
+	}
 	public static RV_Query Query(String transactionId) throws Exception{
 		Msg<RV_Query> rv=new Msg<RV_Query>();
 		Msg<ASK_Query> ask=new Msg<ASK_Query>();

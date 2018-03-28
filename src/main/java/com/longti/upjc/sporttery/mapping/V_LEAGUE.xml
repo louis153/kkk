@@ -3,36 +3,27 @@
     <mapper namespace="com.longti.upjc.entity.sporttery.V_LEAGUE">
 	<select id = "selectV_LEAGUEList" resultType="V_LEAGUE" parameterType="V_LEAGUE">
 		 
-<if test='position == "3"'>
-select leaguename,count(*) AS leaguecount,#{position} as position, left(issue,8) as saleday from t_loto_bn
-</if>		
-<if test='position == "2"'>
-select leaguename,count(*) AS leaguecount,#{position} as position, left(issue,8) as saleday from t_loto_fn
-</if>		
-<if test='position == "4"'>
-select game_name as leaguename,count(*) AS leaguecount,#{position} as position, left(endtime,10) as saleday from t_loto_en
-</if>		
-
+select leaguename,count(*) AS leaguecount, left(issue,8) as saleday from 
+<choose>  
+   	<when test="electronic_code=='ETH'.toString()">t_loto_fn_eth</when>  
+   	<when test="electronic_code=='GTO'.toString()">t_loto_fn_gto</when>
+   	<when test="electronic_code=='UZ'.toString()">t_loto_fn_uz</when>   
+</choose> 
        where status=1 
 <if test="leaguename != null">
  and leaguename=#{leaguename}
 </if>
-<if test='position == "2"'>
-<![CDATA[and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s')
-and (had_bet=1 ) and issue<>#{rem_issue}]]>
+<![CDATA[and endtime > DATE_FORMAT(now(),'%Y%m%d%H%i%s') and (had_bet=1 )]]>
 group by leaguename,left(issue,8) order by leaguename
-</if>
-<if test='position == "4"'>
-<![CDATA[and endtime > DATE_FORMAT(now(),'%Y-%m-%d %H:%i:%s')
-and mnl_bet=1 and issue<>#{rem_issue}]]>
-group by game_name,left(endtime,10) order by game_name
-</if>
-
-
-       
     </select>
     <select id = "selectV_LEAGUECount" resultType="int" parameterType="V_LEAGUE">
-		SELECT count(t.*) from (select distinct leaguename AS leaguename from t_loto_bn where status=1) t
+		SELECT count(t.*) from (select distinct leaguename AS leaguename from 
+<choose>  
+   	<when test="electronic_code=='ETH'.toString()">t_loto_fn_eth</when>  
+   	<when test="electronic_code=='GTO'.toString()">t_loto_fn_gto</when>
+   	<when test="electronic_code=='UZ'.toString()">t_loto_fn_uz</when>   
+</choose>
+where status=1) t
         <where>
 <if test="leaguename != null">
  and t.leaguename=#{leaguename}

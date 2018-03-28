@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.TAB_WARN_MESSAGE">
+    <select id = "selectTAB_WARN_MESSAGEList" resultType="TAB_WARN_MESSAGE" parameterType="TAB_WARN_MESSAGE">
+		SELECT id,type,issue,currency,match_name,home_team_name,guest_team_name,play_method,event_desc,event_time,stop_time,processed from tab_warn_message
+        <where>
+<if test="id != null">
+ and id=#{id}
+</if>
+<if test="type != null">
+ and type=#{type}
+</if>
+<if test="issue != null">
+ and issue = #{issue}
+</if>
+<if test="currency != null">
+ and currency = #{currency}
+</if>
+<if test="match_name != null">
+ and match_name = #{match_name}
+</if>
+<if test="home_team_name != null">
+ and home_team_name = #{home_team_name}
+</if>
+<if test="guest_team_name != null">
+ and guest_team_name = #{guest_team_name}
+</if>
+<if test="play_method != null">
+ and play_method = #{play_method}
+</if>
+<if test="event_desc != null">
+ and event_desc = #{event_desc}
+</if>
+<if test="event_time != null">
+ and date(event_time)=date(#{event_time})
+</if>
+<if test="start_event_time != null and end_event_time != null ">
+ and event_time between #{start_event_time} and #{end_event_time}
+</if>
+<if test="stop_time != null">
+ and date(stop_time)=date(#{stop_time})
+</if>
+<if test="start_stop_time != null and end_stop_time != null ">
+ and stop_time between #{start_stop_time} and #{end_stop_time}
+</if>
+<if test="processed != null">
+ and processed=#{processed}
+</if>
+</where>
+order by id
+
+        <if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
+    </select>
+    
+	<insert id="save" parameterType="TAB_WARN_MESSAGE">
+    <![CDATA[
+        INSERT INTO tab_warn_message(id,type,issue,currency,match_name,home_team_name,guest_team_name,play_method,event_desc,event_time,stop_time,processed)
+VALUES(#{id},#{type},#{issue},#{currency},#{match_name},#{home_team_name},#{guest_team_name},#{play_method},#{event_desc},#{event_time},#{stop_time},#{processed})
+	]]>
+    </insert>
+       
+</mapper > 

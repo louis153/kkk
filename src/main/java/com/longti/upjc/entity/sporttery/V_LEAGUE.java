@@ -13,11 +13,12 @@ public class V_LEAGUE implements Serializable {
 	 */
 	private static final long serialVersionUID = 9058820038302900712L;
 	private  Integer leaguecount;//比赛场数
+	private String electronic_code;//币种
     private String leaguename; //比赛名称
     private String saleday;//销售日
     private Integer row_start;//开始行
     private Integer page_size;//每页行数
-
+  
 
     public String getLeaguename() {
         return leaguename;
@@ -51,6 +52,12 @@ public class V_LEAGUE implements Serializable {
 	}
 	public void setSaleday(String saleday) {
 		this.saleday = saleday;
+	}
+	public String getElectronic_code() {
+		return electronic_code;
+	}
+	public void setElectronic_code(String electronic_code) {
+		this.electronic_code = electronic_code;
 	}
 	
 

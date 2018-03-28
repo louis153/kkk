@@ -45,6 +45,9 @@
         
         <typeAlias type="com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD" alias="TAB_SALES_THRESHOLD"></typeAlias>
         
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_WARN_MESSAGE" alias="TAB_WARN_MESSAGE"></typeAlias>
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_WARN_RECEIVE" alias="TAB_WARN_RECEIVE"></typeAlias>
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_WARN_SETTING" alias="TAB_WARN_SETTING"></typeAlias>
     </typeAliases>
     <mappers>
         <!-- 竞彩 -->
@@ -86,5 +89,9 @@
         <mapper resource="com/longti/upjc/sporttery/mapping/T_USER.xml" />
         
         <mapper resource="com/longti/upjc/sporttery/mapping/TAB_SALES_THRESHOLD.xml" />
+        
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_WARN_MESSAGE.xml" />
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_WARN_RECEIVE.xml" />
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_WARN_SETTING.xml" />
     </mappers>
 </configuration>

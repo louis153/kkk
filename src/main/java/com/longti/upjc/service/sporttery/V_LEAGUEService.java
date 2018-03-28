@@ -7,18 +7,18 @@ import com.longti.upjc.entity.sporttery.V_LEAGUE;
 /**
  * VIEWservice
  */
-public interface V_LEAGUE_FService {
+public interface V_LEAGUEService {
 	
    
     /**
 	 * 条件查询
 	 */
-    public List<V_LEAGUE> selectV_LEAGUE_FList(V_LEAGUE v_league_f) throws Exception;
+    public List<V_LEAGUE> selectV_LEAGUE_List(V_LEAGUE v_league) throws Exception;
 
     /**
      * 条件查询数量
      */
-    public int selectV_LEAGUE_FCount(V_LEAGUE v_league_f) throws Exception;
+    public int selectV_LEAGUE_Count(V_LEAGUE v_league) throws Exception;
 
 
 	
