@@ -303,23 +303,36 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 
 	
 	public void updateDPs(String issume, HashMap<String, Boolean> canChangeOdd, List<String> canBet,String electronic_code) throws Exception {
+		logger.info("----计算可销售话题比赛开始----->");
 		T_LOTO_E loto_en = new T_LOTO_E();
 		loto_en.setIssue(issume);
 		loto_en.setElectronic_code(electronic_code);
 		List<T_LOTO_E> lst_LOTO_E = loto_ENDao.selectLOTO_ENList(loto_en);
 		if (lst_LOTO_E.size() > 0) {
 			BigDecimal odds_one=new BigDecimal(lst_LOTO_E.get(0).getOdds_one());
-			BigDecimal odds_two=new BigDecimal(lst_LOTO_E.get(0).getOdds_two());
-			BigDecimal odds_three=new BigDecimal(lst_LOTO_E.get(0).getOdds_three());			
-			
+			BigDecimal odds_two=null;
+			if(lst_LOTO_E.get(0).getOdds_two().isEmpty()){
+		    	odds_two=new BigDecimal(0);
+		    }
+			else{
+				odds_two=new BigDecimal(lst_LOTO_E.get(0).getOdds_two());
+			}
+			BigDecimal odds_three=null;
+			if(lst_LOTO_E.get(0).getOdds_three().isEmpty()){
+				odds_three=new BigDecimal(0);
+			}
+			else{
+				odds_three=new BigDecimal(lst_LOTO_E.get(0).getOdds_three());			
+			}
 			if (canBet.indexOf(issume + "|501") >= 0 
 					|| odds_one.compareTo(new BigDecimal("1.01"))<0
-					|| odds_two.compareTo(new BigDecimal("1.01"))<0
-					|| odds_three.compareTo(new BigDecimal("1.01"))<0) {
+					|| (odds_two.compareTo(new BigDecimal("1.01"))<0&&lst_LOTO_E.get(0).getOdds_two().isEmpty()==false)
+					|| (odds_three.compareTo(new BigDecimal("1.01"))<0&&lst_LOTO_E.get(0).getOdds_three().isEmpty()==false)) {
 				lst_LOTO_E.get(0).setMnl_bet(0);
 				loto_ENDao.updateLOTO_EN(lst_LOTO_E.get(0));
 			}
 		}
+		logger.info("----计算可销售话题比赛结束----->");
 	}
 
 }

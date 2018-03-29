@@ -731,11 +731,18 @@ public class PayAllStrategy implements IMethodStrategy {
 						BigDecimal odds_three=new BigDecimal("0");
 						if(StringUtil.isEmpty(e.getOdds_one())==false){
 							odds_one=new BigDecimal(e.getOdds_one());
-							odds_two=new BigDecimal(e.getOdds_two());
-							odds_three=new BigDecimal(e.getOdds_three());
+							if(e.getOdds_two().isEmpty()==false){
+								odds_two=new BigDecimal(e.getOdds_two());
+							}
+							if(e.getOdds_three().isEmpty()==false){
+								odds_three=new BigDecimal(e.getOdds_three());
+							}
 						}
 						
-						if (StringUtil.isEmpty(e.getOdds_one())||odds_one.compareTo(minOdd)<0||odds_two.compareTo(minOdd)<0 || odds_three.compareTo(minOdd)<0) {
+						if (StringUtil.isEmpty(e.getOdds_one())
+						  ||odds_one.compareTo(minOdd)<0
+						  ||(odds_two.compareTo(minOdd)<0&&e.getOdds_two().isEmpty()==false) 
+						  ||(odds_three.compareTo(minOdd)<0&&e.getOdds_three().isEmpty()==false)) {
 							rv.setMess(ErrorMessage.END_SELL);
 							endMatchs.clear();
 							endMatchs.add(e.getIssue());
