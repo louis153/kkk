@@ -17,6 +17,13 @@ public class T_INVITATION_AWARDServiceImpl implements T_INVITATION_AWARDService 
 	@Autowired
 	private T_INVITATION_AWARDDao t_invitation_awardDDao;
 	
+	
+	/**
+	 * 查询邀请好友
+	 */
+	public List<T_INVITATION_AWARD> selectT_INVITATION_AWARD(T_INVITATION_AWARD t_invitation_award) throws Exception{
+		return t_invitation_awardDDao.selectT_INVITATION_AWARD(t_invitation_award);
+	}
 	/**
 	 * 统计查询
 	 */

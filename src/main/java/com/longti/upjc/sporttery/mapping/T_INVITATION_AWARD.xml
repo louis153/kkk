@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.T_INVITATION_AWARD">
+    <select id = "selectT_INVITATION_AWARD" resultType="T_INVITATION_AWARD" parameterType="T_INVITATION_AWARD">
+        SELECT SUM(win_fee) as total,user_pin,contributor,electronic_code
+        from t_invitation_award
+        <where>
+<if test="user_pin != null">
+ and user_pin=#{user_pin}
+</if>
+<if test="type != null">
+ and type=#{type}
+</if>
+<if test="contributor != null">
+ and contributor=#{contributor}
+</if>
+<if test="electronic_code != null">
+ and electronic_code=#{electronic_code}
+</if>
+GROUP BY contributor,electronic_code
+</where>
+    </select>
+    
     <select id = "sumT_INVITATION_AWARD" resultType="T_INVITATION_AWARD" parameterType="T_INVITATION_AWARD">
         SELECT SUM(win_fee) as total,electronic_code
         from t_invitation_award
@@ -11,14 +31,17 @@
 <if test="contributor != null">
  and contributor=#{contributor}
 </if>
+<if test="electronic_code != null">
+ and electronic_code=#{electronic_code}
+</if>
 GROUP BY electronic_code
 </where>
     </select>
     
 	<select id = "selectT_INVITATION_AWARDList" resultType="T_INVITATION_AWARD" parameterType="T_INVITATION_AWARD">
 		SELECT 
-		    t.id,t.user_pin,t.contributor,t.electronic_code,t.win_fee,t.create_time
-		from t_invitation_award t
+		    t.id,t.user_pin,t.contributor,t.electronic_code,t.win_fee,t.create_time,t.type,t1.nick_name
+		from t_invitation_award t LEFT JOIN t_user t1 ON t.contributor = t1.user_pin
         <where>
 <if test="user_pin != null">
  and t.user_pin=#{user_pin}
@@ -26,8 +49,14 @@ GROUP BY electronic_code
 <if test="contributor != null">
  and t.contributor=#{contributor}
 </if>
+<if test="electronic_code != null">
+ and electronic_code=#{electronic_code}
+</if>
 </where>
 order by t.create_time
+<if test = "row_start != null and page_size != null" >
+        limit ${row_start},${page_size}
+        </if>
     </select>
     
     <select id = "selectT_INVITATION_AWARDCount" resultType="int" parameterType="T_INVITATION_AWARD">
@@ -38,6 +67,9 @@ order by t.create_time
 </if>
 <if test="contributor != null">
  and contributor=#{contributor}
+</if>
+<if test="electronic_code != null">
+ and electronic_code=#{electronic_code}
 </if>
 </where>
 order by create_time

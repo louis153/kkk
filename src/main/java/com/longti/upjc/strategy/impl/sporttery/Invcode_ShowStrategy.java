@@ -45,7 +45,7 @@ public class Invcode_ShowStrategy implements IMethodStrategy {
 			invList = userINVCODEService.selectT_USER_INVCODEList(t_user_invcode);
 			if(invList.size()>0){
 				t_user_invcode = invList.get(0);    
-				if(0==t_user_invcode.getIs_bind()){
+				if("0".equals(t_user_invcode.getIs_bind())){
 					Date now = new Date();
 	            	Date after = DateUtils.getHourAfterDate(t_user_invcode.getFirstlogin_time(),24);
 	            	if(now.before(after)){

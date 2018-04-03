@@ -33,6 +33,7 @@ public class ProfileListStrategy implements IMethodStrategy {
 	public static class ProfileDetail {
 		public String val;//收益
 		public String electronic_code;//币种简称
+		public String type;//类型（0-竞猜下单赠送、1-竞猜中奖赠送）
 		public String nick_name;//用户昵称
 		public String get_date;//时间
 	}
@@ -94,10 +95,11 @@ public class ProfileListStrategy implements IMethodStrategy {
 			invlst = t_invitation_awardService.selectT_INVITATION_AWARDList(t_invitation_award);
 			for(T_INVITATION_AWARD inv : invlst){
 				ProfileDetail profileDetail = new ProfileDetail();
+				profileDetail.type = inv.getType();
 				profileDetail.electronic_code = inv.getElectronic_code();
 				profileDetail.get_date = DateUtils.getDateToStr(inv.getCreate_time(), "yyyy-MM-dd HH:mm:ss");
-				profileDetail.nick_name = inv.getUser_pin();
-				profileDetail.val = NumberUtils.longDiv(inv.getWin_fee(),BetUtils.preMul).toString();
+				profileDetail.nick_name = inv.getNick_name();
+				profileDetail.val = inv.getWin_fee();
 				rv.getData().lst.add(profileDetail);
 			}
 			rv.getData().page_index= page_index;

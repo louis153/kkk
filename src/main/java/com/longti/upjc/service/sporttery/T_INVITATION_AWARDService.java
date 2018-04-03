@@ -8,7 +8,10 @@ import com.longti.upjc.entity.sporttery.T_INVITATION_AWARD;
  * 绑定奖励service
  */
 public interface T_INVITATION_AWARDService {
-	
+	/**
+	 * 查询邀请好友
+	 */
+	public List<T_INVITATION_AWARD> selectT_INVITATION_AWARD(T_INVITATION_AWARD t_invitation_award) throws Exception;
 	/**
 	 * 统计查询
 	 */

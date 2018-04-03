@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+    <mapper namespace="com.longti.upjc.entity.sporttery.TAB_INVITATION_BIND">
+	<select id = "selectTAB_INVITATION_BINDList" resultType="TAB_INVITATION_BIND" parameterType="TAB_INVITATION_BIND">
+		SELECT t.id,t.bind_available,t.bind_fee,t.be_bind_available,t.be_bind_fee_total,t.be_bind_fee_one,t.be_bind_fee_two,t.be_bind_fee_three,t.be_bind_fee_four from tab_invitation_bind t
+        <where>
+<if test="bind_available != null">
+ and t.bind_available=#{bind_available}
+</if>
+<if test="be_bind_available != null">
+ and t.be_bind_available=#{be_bind_available}
+</if>
+</where>
+order by t.id
+    </select>
+    
+    <select id = "selectTAB_INVITATION_BINDCount" resultType="int" parameterType="TAB_INVITATION_BIND">
+		SELECT count(*) from tab_invitation_bind
+        <where>
+<if test="bind_available != null">
+ and bind_available=#{bind_available}
+</if>
+<if test="be_bind_available != null">
+ and be_bind_available=#{be_bind_available}
+</if>
+</where>
+order by id
+       
+    </select>
+    
+    <insert id="save" parameterType="TAB_INVITATION_BIND">
+    <![CDATA[
+        INSERT INTO tab_invitation_bind(id,bind_available,bind_fee,be_bind_available,be_bind_fee_total,be_bind_fee_one,be_bind_fee_two,be_bind_fee_three,be_bind_fee_four)
+VALUES(#{id},#{bind_available},#{bind_fee},#{be_bind_available},#{be_bind_fee_total},#{be_bind_fee_one},#{be_bind_fee_two},#{be_bind_fee_three},#{be_bind_fee_four})
+	]]>
+    </insert>
+    
+    <insert id="saveList" parameterType="java.util.List">
+    <![CDATA[
+        INSERT INTO tab_invitation_bind(id,bind_available,bind_fee,be_bind_available,be_bind_fee_total,be_bind_fee_one,be_bind_fee_two,be_bind_fee_three,be_bind_fee_four)
+VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.bind_available},#{v.bind_fee},#{v.be_bind_available},#{v.be_bind_fee_total},#{v.be_bind_fee_one},#{v.be_bind_fee_two},#{v.be_bind_fee_three},#{v.be_bind_fee_four}) ]]>
+    </foreach>
+    </insert>
+    
+    <update id="update" parameterType="TAB_INVITATION_BIND">
+    <![CDATA[
+        UPDATE tab_invitation_bind set id=#{id},bind_available=#{bind_available},bind_fee=#{bind_fee},be_bind_available=#{be_bind_available},be_bind_fee_total=#{be_bind_fee_total},be_bind_fee_one=#{be_bind_fee_one},be_bind_fee_two=#{be_bind_fee_two},be_bind_fee_three=#{be_bind_fee_three},be_bind_fee_four=#{be_bind_fee_four}
+		WHERE  id=#{id} 
+	]]>
+    </update>
+    
+    <insert id="updateList" parameterType="java.util.List">
+    <![CDATA[
+        REPLACE INTO tab_invitation_bind(id,bind_available,bind_fee,be_bind_available,be_bind_fee_total,be_bind_fee_one,be_bind_fee_two,be_bind_fee_three,be_bind_fee_four)
+    VALUES
+	]]>
+    <foreach collection="list" item="v" index="index" separator=", " > 
+        <![CDATA[(#{v.id},#{v.bind_available},#{v.bind_fee},#{v.be_bind_available},#{v.be_bind_fee_total},#{v.be_bind_fee_one},#{v.be_bind_fee_two},#{v.be_bind_fee_three},#{v.be_bind_fee_four})) ]]>
+    </foreach>
+    </insert>
+    
+    <delete id="delete" parameterType="TAB_INVITATION_BIND">
+    <![CDATA[
+        DELETE FROM tab_invitation_bind WHERE  id=#{id} 
+	]]>
+    </delete>    
+</mapper > 

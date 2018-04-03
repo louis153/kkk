@@ -19,6 +19,10 @@
         <typeAlias type="com.longti.upjc.entity.sporttery.TAB_TEAMNAME_LANG" alias="TAB_TEAMNAME_LANG"></typeAlias>
         <typeAlias type="com.longti.upjc.entity.sporttery.TAB_PLAYMETHOD_LANG" alias="TAB_PLAYMETHOD_LANG"></typeAlias>
         <typeAlias type="com.longti.upjc.entity.sporttery.TAB_OPTIONS_LANG" alias="TAB_OPTIONS_LANG"></typeAlias> 
+        <!-- 绑定邀请码设置 -->
+        <typeAlias type="com.longti.upjc.entity.sporttery.TAB_INVITATION_BIND" alias="TAB_INVITATION_BIND"></typeAlias>
+
+
 
         <!-- 竞彩比赛日 -->
         <typeAlias type="com.longti.upjc.entity.sporttery.T_LOTO_E" alias="T_LOTO_E"></typeAlias>
@@ -55,7 +59,11 @@
         <mapper resource="com/longti/upjc/sporttery/mapping/TAB_TEAMNAME_LANG.xml" />
         <mapper resource="com/longti/upjc/sporttery/mapping/TAB_PLAYMETHOD_LANG.xml" />
         <mapper resource="com/longti/upjc/sporttery/mapping/TAB_OPTIONS_LANG.xml" />
-
+        <!-- 绑定邀请码设置 -->
+        <mapper resource="com/longti/upjc/sporttery/mapping/TAB_INVITATION_BIND.xml" />
+        
+        
+        
         <!-- 竞彩比赛日 -->  
         <mapper resource="com/longti/upjc/sporttery/mapping/LOTO_F.xml" />
         <mapper resource="com/longti/upjc/sporttery/mapping/T_LOTO_E.xml" />

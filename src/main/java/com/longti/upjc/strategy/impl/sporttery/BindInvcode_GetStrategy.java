@@ -17,9 +17,7 @@ import com.longti.upjc.service.sporttery.T_INVITATION_AWARDService;
 import com.longti.upjc.service.sporttery.T_USER_INVCODEService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.ErrorMessage;
-import com.longti.upjc.util.NumberUtils;
 import com.longti.upjc.util.ReturnValue;
-import com.longti.upjc.util.jdbet.BetUtils;
 
 /**
  * 获取绑定邀请码
@@ -64,11 +62,11 @@ public class BindInvcode_GetStrategy implements IMethodStrategy {
             	String uz = "0";
             	for(T_INVITATION_AWARD aw : awlst){
             		if("GTO".equals(aw.getElectronic_code())){
-            			gto = String.valueOf(aw.getTotal());//NumberUtils.longDiv(aw.getTotal(),BetUtils.preMul).toString();
+            			gto = String.valueOf(aw.getTotal());
             		}else if("ETH".equals(aw.getElectronic_code())){
-            			eth = String.valueOf(aw.getTotal());//NumberUtils.longDiv(aw.getTotal(),BetUtils.preMul).toString();
+            			eth = String.valueOf(aw.getTotal());
             		}else if("UZ".equals(aw.getElectronic_code())){
-            			uz= String.valueOf(aw.getTotal());//NumberUtils.longDiv(aw.getTotal(),BetUtils.preMul).toString();
+            			uz= String.valueOf(aw.getTotal());
             		}
             	}
             	lotoBindInvcodeDetail.gto = gto;

@@ -14,7 +14,7 @@ public class TAB_DICT  implements Serializable {
 	private static final long serialVersionUID = 4486236233364110947L;
 	
 	private int id;//主键
-	private int type;//字典类型 1.绑定邀请码获得GTO数, 2邀请用户中奖比例(GTO), 3 (ETH), 4(U钻)
+	private int type;//字典类型2邀请用户中奖比例(GTO), 3 (ETH), 4(U钻)
 	private String value;//字典值
 	private Date create_time;//创建时间
 	private int available;//是否可用 ,0 否1是

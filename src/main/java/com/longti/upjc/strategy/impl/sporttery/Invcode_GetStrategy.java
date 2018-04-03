@@ -65,11 +65,11 @@ public class Invcode_GetStrategy implements IMethodStrategy {
             	String uz = "0";
             	for(T_INVITATION_AWARD aw : awlst){
             		if("GTO".equals(aw.getElectronic_code())){
-            			gto = String.valueOf(aw.getTotal());//NumberUtils.longDiv(aw.getTotal(),BetUtils.preMul).toString();
+            			gto = String.valueOf(aw.getTotal());
             		}else if("ETH".equals(aw.getElectronic_code())){
-            			eth = String.valueOf(aw.getTotal());//NumberUtils.longDiv(aw.getTotal(),BetUtils.preMul).toString();
+            			eth = String.valueOf(aw.getTotal());
             		}else if("UZ".equals(aw.getElectronic_code())){
-            			uz= String.valueOf(aw.getTotal());//NumberUtils.longDiv(aw.getTotal(),BetUtils.preMul).toString();
+            			uz= String.valueOf(aw.getTotal());
             		}
             	}
             	lotoInvcodeDetail.gto = gto;
