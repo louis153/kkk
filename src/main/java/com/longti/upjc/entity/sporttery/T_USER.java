@@ -1,6 +1,8 @@
 package com.longti.upjc.entity.sporttery;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+
 
 
 /**
@@ -20,9 +22,12 @@ public class T_USER implements Serializable {
     private Date start_first_time; //开始第一次登录时间
     private Date end_first_time; //结束第一次登录时间
     private Date land_time; //本次登录时间
-    private Long award_gto; //奖励的gto账户金额
+    private BigDecimal award_gto; //奖励的gto账户金额
     private Date start_land_time; //开始本次登录时间
     private Date end_land_time; //结束本次登录时间
+    private BigDecimal award_eth;//奖励的eth账户金额
+    private BigDecimal award_uz;//奖励的uz账户金额
+    private Integer bet_times;//投注次数
     private Integer row_start;//开始行
     private Integer page_size;//每页行数
 
@@ -69,10 +74,10 @@ public class T_USER implements Serializable {
 	public void setLand_time(Date land_time) {
 		this.land_time = land_time;
 	}
-    public Long getAward_gto() {
+    public BigDecimal getAward_gto() {
 		return award_gto;
 	}
-	public void setAward_gto(Long award_gto) {
+	public void setAward_gto(BigDecimal award_gto) {
 		this.award_gto = award_gto;
 	}
 	public Date getStart_land_time() {
@@ -102,6 +107,24 @@ public class T_USER implements Serializable {
     public void setPage_size(Integer page_size){
         this.page_size=page_size;
     }
+	public BigDecimal getAward_eth() {
+		return award_eth;
+	}
+	public void setAward_eth(BigDecimal award_eth) {
+		this.award_eth = award_eth;
+	}
+	public BigDecimal getAward_uz() {
+		return award_uz;
+	}
+	public void setAward_uz(BigDecimal award_uz) {
+		this.award_uz = award_uz;
+	}
+	public Integer getBet_times() {
+		return bet_times;
+	}
+	public void setBet_times(Integer bet_times) {
+		this.bet_times = bet_times;
+	}
 
 	
 }

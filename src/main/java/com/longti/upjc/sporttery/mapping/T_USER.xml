@@ -2,7 +2,7 @@
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.T_USER">
 	<select id = "selectT_USERList" resultType="T_USER" parameterType="T_USER">
-		SELECT user_pin,user_token,nick_name,first_time,land_time,award_gto from t_user
+		SELECT user_pin,user_token,nick_name,first_time,land_time,award_gto,award_eth,award_uz,bet_times from t_user
         <where>
 <if test="user_pin != null">
  and user_pin=#{user_pin}
@@ -62,32 +62,33 @@ order by user_pin
     </select>
     <insert id="save" parameterType="T_USER">
     <![CDATA[
-        INSERT INTO t_user(user_pin,user_token,nick_name,first_time,land_time)
-VALUES(#{user_pin},#{user_token},#{nick_name},#{first_time},#{land_time})
+        INSERT INTO t_user(user_pin,user_token,nick_name,first_time,land_time,award_gto,award_eth,award_uz,bet_times)
+VALUES(#{user_pin},#{user_token},#{nick_name},#{first_time},#{land_time},#{award_gto},#{award_eth},#{award_uz},#{bet_times})
 	]]>
     </insert>
     <insert id="saveList" parameterType="java.util.List">
     <![CDATA[
-        INSERT INTO t_user(user_pin,user_token,nick_name,first_time,land_time)
+        INSERT INTO t_user(user_pin,user_token,nick_name,first_time,land_time,award_gto,award_eth,award_uz,bet_times)
 VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.user_pin},#{v.user_token},#{v.nick_name},#{v.first_time},#{v.land_time}) ]]>
+        <![CDATA[(#{v.user_pin},#{v.user_token},#{v.nick_name},#{v.first_time},#{v.land_time},#{v.award_gto},#{v.award_eth},#{v.award_uz},#{v.bet_times}) ]]>
     </foreach>
     </insert>
     <update id="update" parameterType="T_USER">
     <![CDATA[
-        UPDATE t_user set user_pin=#{user_pin},user_token=#{user_token},nick_name=#{nick_name},first_time=#{first_time},land_time=#{land_time},award_gto=#{award_gto}
+        UPDATE t_user set user_pin=#{user_pin},user_token=#{user_token},nick_name=#{nick_name},first_time=#{first_time},land_time=#{land_time},
+        award_gto=#{award_gto},award_eth=#{award_eth},award_uz=#{award_uz},bet_times=#{bet_times}
 		WHERE  user_pin=#{user_pin} 
 	]]>
     </update>
     <insert id="updateList" parameterType="java.util.List">
     <![CDATA[
-        REPLACE INTO t_user(user_pin,user_token,nick_name,first_time,land_time)
+        REPLACE INTO t_user(user_pin,user_token,nick_name,first_time,land_time,award_gto,award_eth,award_uz,bet_times)
     VALUES
 	]]>
     <foreach collection="list" item="v" index="index" separator=", " > 
-        <![CDATA[(#{v.user_pin},#{v.user_token},#{v.nick_name},#{v.first_time},#{v.land_time}) ]]>
+        <![CDATA[(#{v.user_pin},#{v.user_token},#{v.nick_name},#{v.first_time},#{v.land_time},#{v.award_gto},#{v.award_eth},#{v.award_uz},#{v.bet_times}) ]]>
     </foreach>
     </insert>
     <delete id="delete" parameterType="T_USER">

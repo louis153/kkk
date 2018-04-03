@@ -1,5 +1,6 @@
 package com.longti.upjc.service.impl.sporttery;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ibm.icu.math.BigDecimal;
+
 import com.longti.upjc.dao.sporttery.LOTO_ENDao;
 import com.longti.upjc.dao.sporttery.LOTO_FNDao;
 import com.longti.upjc.dao.sporttery.LOTO_ORDERDao;
@@ -193,27 +194,39 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 	private long getReward_Bet_fee(List<LOTO_ORDER> lstLotoOrder) throws Exception{
 		if(lstLotoOrder.size()>0){
 			T_USER tUser=new T_USER();
-			if(lstLotoOrder.get(0).getElectronic_code().equals("GTO")==false){
-				return 0;
-			}
+			
 			tUser.setUser_pin(lstLotoOrder.get(0).getUser_pin());
 			List<T_USER> lsT_USERs= t_USERDao.selectT_USERList(tUser);
+			String electronic_code=lstLotoOrder.get(0).getElectronic_code();
 			if(lsT_USERs.isEmpty()){
 				return 0;
 			}
 			else{
 				tUser=lsT_USERs.get(0);
-				long awardGto=tUser.getAward_gto();
+				BigDecimal award=null;
+				if(electronic_code.equalsIgnoreCase("GTO")){
+					award=tUser.getAward_gto();
+				}
+				else if(electronic_code.equalsIgnoreCase("ETH")){
+					award=tUser.getAward_eth();
+				}
+				else if(electronic_code.equalsIgnoreCase("UZ")){
+					award=tUser.getAward_uz();
+				}
+					
+				
 				long sumLong=0L;
 				for(LOTO_ORDER loto_ORDER:lstLotoOrder){
 					long betFee=loto_ORDER.getBet_fee();
-					if(awardGto>0){
-						if(betFee>awardGto){
-							loto_ORDER.setReward_bet_fee(String.valueOf(awardGto));
-							sumLong+=awardGto;
-							awardGto=0L;							
+					
+					if(award.compareTo(new BigDecimal(0))>0){
+						if(new BigDecimal(betFee/BetUtils.preMul).compareTo(award)>0){
+							loto_ORDER.setReward_bet_fee(String.valueOf(award));
+							long subv=award.multiply(new BigDecimal(BetUtils.preMul)).setScale(0, BigDecimal.ROUND_FLOOR).longValue();
+							sumLong+=subv;
+							award=award.subtract(new BigDecimal(subv/BetUtils.preMul));							
 						}else{
-							awardGto-=betFee;
+							award.subtract(new BigDecimal(betFee/BetUtils.preMul));
 							loto_ORDER.setReward_bet_fee(String.valueOf(betFee));
 							sumLong+=betFee;
 						}						
@@ -223,7 +236,15 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 						break;
 					}
 				}
-				tUser.setAward_gto(awardGto);
+				if(electronic_code.equalsIgnoreCase("GTO")){
+					tUser.setAward_gto(award);
+				}
+				else if(electronic_code.equalsIgnoreCase("ETH")){
+					tUser.setAward_eth(award);
+				}
+				else if(electronic_code.equalsIgnoreCase("UZ")){
+					tUser.setAward_uz(award);
+				}				
 				t_USERDao.updateT_USER(tUser);
 				return sumLong;
 			}

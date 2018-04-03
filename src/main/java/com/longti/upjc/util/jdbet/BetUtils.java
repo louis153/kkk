@@ -34,7 +34,20 @@ public class BetUtils {
 	public static String 	up_appkey=IOUtils.getConfigParam("up.appkey", "up.properties");
 	public static String 	up_appSecret=IOUtils.getConfigParam("up.appSecret", "up.properties");
 	
-	
+	public static class ErrInfo{
+		private String code;
+		private String message;
+		public ErrInfo(String strCode,String strMessage){
+			this.code=(strCode);
+			this.message=(strMessage);
+		}
+		public String getMessage() {
+			return message;
+		}
+		public String getCode() {
+			return code;
+		}
+	}
 	/**
 	 * 验证签名
 	 * @param str_xml
@@ -220,4 +233,37 @@ public class BetUtils {
 		
 		return rv.getBody();
 	}
+	
+	
+	public static ErrInfo SC_SUCCESS=new ErrInfo("N000000", "成功");
+
+	public static ErrInfo SC_UNKNOWN=new ErrInfo("E000000", "未知");
+
+	public static ErrInfo SC_SYSTEM_ERROR=new ErrInfo("E000001", "系统错误");
+
+	public static ErrInfo SC_PARAMETER_INVALID=new ErrInfo("E000002", "参数错误");
+
+	/*-------------------E001000 up_mall------------------------*/
+	public static ErrInfo UP_MALL_FAIL=new ErrInfo("E001001", "up_mall系统错误/超时");
+
+	public static ErrInfo UP_MALL_UCOINS_NOT_ENOUGH=new ErrInfo("E001002", "用户u钻不足");
+
+	public static ErrInfo UP_MALL_TRANSACTION_REPEATED=new ErrInfo("E001003", "系统交易订单重复");
+
+	public static ErrInfo UP_MALL_TRANSACTION_NOT_EXIST=new ErrInfo("E001004", "系统交易订单不存在");
+
+	public static ErrInfo SC_MALL_USER_FROZEN=new ErrInfo("E001005", "用户被冻结");
+
+
+	/*-------------------E1002000 wallet -----------------------*/
+	public static ErrInfo WALLET_BALANCE_NOT_ENOUGH=new ErrInfo("E002001", "钱包资金不足");
+
+	public static ErrInfo WALLET_PASSPHRASE_NOT_CORRECT=new ErrInfo("E002002", "钱包支付密码不正确");
+
+	public static ErrInfo WALLET_SENDER_IDENTITY_NOT_FOUNT=new ErrInfo("E002003", "转账钱包不存在");
+
+	public static ErrInfo WALLET_RECEIVER_IDENTITY_NOT_FOUNT=new ErrInfo("E002004", "收账钱包不存在");
+
+	public static ErrInfo WALLET_TRANSACTION_NOT_ACCEPTED=new ErrInfo("E002005", "钱包未受理交易");
+
 }
