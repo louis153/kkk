@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.ibm.icu.math.BigDecimal;
 import com.longti.upjc.entity.sporttery.LOTO_F;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
+import com.longti.upjc.entity.sporttery.TAB_INVITATION_BIND;
 import com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD;
 import com.longti.upjc.entity.sporttery.TAB_WARN_MESSAGE;
 import com.longti.upjc.entity.sporttery.TAB_WARN_SETTING;
@@ -33,6 +34,7 @@ import com.longti.upjc.entity.sporttery.T_USER;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_FNService;
+import com.longti.upjc.service.sporttery.TAB_INVITATION_BINDService;
 import com.longti.upjc.service.sporttery.TAB_SALES_THRESHOLDService;
 import com.longti.upjc.service.sporttery.TAB_WARN_MESSAGEService;
 import com.longti.upjc.service.sporttery.T_LOTO_ENService;
@@ -46,7 +48,6 @@ import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.LangUtil;
 import com.longti.upjc.util.LangUtil.LangObj;
 import com.longti.upjc.util.jdbet.BetUtils;
-import com.mysql.jdbc.log.Log;
 import com.longti.upjc.util.ReturnValue;
 import com.longti.upjc.util.SmsUtils;
 import com.longti.upjc.util.StringUtil;
@@ -78,7 +79,6 @@ public class PayAllStrategy implements IMethodStrategy {
 	private LangListStrategy langListStrategy;
 	@Autowired
 	private TAB_WARN_MESSAGEService tab_WARN_MESSAGEService;
-	
 	
 	public static class Odd {
 		private String odd_name;
@@ -179,6 +179,8 @@ public class PayAllStrategy implements IMethodStrategy {
 
 	}
 
+	
+	
 	@Override
 	public String doJsonMethod(Request_LtGameLogic request_LtGameLogic, JSONObject jsonRequest) throws Exception {		
 		logger.info("pay开始调用支付接口doJsonMethod------>" + JSONObject.toJSONString(jsonRequest));
@@ -236,6 +238,8 @@ public class PayAllStrategy implements IMethodStrategy {
 			return JSONObject.toJSONString(rv);
 		} else {
 			rv.setMess(ErrorMessage.SUCCESS);
+			String betId=UUID.randomUUID().toString().replace("-", "");
+			setTAB_INVITATION_BIND(request_LtGameLogic.getUserPin(),betId);
 			logger.info("调用支付接口成功----->");
 			return JSONObject.toJSONString(rv);
 		}
@@ -960,5 +964,14 @@ public class PayAllStrategy implements IMethodStrategy {
 			lstTemp = null;
 
 		}
+	}
+	
+	/**
+	 * 计算投注次数
+	 * @param userPin
+	 * @throws Exception
+	 */
+	private void setTAB_INVITATION_BIND(String userPin,String orderId) throws Exception{
+		t_USERService.saveInvitationBind(userPin,orderId);
 	}
 }

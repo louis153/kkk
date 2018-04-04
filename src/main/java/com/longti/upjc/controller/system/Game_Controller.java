@@ -104,6 +104,13 @@ public class Game_Controller {
 			
 			if(jsonRequest.get("method").equals("pay")||jsonRequest.get("method").equals("login")||jsonRequest.get("method").equals("get_balance")||request_LtGameLogic.getTranType()==1){
 				checkTokenFlag=checkServerToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
+			}else if(jsonRequest.get("method").equals("loto_fn_list")
+				    ||jsonRequest.get("method").equals("loto_en_list")
+				    ||jsonRequest.get("method").equals("v_saleday_list")
+				    ||jsonRequest.get("method").equals("v_league_list")
+				    ||jsonRequest.get("method").equals("t_win_list")){
+				logger.info("请求的方法无需验证token");
+				
 			}else{
 				checkTokenFlag=checkToken(jsonObject.getString("userPin"),jsonObject.getString("userToken"));
 			}

@@ -92,13 +92,11 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 				lotoEnDetail.odds_three=e.getOdds_three();
 				rv.getData().lst.add(lotoEnDetail);
 		    }			
-			rv.setStatus(ErrorMessage.SUCCESS.getCode());
-			rv.setMessage(ErrorMessage.SUCCESS.getMessage());
+			rv.setMess(ErrorMessage.SUCCESS);
 			logger.info("查看话题竞猜列表成功----->");
 		} catch (Exception e) {
 			e.printStackTrace();
-			rv.setStatus(ErrorMessage.FAIL.getCode());
-			rv.setMessage(ErrorMessage.FAIL.getMessage());
+			rv.setMess(ErrorMessage.FAIL);
 			logger.info("查看话题竞猜列表失败----->");
 		}
 		return JSONObject.toJSONString(rv);

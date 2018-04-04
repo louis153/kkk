@@ -95,5 +95,5 @@ VALUES
     <![CDATA[
         DELETE FROM t_user WHERE  user_pin=#{user_pin} 
 	]]>
-    </delete>    
+    </delete>     
 </mapper > 
