@@ -238,7 +238,8 @@ public class PayAllStrategy implements IMethodStrategy {
 			return JSONObject.toJSONString(rv);
 		} else {
 			rv.setMess(ErrorMessage.SUCCESS);
-			setTAB_INVITATION_BIND(request_LtGameLogic.getUserPin());
+			String betId=UUID.randomUUID().toString().replace("-", "");
+			setTAB_INVITATION_BIND(request_LtGameLogic.getUserPin(),betId);
 			logger.info("调用支付接口成功----->");
 			return JSONObject.toJSONString(rv);
 		}
@@ -970,7 +971,7 @@ public class PayAllStrategy implements IMethodStrategy {
 	 * @param userPin
 	 * @throws Exception
 	 */
-	private void setTAB_INVITATION_BIND(String userPin) throws Exception{
-		t_USERService.invitation_BIND(userPin);
+	private void setTAB_INVITATION_BIND(String userPin,String orderId) throws Exception{
+		t_USERService.saveInvitationBind(userPin,orderId);
 	}
 }

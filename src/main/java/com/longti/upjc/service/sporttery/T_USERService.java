@@ -48,5 +48,5 @@ public interface T_USERService {
 	/**
 	 * 
 	 */
-    public void invitation_BIND(String userPin) throws Exception;
+    public void saveInvitationBind(String userPin, String orderId) throws Exception;
 }
