@@ -45,5 +45,8 @@ public interface T_USERService {
     public int deleteT_USER(T_USER t_user) throws Exception;
 
 
-	
+	/**
+	 * 
+	 */
+    public void invitation_BIND(String userPin) throws Exception;
 }

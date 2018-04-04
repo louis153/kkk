@@ -18,6 +18,7 @@ import com.longti.upjc.service.sporttery.T_USERService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.DateUtils;
 import com.longti.upjc.util.ErrorMessage;
+import com.longti.upjc.util.ErrorMessage.ErrInfo;
 import com.longti.upjc.util.ReturnValue;
 
 /**
@@ -68,18 +69,18 @@ public class LoginStrategy implements IMethodStrategy {
 			t_user.setUser_pin(request_LtGameLogic.getUserPin());
 			t_user.setUser_token(request_LtGameLogic.getUserToken());
 			t_user.setNick_name(login_Request.nick_name);
-			
+			t_USERService.insertT_USER(t_user);
 			logger.info("登录接口调用生成邀请码接口开始----->");
 			JSONObject jsonRV=create_invcode(request_LtGameLogic,DateUtils.getDateToStr(t_user.getFirst_time(), "yyyy-MM-dd HH:mm:ss"));
 			if(jsonRV.getString("status").equals(ErrorMessage.SUCCESS.getCode())==false){
-				rv.setStatus(jsonRV.getString("status"));
-				rv.setMessage(jsonRV.getString("message"));
+				rv.setMess(new ErrInfo(jsonRV.getString("status"),jsonRV.getString("message")));
 				logger.info("登录接口调用生成邀请码接口失败----->"+jsonRV.getString("message"));
+				t_USERService.deleteT_USER(t_user);
 				return JSONObject.toJSONString(rv);
 			}			
 			logger.info("登录接口调用生成邀请码接口成功----->");			
 			
-			t_USERService.insertT_USER(t_user);
+			
 		}else{
 			t_user=lsT_USERs.get(0);
 			t_user.setLand_time(new Date());
@@ -89,8 +90,7 @@ public class LoginStrategy implements IMethodStrategy {
 			t_USERService.updateT_USER(t_user);
 		}		
 		
-		rv.setStatus(ErrorMessage.SUCCESS.getCode());
-		rv.setMessage(ErrorMessage.SUCCESS.getMessage());
+		rv.setMess(ErrorMessage.SUCCESS);
 		logger.info("调用登录接口成功----->");
 		return JSONObject.toJSONString(rv);
 	}

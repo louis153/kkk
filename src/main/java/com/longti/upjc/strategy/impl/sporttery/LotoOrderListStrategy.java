@@ -88,8 +88,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 			record_count = this.loto_ORDERService.selectLOTO_ORDERCount(lotoOrder);
 		} catch (Exception e) {
 			logger.error("查询我的投注数据总数userPin："+request_LtGameLogic.getUserPin()+"失败----->");
-			rv.setStatus(ErrorMessage.FAIL.getCode());
-			rv.setMessage(ErrorMessage.FAIL.getMessage());
+			rv.setMess(ErrorMessage.FAIL);
 			return JSONObject.toJSONString(rv);
 		}
 		lotoOrder.setPage_size(20);
@@ -100,8 +99,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
             rv.getData().page_size= lotoOrder.getPage_size();
             rv.getData().page_count=page_count;
             rv.getData().record_count= record_count;
-            rv.setStatus(ErrorMessage.NO_REC.getCode());
-            rv.setMessage(ErrorMessage.NO_REC.getMessage());
+            rv.setMess(ErrorMessage.NO_REC);
             return JSONObject.toJSONString(rv);
         }
         if (page_index < 0)
@@ -140,8 +138,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
 			
 		} catch (Exception e) {			
 			logger.error("查询我的投注数据userPin："+request_LtGameLogic.getUserPin()+"失败----->");
-			rv.setStatus(ErrorMessage.FAIL.getCode());
-	        rv.setMessage(ErrorMessage.FAIL.getMessage());
+			rv.setMess(ErrorMessage.FAIL);
 	        return JSONObject.toJSONString(rv);
 		}
 
@@ -150,8 +147,7 @@ public class LotoOrderListStrategy implements IMethodStrategy{
         rv.getData().page_size= lotoOrder.getPage_size();
         rv.getData().page_count= page_count;
         rv.getData().record_count= record_count;
-        rv.setStatus(ErrorMessage.SUCCESS.getCode());
-        rv.setMessage(ErrorMessage.SUCCESS.getMessage());
+        rv.setMess(ErrorMessage.SUCCESS);
         String outStr=JSONObject.toJSONString(rv);
         logger.info("查询我的投注数据userPin："+request_LtGameLogic.getUserPin()+"成功----->");
 		return outStr;

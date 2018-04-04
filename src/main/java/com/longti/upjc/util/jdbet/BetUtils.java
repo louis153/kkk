@@ -1,15 +1,15 @@
 package com.longti.upjc.util.jdbet;
 
 
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.longti.upjc.formdata.Head;
 import com.longti.upjc.formdata.Msg;
-import com.longti.upjc.formdata.sporttery.ASK_Balance;
-import com.longti.upjc.formdata.sporttery.ASK_Change;
-import com.longti.upjc.formdata.sporttery.ASK_Query;
 import com.longti.upjc.formdata.sporttery.ASK_Token;
 import com.longti.upjc.formdata.sporttery.RV_Balance;
 import com.longti.upjc.formdata.sporttery.RV_Change;
@@ -17,6 +17,7 @@ import com.longti.upjc.formdata.sporttery.RV_Query;
 import com.longti.upjc.formdata.sporttery.RV_Token;
 import com.longti.upjc.util.IOUtils;
 import com.longti.upjc.util.PostUtils;
+import com.longti.upjc.util.StringUtil;
 
 
 public class BetUtils {
@@ -27,9 +28,10 @@ public class BetUtils {
 	public static String TOKEN_VALID="valid";
 	public static String TOKEN_INVALID="invalid";
 	
-	public static String 	up_balance=IOUtils.getConfigParam("up.balance", "up.properties");
-	public static String 	up_change=IOUtils.getConfigParam("up.change", "up.properties");
-	public static String 	up_query=IOUtils.getConfigParam("up.query", "up.properties");
+	public static String 	up_detail=IOUtils.getConfigParam("up.detail", "up.properties");
+	public static String 	up_reward=IOUtils.getConfigParam("up.reward", "up.properties");
+	public static String 	up_consume=IOUtils.getConfigParam("up.consume", "up.properties");
+	public static String 	up_check=IOUtils.getConfigParam("up.check", "up.properties");
 	public static String 	up_checkToken=IOUtils.getConfigParam("up.checkToken", "up.properties");
 	public static String 	up_appkey=IOUtils.getConfigParam("up.appkey", "up.properties");
 	public static String 	up_appSecret=IOUtils.getConfigParam("up.appSecret", "up.properties");
@@ -81,28 +83,71 @@ public class BetUtils {
 	
 	public static RV_Change Bet(String userPin,String electronic_code,String orderId,String bet_fee,String password) throws Exception{
 		Msg<RV_Change> rv=new Msg<RV_Change>();
-		Msg<ASK_Change> ask=new Msg<ASK_Change>();
-		ask.setBody(new ASK_Change());
+		Msg<AskConsume> ask=new Msg<AskConsume>();
+		ask.setBody(new AskConsume());
 		ask.getBody().amount=bet_fee;
-		ask.getBody().currencyCode=electronic_code.toUpperCase();
-		ask.getBody().passphrase=password;
+		ask.getBody().businessType="";
+		ask.getBody().ownerIdentityData="uplive"+userPin;
 		ask.getBody().transactionId=orderId;
-		ask.getBody().type="sub";
-		ask.getBody().walletId="uplive"+userPin;
-		
+		ask.getBody().supporterIdentityData="uplive";
+		ask.getBody().supporterUpUid=0;	
 		
 		ask.setHead(Create_Head());
 		try {
-			String rvStr=PostUtils.doPostGZip(up_change,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			String rvStr=PostUtils.doPostGZip(up_consume+"/"+electronic_code.toLowerCase(),ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
 			JSONObject obj=JSONObject.parseObject(rvStr);
 			Head head=new Head();
 			head.setAppkey(up_appkey);
 			rv.setHead(head);
+			RvConsume rvConsume=new RvConsume();
+			rvConsume.code=obj.getString("code");
+			JSONObject data=(JSONObject)StringUtil.ifnull(obj.get("data"),new JSONObject());			
+			rvConsume.data.firstname=StringUtil.ifnull(data.get("firstname"),"").toString();
+			rvConsume.data.identityData=StringUtil.ifnull(data.get("identityData"),"").toString();
+			rvConsume.data.lastname=StringUtil.ifnull(data.get("lastname"),"").toString();
+			JSONArray wallets=(JSONArray)StringUtil.ifnull(data.get("wallets"),new JSONArray());	
+			for(Object o :wallets){
+				JSONObject w=(JSONObject)o;
+				Wallet wallet=new Wallet();
+				wallet.address=StringUtil.ifnull(w.get("address"),"").toString();
+				wallet.blocked=StringUtil.ifnull(w.get("blocked"),"").toString();
+				wallet.currencyCode=StringUtil.ifnull(w.get("currencyCode"),"").toString();
+				wallet.offChained=StringUtil.ifnull(w.get("offChained"),"").toString();
+				wallet.onChained=StringUtil.ifnull(w.get("onChained"),"").toString();
+				rvConsume.data.wallets.add(wallet);
+			}
+			rvConsume.message=StringUtil.ifnull(obj.get("message"),SC_UNKNOWN.message).toString();
 			RV_Change body=new RV_Change();
-			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
-			body.balance.ETH=jsonBalance.getString("ETH");
-			body.balance.GTO=jsonBalance.getString("GTO");
-			body.status=obj.get("status").toString();
+			
+			for(Wallet wallet:rvConsume.data.wallets){
+				if(wallet.currencyCode.equalsIgnoreCase("gto")){
+					body.balance.GTO=wallet.offChained;
+				}
+				else if(wallet.currencyCode.equalsIgnoreCase("eth")){
+					body.balance.ETH=wallet.offChained;
+				}
+				else if(wallet.currencyCode.equalsIgnoreCase("uz")){
+					body.balance.UZ=wallet.offChained;
+				}
+			}
+			
+			if(rvConsume.code.equals(SC_SUCCESS.code)){
+				body.status="success";
+				body.message=SC_SUCCESS.message;
+			}
+			else{
+				if(body.status.equals(SC_UNKNOWN.code)){
+					RV_Query rv_Query= Query(orderId, userPin);
+					rv.getBody().status=rv_Query.status;
+					rv.getBody().message=rv_Query.message;
+				}else{
+					body.status="failed";
+					logger.error(rvConsume.message+"----->");
+					body.message=StringUtil.ifnull(ErrHash.get(rvConsume.code),SC_UNKNOWN).message;
+				}
+			}
+			
+			
 			rv.setBody(body);//将建json对象转换为RV_Login对象
 			
 		} catch (Exception e) {
@@ -112,29 +157,73 @@ public class BetUtils {
 		
 		return rv.getBody();
 	}
-	public static RV_Change Award(String userPin,String electronic_code,String orderId,String bet_fee) throws Exception{
+	public static RV_Change Award(String userPin,String electronic_code,String orderId,String fee) throws Exception{
 		Msg<RV_Change> rv=new Msg<RV_Change>();
-		Msg<ASK_Change> ask=new Msg<ASK_Change>();
-		ask.setBody(new ASK_Change());
-		ask.getBody().amount=bet_fee;
-		ask.getBody().currencyCode=electronic_code.toUpperCase();
+		Msg<AskReward> ask=new Msg<AskReward>();
+		ask.setBody(new AskReward());
+		ask.getBody().amount=fee;
+		ask.getBody().businessType="";
+		ask.getBody().ownerIdentityData="uplive"+userPin;
 		ask.getBody().transactionId=orderId;
-		ask.getBody().type="add";
-		ask.getBody().walletId="uplive"+userPin;
+		ask.getBody().supporterIdentityData="uplive";
+		ask.getBody().supporterUpUid=0;	
 		
 		
 		ask.setHead(Create_Head());
 		try {
-			String rvStr=PostUtils.doPostGZip(up_change,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			String rvStr=PostUtils.doPostGZip(up_reward+"/"+electronic_code.toLowerCase(),ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
 			JSONObject obj=JSONObject.parseObject(rvStr);
 			Head head=new Head();
 			head.setAppkey(up_appkey);
 			rv.setHead(head);
+			
+			RvReward rvReward=new RvReward();
+			rvReward.code=StringUtil.ifnull(obj.get("code"),"").toString();
+			JSONObject data=(JSONObject)StringUtil.ifnull(obj.get("data"),new JSONObject());			
+			rvReward.data.firstname=StringUtil.ifnull(data.get("firstname"),"").toString();
+			rvReward.data.identityData=StringUtil.ifnull(data.get("identityData"),"").toString();
+			rvReward.data.lastname=StringUtil.ifnull(data.get("lastname"),"").toString();
+			JSONArray wallets=(JSONArray)StringUtil.ifnull(data.get("wallets"),new JSONArray());	
+			for(Object o :wallets){
+				JSONObject w=(JSONObject)o;
+				Wallet wallet=new Wallet();
+				wallet.address=StringUtil.ifnull(w.get("address"),"").toString();
+				wallet.blocked=StringUtil.ifnull(w.get("blocked"),"").toString();
+				wallet.currencyCode=StringUtil.ifnull(w.get("currencyCode"),"").toString();
+				wallet.offChained=StringUtil.ifnull(w.get("offChained"),"").toString();
+				wallet.onChained=StringUtil.ifnull(w.get("onChained"),"").toString();
+				rvReward.data.wallets.add(wallet);
+			}
+			rvReward.message=StringUtil.ifnull(obj.get("message"),"").toString();
 			RV_Change body=new RV_Change();
-			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
-			body.balance.ETH=jsonBalance.getString("ETH");
-			body.balance.GTO=jsonBalance.getString("GTO");
-			body.status=obj.get("status").toString();
+			
+			for(Wallet wallet:rvReward.data.wallets){
+				if(wallet.currencyCode.equalsIgnoreCase("gto")){
+					body.balance.GTO=wallet.offChained;
+				}
+				else if(wallet.currencyCode.equalsIgnoreCase("eth")){
+					body.balance.ETH=wallet.offChained;
+				}
+				else if(wallet.currencyCode.equalsIgnoreCase("uz")){
+					body.balance.UZ=wallet.offChained;
+				}
+			}
+			
+			if(rvReward.code.equals(SC_SUCCESS.code)){
+				body.status="success";
+				body.message=SC_SUCCESS.message;
+			}
+			else{
+				if(body.status.equals(SC_UNKNOWN.code)){
+					RV_Query rv_Query= Query(orderId, userPin);
+					rv.getBody().status=rv_Query.status;
+					rv.getBody().message=rv_Query.message;
+				}else{
+					body.status="failed";
+					logger.error(rvReward.message+"----->");
+					body.message=StringUtil.ifnull(ErrHash.get(rvReward.code),SC_UNKNOWN).message;
+				}
+			}
 			rv.setBody(body);//将建json对象转换为RV_Login对象
 			
 		} catch (Exception e) {
@@ -147,31 +236,63 @@ public class BetUtils {
 	
 	public static RV_Balance Balance(String userPin,String electronic_code) throws Exception{
 		Msg<RV_Balance> rv=new Msg<RV_Balance>();
-		Msg<ASK_Balance> ask=new Msg<ASK_Balance>();
-		ask.setBody(new ASK_Balance());
-		ask.getBody().walletId="uplive"+userPin;
-		ask.getBody().currencyCode=electronic_code.toUpperCase();
+		Msg<AskDetail> ask=new Msg<AskDetail>();
+		ask.setBody(new AskDetail());
+		ask.getBody().identityData="uplive"+userPin;
 		
 		
 		ask.setHead(Create_Head());
 		try {
-			String rvStr=PostUtils.doPostGZip(up_balance,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			String rvStr=PostUtils.doPostGZip(up_detail+"/"+electronic_code.toLowerCase(),ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
 			JSONObject obj=JSONObject.parseObject(rvStr);
 			Head head=new Head();
 			head.setAppkey(up_appkey);
 			rv.setHead(head);
+			RvDetail rvDetail=new RvDetail();
+			rvDetail.code=StringUtil.ifnull(obj.get("code"),"").toString();
+			JSONObject data=(JSONObject)StringUtil.ifnull(obj.get("data"),new JSONObject());
+			rvDetail.data.firstname=StringUtil.ifnull(obj.get("firstname"),"").toString();
+			rvDetail.data.identityData=StringUtil.ifnull(obj.get("identityData"),"").toString();
+			rvDetail.data.lastname=StringUtil.ifnull(obj.get("lastname"),"").toString();
+			
+			JSONArray wallets= (JSONArray)StringUtil.ifnull(data.get("wallets"),new JSONArray());
+			for(Object o:wallets){
+				JSONObject w=(JSONObject)o;
+				Wallet wallet=new Wallet();
+				wallet.address=StringUtil.ifnull(w.get("address"),"").toString();
+				wallet.blocked=StringUtil.ifnull(w.get("blocked"),"").toString();
+				wallet.currencyCode=StringUtil.ifnull(w.get("currencyCode"),"").toString();
+				wallet.offChained=StringUtil.ifnull(w.get("offChained"),"").toString();
+				wallet.onChained=StringUtil.ifnull(w.get("offChained"),"").toString();
+				rvDetail.data.wallets.add(wallet);
+			}
+			rvDetail.message=StringUtil.ifnull(obj.get("message"),"").toString();
+			
 			RV_Balance body=new RV_Balance();
-			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
-			if(electronic_code.equalsIgnoreCase("ETH")){
-				body.balance=jsonBalance.getString("ETH");	
+			for(Wallet wallet:rvDetail.data.wallets){
+				if(electronic_code.equalsIgnoreCase("ETH")){
+					body.balance=wallet.offChained;	
+				}
+				else if(electronic_code.equalsIgnoreCase("GTO")){
+					body.balance=wallet.offChained;	
+				}
+				else if(electronic_code.equalsIgnoreCase("UZ")){
+					body.balance=wallet.offChained;
+				}
 			}
-			else if(electronic_code.equalsIgnoreCase("GTO")){
-				body.balance=jsonBalance.getString("GTO");	
+			if(rvDetail.code.equals(SC_SUCCESS.code)){
+				body.status="success";
+				body.message=SC_SUCCESS.message;
 			}
-			else if(electronic_code.equalsIgnoreCase("UZ")){
-				body.balance=jsonBalance.getString("UZ");
+			else{
+				if(rvDetail.code.equals(SC_UNKNOWN.code)){
+					
+				}else{
+					body.status="failed";
+					logger.error(rvDetail.message+"----->");
+					body.message=StringUtil.ifnull(ErrHash.get(rvDetail.code),SC_UNKNOWN).message;
+				}
 			}
-			body.status=obj.get("status").toString();
 			rv.setBody(body);//将建json对象转换为RV_Login对象
 			
 		} catch (Exception e) {
@@ -206,24 +327,63 @@ public class BetUtils {
 		
 		return rv.getBody();
 	}
-	public static RV_Query Query(String transactionId) throws Exception{
+	public static RV_Query Query(String transactionId,String userPin) throws Exception{
 		Msg<RV_Query> rv=new Msg<RV_Query>();
-		Msg<ASK_Query> ask=new Msg<ASK_Query>();
-		ask.setBody(new ASK_Query());
-		ask.getBody().transactionId=transactionId;		
-		
+		Msg<AskQuery> ask=new Msg<AskQuery>();
+		ask.setBody(new AskQuery());
+		ask.getBody().identityData=userPin;		
+		ask.getBody().transactionId=transactionId;
 		ask.setHead(Create_Head());
 		try {
-			String rvStr=PostUtils.doPostGZip(up_query,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
+			String rvStr=PostUtils.doPostGZip(up_detail,ask.getHead() ,JSONObject.toJSONString(ask.getBody()).toString());
 			JSONObject obj=JSONObject.parseObject(rvStr);
 			Head head=new Head();
 			head.setAppkey(up_appkey);
 			rv.setHead(head);
+			
+			RvDetail rvDetail=new RvDetail();
+			rvDetail.code=StringUtil.ifnull(obj.get("code"),"").toString();
+			JSONObject data=(JSONObject)StringUtil.ifnull(obj.get("data"),new JSONObject());
+			rvDetail.data.firstname=StringUtil.ifnull(data.get("firstname"),"").toString();
+			rvDetail.data.identityData=StringUtil.ifnull(data.get("identityData"),"").toString();
+			rvDetail.data.lastname=StringUtil.ifnull(data.get("lastname"),"").toString();
+			JSONArray wallets=(JSONArray)StringUtil.ifnull(data.get("wallets"),new JSONArray());
+			for(Object o:wallets){
+				JSONObject w=(JSONObject)o;
+				Wallet wallet=new Wallet();
+				wallet.address=StringUtil.ifnull(w.get("address"),"").toString();
+				wallet.blocked=StringUtil.ifnull(w.get("blocked"),"").toString();
+				wallet.currencyCode=StringUtil.ifnull(w.get("currencyCode"),"").toString();
+				wallet.offChained=StringUtil.ifnull(w.get("offChained"),"").toString();
+				wallet.onChained=StringUtil.ifnull(w.get("onChained"),"").toString();
+				rvDetail.data.wallets.add(wallet);
+			}
+			rvDetail.message=StringUtil.ifnull(obj.get("message"),"").toString();
 			RV_Query body=new RV_Query();
-			JSONObject jsonBalance=(JSONObject)((JSONObject)obj).get("balance");
-			body.balance.ETH=jsonBalance.getString("ETH");
-			body.balance.GTO=jsonBalance.getString("GTO");
-			body.status=obj.get("status").toString();
+			for(Wallet wallet:rvDetail.data.wallets){
+				if(wallet.currencyCode.equalsIgnoreCase("gto")){
+					body.balance.GTO=wallet.offChained;					
+				}
+				else if(wallet.currencyCode.equalsIgnoreCase("eth")){
+					body.balance.ETH=wallet.offChained;
+				}
+				else if(wallet.currencyCode.equalsIgnoreCase("uz")){
+					body.balance.UZ=wallet.offChained;
+				}
+			}
+			if(rvDetail.code.equals(SC_SUCCESS.code)){
+				body.status="success";
+				body.message=SC_SUCCESS.message;
+			}
+			else{
+				if(rvDetail.code.equals(SC_UNKNOWN.code)){
+					
+				}else{
+					body.status="failed";
+					logger.error(rvDetail.message+"----->");
+					body.message=StringUtil.ifnull(ErrHash.get(rvDetail.code),SC_UNKNOWN).message;
+				}
+			}
 			rv.setBody(body);//将建json对象转换为RV_Login对象
 			
 		} catch (Exception e) {
@@ -265,5 +425,31 @@ public class BetUtils {
 	public static ErrInfo WALLET_RECEIVER_IDENTITY_NOT_FOUNT=new ErrInfo("E002004", "收账钱包不存在");
 
 	public static ErrInfo WALLET_TRANSACTION_NOT_ACCEPTED=new ErrInfo("E002005", "钱包未受理交易");
+	
+	public static HashMap<String, ErrInfo> ErrHash = new HashMap<String, ErrInfo>() {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 
+		{
+			put(SC_SUCCESS.code, SC_SUCCESS);
+			put(SC_UNKNOWN.code,SC_UNKNOWN);
+			put(SC_SYSTEM_ERROR.code,SC_SYSTEM_ERROR);
+			put(SC_PARAMETER_INVALID.code,SC_PARAMETER_INVALID);
+			
+			put(UP_MALL_FAIL.code,UP_MALL_FAIL);
+			put(UP_MALL_UCOINS_NOT_ENOUGH.code,UP_MALL_UCOINS_NOT_ENOUGH);
+			put(UP_MALL_TRANSACTION_REPEATED.code,UP_MALL_TRANSACTION_REPEATED);
+			put(UP_MALL_TRANSACTION_NOT_EXIST.code,UP_MALL_TRANSACTION_NOT_EXIST);
+			put(SC_MALL_USER_FROZEN.code,SC_MALL_USER_FROZEN);
+
+			put(WALLET_BALANCE_NOT_ENOUGH.code,WALLET_BALANCE_NOT_ENOUGH);
+			put(WALLET_PASSPHRASE_NOT_CORRECT.code,WALLET_PASSPHRASE_NOT_CORRECT);
+			put(WALLET_SENDER_IDENTITY_NOT_FOUNT.code,WALLET_SENDER_IDENTITY_NOT_FOUNT);
+			put(WALLET_RECEIVER_IDENTITY_NOT_FOUNT.code,WALLET_RECEIVER_IDENTITY_NOT_FOUNT);
+			put(WALLET_TRANSACTION_NOT_ACCEPTED.code,WALLET_TRANSACTION_NOT_ACCEPTED);
+		};
+	
+	};
 }
