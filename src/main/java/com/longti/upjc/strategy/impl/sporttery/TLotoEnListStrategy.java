@@ -32,6 +32,7 @@ import com.longti.upjc.util.LangUtil.LangObj;
 public class TLotoEnListStrategy implements IMethodStrategy {
 
 	public static class LotoEnDetail {
+	    public String lottery_type;//投注类型
 		public String issue; // 比赛编号
 		public String endtime; // 截止投注时间
 		public String home_team_name; // 主队名称
@@ -76,6 +77,7 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 			logger.info("多语言转换成功----->");
 			for (T_LOTO_E e : lst) {
 				LotoEnDetail lotoEnDetail = new LotoEnDetail();
+				lotoEnDetail.lottery_type = String.valueOf(e.getLottery_type());
 				lotoEnDetail.endtime = e.getEndtime().replace("-", "").replace(" ", "").replace(":", "");
 				lotoEnDetail.home_team_name = e.getHome_team_name();
 				lotoEnDetail.guest_team_name = e.getGuest_team_name();
