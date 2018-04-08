@@ -85,7 +85,7 @@ public class BalanceStrategy implements IMethodStrategy {
 			balance=new BigDecimal(rv_Balance.balance);
 		}
 		rv.setData(new Balance_Data());
-		rv.getData().balance=balance.toString();
+		rv.getData().balance=StringUtil.removeEndZero(balance.toString());
 	
 		rv.setMess(ErrorMessage.SUCCESS);
 		logger.info("调用查看余额接口成功----->");
