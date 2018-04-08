@@ -4,6 +4,7 @@
  */
 package com.longti.upjc.strategy.impl.sporttery;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import org.slf4j.Logger;
@@ -68,6 +69,10 @@ public class LoginStrategy implements IMethodStrategy {
 			t_user.setLand_time(new Date());
 			t_user.setUser_pin(request_LtGameLogic.getUserPin());
 			t_user.setUser_token(request_LtGameLogic.getUserToken());
+			t_user.setAward_eth(new BigDecimal(0));
+			t_user.setAward_gto(new BigDecimal(0));
+			t_user.setAward_uz(new BigDecimal(0));
+		    t_user.setBet_times(0);
 			t_user.setNick_name(login_Request.nick_name);
 			t_USERService.insertT_USER(t_user);
 			logger.info("登录接口调用生成邀请码接口开始----->");

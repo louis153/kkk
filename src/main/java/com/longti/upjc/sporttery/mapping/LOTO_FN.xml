@@ -22,6 +22,7 @@ LIMIT 0,1
         	<when test="electronic_code=='UZ'.toString()">t_loto_fn_uz</when>   
     	</choose> 
         <where>
+        and leaguename in (select match_name from tab_match_type where `show`=1)
 <if test="issue != null and issue != ''">
  and issue = #{issue}
 </if>

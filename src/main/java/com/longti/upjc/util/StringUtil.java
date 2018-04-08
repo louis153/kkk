@@ -295,6 +295,22 @@ public final class StringUtil {
         }
         return false;
     }
+    
+    public static String removeEndZero(String str){
+    	if(str.indexOf(".")>=0){
+    		int i=str.length();
+    		while(str.charAt(i-1)=='0'){
+    			i--;
+    		}
+    		if(str.charAt(i-1)=='.'){
+    			i--;
+    		}
+    		return str.substring(0, i);
+    		
+    	}else{
+    		return str;
+    	}
+    }
 
     public static boolean isEmpty(String str) {
         return ifnull(str, "").trim().isEmpty();
@@ -303,7 +319,8 @@ public final class StringUtil {
         return ifnull(str, "").toString().trim().isEmpty();
     }
     public static void main(String[] args) {
-        System.out.println(String.format("%08d", 1234567));
+        String str="11.0000000";        
+    	System.out.println(removeEndZero(str));        
     }
 
 }
