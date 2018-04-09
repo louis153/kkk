@@ -16,6 +16,7 @@ import com.longti.upjc.service.sporttery.TAB_INVITATION_BINDService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.ReturnValue;
+import com.longti.upjc.util.StringUtil;
 
 /**
  * 绑定邀请码获得GTO数量
@@ -45,7 +46,7 @@ public class GtoBindStrategy implements IMethodStrategy {
 			if(tab_invitation_bindList.size()>0){
 				tab_invitation_bind = tab_invitation_bindList.get(0);
 				Tab_Invitation_BindDetail tab_Invitation_BindDetail = new Tab_Invitation_BindDetail();
-				tab_Invitation_BindDetail.gto=tab_invitation_bind.getBind_fee().toString();
+				tab_Invitation_BindDetail.gto = StringUtil.removeEndZero(tab_invitation_bind.getBind_fee().toString());
 				rv.setData(tab_Invitation_BindDetail);
 				rv.setStatus(ErrorMessage.SUCCESS.getCode());
 				rv.setMessage(ErrorMessage.SUCCESS.getMessage());
