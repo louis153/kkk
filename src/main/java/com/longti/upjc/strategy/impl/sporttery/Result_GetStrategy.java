@@ -166,7 +166,9 @@ public class Result_GetStrategy implements IMethodStrategy{
 					List<T_LOTO_E> lst_e = lotoEService.selectT_LOTO_EList(e);
 					if (lst_e.isEmpty() == false) {
 						e = lst_e.get(0);
-						rv.getData().endtime = e.getStarttime();
+						rv.getData().endtime = e.getStarttime().substring(0, 4) + "-" + e.getStarttime().substring(4, 6) + "-"
+								+ e.getStarttime().substring(6, 8) + " " + e.getStarttime().substring(8, 10) + ":"
+								+ e.getStarttime().substring(10, 12) + ":" + e.getStarttime().substring(12, 14);
 					}
 					
 
