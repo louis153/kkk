@@ -62,6 +62,7 @@ public class Result_GetStrategy implements IMethodStrategy{
         public String reward_bet_fee;//奖励投注金额, 使用猜球系统奖励的虚拟币进行投注的金额
         public String cg; //赛果（话题结果）
         public String huat_context; //话题内容
+        public String lottery_type; //话题类型
         public String huat_result; //	竞猜结果
         public String result_context; //	结果内容
         public String electronic_code; //币种简称
@@ -172,11 +173,11 @@ public class Result_GetStrategy implements IMethodStrategy{
 					if (lotoOrder.getBet_type() == 501) {
 						rv.getData().cg = e.getCg();
 						if (lotoOrder.getBet_info().startsWith("options_one")) {
-							rv.getData().odd_name = "odds_one";
+							rv.getData().odd_name = e.getOptions_one();
 						} else if (lotoOrder.getBet_info().startsWith("options_two")) {
-							rv.getData().odd_name = "odds_two";
+							rv.getData().odd_name = e.getOptions_two();
 						} else if (lotoOrder.getBet_info().startsWith("options_three")) {
-							rv.getData().odd_name = "odds_three";
+							rv.getData().odd_name = e.getOptions_three();
 						}
 					}
 					rv.getData().home_full_result = "";
@@ -188,7 +189,8 @@ public class Result_GetStrategy implements IMethodStrategy{
 					rv.getData().leaguename=e.getLeaguename();
 					
 					rv.getData().huat_context=lotoOrder.getPlay_method();
-					rv.getData().huat_result="";					
+					rv.getData().lottery_type=String.valueOf(e.getLottery_type());//话题类型
+					rv.getData().huat_result="";//话题结果					
 					if(2==lotoOrder.getBet_status()||3==lotoOrder.getBet_status()){
 						rv.getData().huat_result="1";
 					}else if(5==lotoOrder.getBet_status()){//话题不中返还
