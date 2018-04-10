@@ -70,6 +70,7 @@ public class TLotoEnListStrategy implements IMethodStrategy {
 			T_LOTO_E t_loto_e = new T_LOTO_E();
 			t_loto_e.setElectronic_code(electronic_code);
 			t_loto_e.setStatus(1);
+			t_loto_e.setAvailable(1);
 			t_loto_e.setMnl_bet(1);
 			lst = lotoENService.selectT_LOTO_ENList(t_loto_e);
 			logger.info("多语言转换开始----->");
