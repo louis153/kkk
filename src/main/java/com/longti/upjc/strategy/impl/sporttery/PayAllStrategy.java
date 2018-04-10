@@ -822,10 +822,10 @@ public class PayAllStrategy implements IMethodStrategy {
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
 				}
 				if (odd.getOdd_name().equals("odds_two")){
-					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_two())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
 				}
 				if (odd.getOdd_name().equals("odds_three")){
-					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_three())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
 				}
 			}
 			if (m_cost != 0) {
