@@ -22,7 +22,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.ibm.icu.math.BigDecimal;
 import com.longti.upjc.entity.sporttery.LOTO_F;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
-import com.longti.upjc.entity.sporttery.TAB_INVITATION_BIND;
 import com.longti.upjc.entity.sporttery.TAB_SALES_THRESHOLD;
 import com.longti.upjc.entity.sporttery.TAB_WARN_MESSAGE;
 import com.longti.upjc.entity.sporttery.TAB_WARN_SETTING;
@@ -34,7 +33,6 @@ import com.longti.upjc.entity.sporttery.T_USER;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_FNService;
-import com.longti.upjc.service.sporttery.TAB_INVITATION_BINDService;
 import com.longti.upjc.service.sporttery.TAB_SALES_THRESHOLDService;
 import com.longti.upjc.service.sporttery.TAB_WARN_MESSAGEService;
 import com.longti.upjc.service.sporttery.T_LOTO_ENService;
@@ -609,7 +607,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setOptions_two("");
 				loto_ORDER.setPlay_method("");
 				loto_ORDER.setVsteam(f.getHome_team_name() + "vs" + f.getGuest_team_name());
-				loto_ORDER.setWin_fee((int)Math.round(loto_ORDER.getBet_fee() * oddv));
+				loto_ORDER.setWin_fee(Math.round(loto_ORDER.getBet_fee() * oddv));
 				loto_ORDER.setPrize_cancel_time(DateUtils.getDateToStr("1900-1-1"));
 				loto_ORDER.setOptions_one("");
 				loto_ORDER.setLeaguename(f.getLeaguename());
@@ -832,7 +830,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			}
 			if (m_cost != 0) {
 				long new_sum=StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost;
-				long dcxssx_s=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max())*BetUtils.preMul);
+				long dcxssx_s=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max()));
 				checkCanBet(canBet, issue, 501,new_sum ,dcxssx_s);
 
 				if (new_sum > dcxssx_s) {
@@ -922,7 +920,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				loto_ORDER.setUser_pin(userPin);
 				loto_ORDER.setMemo(nickName);
 				loto_ORDER.setVsteam(e.getHome_team_name() + "vs" + e.getGuest_team_name());
-				loto_ORDER.setWin_fee(Integer.parseInt(String.valueOf(Math.round(loto_ORDER.getBet_fee() * oddv))));
+				loto_ORDER.setWin_fee(Math.round(loto_ORDER.getBet_fee() * oddv));
 				loto_ORDER.setPrize_cancel_time(DateUtils.getDateToStr("1900-1-1"));
 				loto_ORDER.setOrder_source(channel);
 				loto_ORDER.setOptions_one(e.getOptions_one());

@@ -23,7 +23,7 @@ public class LOTO_ORDER implements Serializable {
     private String vsteam; //对阵信息
     private String vsresult; //对阵结果
     private Long bet_fee; //投注金额
-    private Integer win_fee; //奖金,0表示未中奖
+    private Long win_fee; //奖金,0表示未中奖
     private Date create_time; //创建时间
     private Date start_create_time; //开始创建时间
     private Date end_create_time; //结束创建时间
@@ -92,10 +92,10 @@ public class LOTO_ORDER implements Serializable {
 	public void setBet_fee(Long bet_fee) {
 		this.bet_fee = bet_fee;
 	}
-    public Integer getWin_fee() {
+    public Long getWin_fee() {
         return win_fee;
 	}
-	public void setWin_fee(Integer win_fee) {
+	public void setWin_fee(Long win_fee) {
 		this.win_fee = win_fee;
 	}
 	@JSONField (format="yyyy-MM-dd HH:mm:ss") 
