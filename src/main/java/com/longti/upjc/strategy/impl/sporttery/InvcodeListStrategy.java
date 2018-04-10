@@ -17,6 +17,7 @@ import com.longti.upjc.service.sporttery.T_USER_INVCODEService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.ErrorMessage;
 import com.longti.upjc.util.ReturnValue;
+import com.longti.upjc.util.StringUtil;
 
 /**
  * 邀请绑定成功轮播
@@ -66,7 +67,7 @@ public class InvcodeListStrategy implements IMethodStrategy {
 			for(T_USER_INVCODE invuser : invuserList){
 				InvcodeDetail invcodeDetail = new InvcodeDetail();
 				invcodeDetail.nick_name = invuser.getNick_name();
-				invcodeDetail.gto = gto;
+				invcodeDetail.gto = StringUtil.removeEndZero(gto);
 				rv.getData().lst.add(invcodeDetail);
 			}
 			rv.setStatus(ErrorMessage.SUCCESS.getCode());
