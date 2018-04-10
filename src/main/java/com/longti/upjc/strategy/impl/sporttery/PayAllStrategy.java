@@ -760,7 +760,7 @@ public class PayAllStrategy implements IMethodStrategy {
 							return;
 						}
 						
-						if(Long.parseLong(odd.getOdd_cost())>(long)(Double.parseDouble(e.getSingle_match_max())*1000000)){
+						if(Long.parseLong(odd.getOdd_cost())>(long)(Double.parseDouble(e.getSingle_match_max()))){
 							rv.setMess(ErrorMessage.ERR_OVERMATCH);
 							endMatchs.clear();
 							endMatchs.add(e.getIssue());
@@ -770,7 +770,8 @@ public class PayAllStrategy implements IMethodStrategy {
 					}
 				}
 			}
-			if(sumCost>(long)(Double.parseDouble(e.getSingle_lottery_max())*1000000)){
+			
+			if(sumCost>(long)(Double.parseDouble(e.getSingle_lottery_max()))){
 				rv.setMess(ErrorMessage.ERR_OVERFLOW);
 				endMatchs.clear();
 				endMatchs.add(e.getIssue());
@@ -828,11 +829,14 @@ public class PayAllStrategy implements IMethodStrategy {
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_three())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
 				}
 			}
+			
+			
+			
 			if (m_cost != 0) {
 				long new_sum=StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost;
 				long dcxssx_s=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max()));
 				checkCanBet(canBet, issue, 501,new_sum ,dcxssx_s);
-
+				
 				if (new_sum > dcxssx_s) {
 					rv.setMess(ErrorMessage.ERR_OVERFLOW);
 
@@ -840,6 +844,17 @@ public class PayAllStrategy implements IMethodStrategy {
 					endMatchs.add(sis_e.getIssue());
 					rv.getData().setEndmatchs(endMatchs);
 					return;
+				}
+				if(mapEs.get(issue).getLottery_type()==1){
+					checkCanBet(canBet, issue, 501,new_sum ,Long.parseLong(mapEs.get(issue).getReturn_min()));
+					if(new_sum>Long.parseLong(mapEs.get(issue).getReturn_max())){						
+						rv.setMess(ErrorMessage.ERR_OVERFLOW);
+
+						endMatchs.clear();
+						endMatchs.add(sis_e.getIssue());
+						rv.getData().setEndmatchs(endMatchs);
+						return;
+					}
 				}
 				TAB_WARN_MESSAGE tab_WARN_MESSAGE=new TAB_WARN_MESSAGE();
 				tab_WARN_MESSAGE.setCurrency(electronic_code);//'币种'
