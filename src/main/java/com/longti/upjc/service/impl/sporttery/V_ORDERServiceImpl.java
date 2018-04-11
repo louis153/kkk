@@ -282,15 +282,15 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 				T_LOTO_SIS_E t_loto_sis_e = new T_LOTO_SIS_E();
 				t_loto_sis_e.setIssue(t.getIssue());
 				t_loto_sis_e.setElectronic_code(vOrder.getElectronic_code());
-				t_loto_sis_e.setOne(t.getBet_info().startsWith("odds_one") ? 1L : 0L);
-				t_loto_sis_e.setTwo(t.getBet_info().startsWith("odds_two") ? 1L : 0L);
-				t_loto_sis_e.setThree(t.getBet_info().startsWith("odds_three") ? 1L : 0L);
-				t_loto_sis_e.setOne_d(t.getBet_info().startsWith("odds_one") ? t.getBet_fee() : 0L);
-				t_loto_sis_e.setTwo_d(t.getBet_info().startsWith("odds_two") ? t.getBet_fee() : 0L);
-				t_loto_sis_e.setThree_d(t.getBet_info().startsWith("odds_three") ? t.getBet_fee() : 0L);
-				t_loto_sis_e.setOne_p(t.getBet_info().startsWith("odds_one") ?setP(t.getBet_info().split("\\|")[1], t.getBet_fee()) : 0L);
-				t_loto_sis_e.setTwo_p(t.getBet_info().startsWith("odds_two") ? setP(t.getBet_info().split("\\|")[1],t.getBet_fee()) : 0L);
-				t_loto_sis_e.setThree_p(t.getBet_info().startsWith("odds_three") ? setP(t.getBet_info().split("\\|")[1],t.getBet_fee()) : 0L);
+				t_loto_sis_e.setOne(t.getBet_info().startsWith("options_one") ? 1L : 0L);
+				t_loto_sis_e.setTwo(t.getBet_info().startsWith("options_two") ? 1L : 0L);
+				t_loto_sis_e.setThree(t.getBet_info().startsWith("options_three") ? 1L : 0L);
+				t_loto_sis_e.setOne_d(t.getBet_info().startsWith("options_one") ? t.getBet_fee() : 0L);
+				t_loto_sis_e.setTwo_d(t.getBet_info().startsWith("options_two") ? t.getBet_fee() : 0L);
+				t_loto_sis_e.setThree_d(t.getBet_info().startsWith("options_three") ? t.getBet_fee() : 0L);
+				t_loto_sis_e.setOne_p(t.getBet_info().startsWith("options_one") ?setP(t.getBet_info().split("\\|")[1], t.getBet_fee()) : 0L);
+				t_loto_sis_e.setTwo_p(t.getBet_info().startsWith("options_two") ? setP(t.getBet_info().split("\\|")[1],t.getBet_fee()) : 0L);
+				t_loto_sis_e.setThree_p(t.getBet_info().startsWith("options_three") ? setP(t.getBet_info().split("\\|")[1],t.getBet_fee()) : 0L);
 				this.t_LOTO_SIS_EDao.saveSis(t_loto_sis_e);
 			}
 		}
