@@ -15,9 +15,7 @@ public class T_LOTO_E implements Serializable {
 
     private String issue; //比赛编号
     private String[] issues;
-    public String[] getIssues() {
-		return issues;
-	}
+    
 	private String electronic_code;//币种
 
     private String play_method; //玩法信息
@@ -268,9 +266,11 @@ public class T_LOTO_E implements Serializable {
 	public void setElectronic_code(String electronic_code) {
 		this.electronic_code = electronic_code;
 	}
-	public void setIssues(String[] sbIssues) {
-		
-		
+	public String[] getIssues() {
+		return issues;
+	}
+	public void setIssues(String[] issues) {
+		this.issues = issues;
 	}
 
 	

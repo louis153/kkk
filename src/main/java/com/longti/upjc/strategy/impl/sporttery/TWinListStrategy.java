@@ -20,6 +20,7 @@ import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_ORDERService;
 import com.longti.upjc.strategy.sporttery.IMethodStrategy;
 import com.longti.upjc.util.ErrorMessage;
+import com.longti.upjc.util.NumberUtils;
 import com.longti.upjc.util.ReturnValue;
 import com.longti.upjc.util.StringUtil;
 import com.longti.upjc.util.jdbet.BetUtils;
@@ -37,7 +38,14 @@ public class TWinListStrategy implements IMethodStrategy{
 	    
 	    private String username; //备注
 	    
+	    private String electronic_code;
 	   
+		public String getElectronic_code() {
+			return electronic_code;
+		}
+		public void setElectronic_code(String electronic_code) {
+			this.electronic_code = electronic_code;
+		}
 		public String getWin_fee() {
 			return win_fee;
 		}
@@ -88,10 +96,10 @@ public class TWinListStrategy implements IMethodStrategy{
 			}else{
 				for(LOTO_ORDER loto_ORDER:lst){
 					if(iLinkedList.indexOf(loto_ORDER.getUser_pin())<0){
-						iLinkedList.add(loto_ORDER.getUser_pin());
-						
+						iLinkedList.add(loto_ORDER.getUser_pin());						
 						WinListDetail winListDetail=new WinListDetail();					
-						winListDetail.setWin_fee(StringUtil.removeEndZero(new BigDecimal(loto_ORDER.getWin_fee()/BetUtils.preMul).toString()));
+						winListDetail.setWin_fee(StringUtil.removeEndZero(new BigDecimal(NumberUtils.longDiv(loto_ORDER.getWin_fee(),BetUtils.preMul)).toString()));
+						winListDetail.setElectronic_code(loto_ORDER.getElectronic_code());
 						winListDetail.setUsername(loto_ORDER.getMemo());
 						lstData.add(winListDetail);
 						icount++;
