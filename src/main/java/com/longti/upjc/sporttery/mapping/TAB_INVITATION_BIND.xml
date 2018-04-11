@@ -11,7 +11,7 @@
  and t.be_bind_available=#{be_bind_available}
 </if>
 </where>
-order by t.id
+order by t.id DESC
     </select>
     
     <select id = "selectTAB_INVITATION_BINDCount" resultType="int" parameterType="TAB_INVITATION_BIND">
@@ -24,7 +24,7 @@ order by t.id
  and be_bind_available=#{be_bind_available}
 </if>
 </where>
-order by id
+order by id DESC
        
     </select>
     
