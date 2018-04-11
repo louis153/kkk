@@ -269,7 +269,7 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 		if(tab_warn_setting!=null)
 		{
-			if(new_sum*100/dcxssx_s>tab_warn_setting.getRatio()){
+			if(new_sum*100/dcxssx_s>tab_warn_setting.getRatio().intValue()){
 				if(tab_WARN_MESSAGEService.selectTAB_WARN_MESSAGEList(tab_warn_message).isEmpty()){
 					tab_warn_message.setEvent_desc(option+"/达到限陪额"+tab_warn_setting.getRatio()+"%");
 					tab_WARN_MESSAGEService.insertTAB_WARN_MESSAGE(tab_warn_message);
@@ -840,6 +840,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			if (m_cost != 0) {
 				long new_sum=StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost;
 				long dcxssx_s=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max()));
+				long dcxssx_m=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_min()));
 				checkCanBet(canBet, issue, 501,new_sum ,dcxssx_s);
 				
 				if (new_sum > dcxssx_s) {
@@ -874,7 +875,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				tab_WARN_MESSAGE.setStop_time(DateUtils.getStrToDate(mapEs.get(sis_e.getIssue()).getEndtime(),"yyyyMMddHHmmss"));//话题停售时间
 				tab_WARN_MESSAGE.setType(0);	//告警类型, 0竞猜话题		
 				
-				checkCanWarn(new_sum,dcxssx_s,tab_WARN_MESSAGE,option);
+				checkCanWarn(new_sum,dcxssx_m,tab_WARN_MESSAGE,option);
 			}
 
 		}
