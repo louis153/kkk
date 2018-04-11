@@ -71,13 +71,13 @@ public class BalanceStrategy implements IMethodStrategy {
 		}
 		else if(request_LtGameLogic.getFeeType().equalsIgnoreCase("ETH")){			
 			if(StringUtil.ifnull(t_user.getAward_eth(),0).equals(0)){
-				t_user.setAward_gto(new BigDecimal(0L));
+				t_user.setAward_eth(new BigDecimal(0L));
 			}			
 			balance=new BigDecimal(rv_Balance.balance).add(t_user.getAward_eth());
 		}
 		else if(request_LtGameLogic.getFeeType().equalsIgnoreCase("UZ")){			
-			if(StringUtil.ifnull(t_user.getAward_eth(),0).equals(0)){
-				t_user.setAward_gto(new BigDecimal(0L));
+			if(StringUtil.ifnull(t_user.getAward_uz(),0).equals(0)){
+				t_user.setAward_uz(new BigDecimal(0L));
 			}			
 			balance=new BigDecimal(rv_Balance.balance).add(t_user.getAward_uz());
 		}
