@@ -231,8 +231,9 @@ public class PayAllStrategy implements IMethodStrategy {
 
 		if (sbFalse.size() > 0) {
 			rv.setMess(ErrorMessage.FAIL);
-
-			logger.info("调用支付接口失败----->");
+			for(String s:sbFalse){
+				logger.info("调用支付接口失败----->"+s);
+			}
 			return JSONObject.toJSONString(rv);
 		} else {
 			rv.setMess(ErrorMessage.SUCCESS);
