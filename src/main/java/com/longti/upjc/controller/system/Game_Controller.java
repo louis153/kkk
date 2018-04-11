@@ -109,6 +109,8 @@ public class Game_Controller {
 				    ||jsonRequest.get("method").equals("v_saleday_list")
 				    ||jsonRequest.get("method").equals("v_league_list")
 				    ||jsonRequest.get("method").equals("t_win_list")
+				    ||jsonRequest.get("method").equals("bind_gto_amount")
+				    ||jsonRequest.get("method").equals("binded_gto_amount")
 				    ||jsonRequest.get("method").equals("ante_list")){
 				logger.info("请求的方法无需验证token");
 				
