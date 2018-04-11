@@ -260,7 +260,7 @@ public class PayAllStrategy implements IMethodStrategy {
 	// 判断是否报警
 	private TAB_WARN_SETTING tab_warn_setting=null;
 	private List<TAB_WARN_RECEIVE> lTab_WARN_RECEIVEs;
-	private void checkCanWarn(Long new_sum,Long dcxssx_s,TAB_WARN_MESSAGE tab_warn_message) throws Exception{
+	private void checkCanWarn(Long new_sum,Long dcxssx_s,TAB_WARN_MESSAGE tab_warn_message,String option) throws Exception{
 		if (tab_warn_setting==null){
 			tab_warn_setting=tab_WARN_MESSAGEService.selectTAB_WARN_SETTING();
 		}
@@ -271,10 +271,12 @@ public class PayAllStrategy implements IMethodStrategy {
 		{
 			if(new_sum*100/dcxssx_s>tab_warn_setting.getRatio()){
 				if(tab_WARN_MESSAGEService.selectTAB_WARN_MESSAGEList(tab_warn_message).isEmpty()){
-					tab_warn_message.setEvent_desc("达到限陪额"+tab_warn_setting.getRatio()+"%");
+					tab_warn_message.setEvent_desc(option+"/达到限陪额"+tab_warn_setting.getRatio()+"%");
 					tab_WARN_MESSAGEService.insertTAB_WARN_MESSAGE(tab_warn_message);
 					for(TAB_WARN_RECEIVE tab_WARN_RECEIVE: lTab_WARN_RECEIVEs){
-						SmsUtils.SendSms(tab_WARN_RECEIVE.getPhone(), "240505", new String[]{""});
+						if(tab_WARN_RECEIVE.getAvailable()==1){
+							SmsUtils.SendSms(tab_WARN_RECEIVE.getPhone(), "240505", new String[]{""});
+						}
 					}					
 				}
 			}
@@ -816,17 +818,20 @@ public class PayAllStrategy implements IMethodStrategy {
 
 			String issue = sis_e.getIssue();
 			RequestData m = jsonMatchs.get(issue);
-			
+			String option="";
 			long m_cost=0;
 			for (Odd odd : m.getOdds()) {				
 				if (odd.getOdd_name().equals("odds_one") ){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					option=mapEs.get(issue).getOptions_one();
 				}
 				if (odd.getOdd_name().equals("odds_two")){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_two())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					option=mapEs.get(issue).getOptions_two();
 				}
 				if (odd.getOdd_name().equals("odds_three")){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_three())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					option=mapEs.get(issue).getOptions_three();
 				}
 			}
 			
@@ -869,7 +874,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				tab_WARN_MESSAGE.setStop_time(DateUtils.getStrToDate(mapEs.get(sis_e.getIssue()).getEndtime(),"yyyyMMddHHmmss"));//话题停售时间
 				tab_WARN_MESSAGE.setType(0);	//告警类型, 0竞猜话题		
 				
-				checkCanWarn(new_sum,dcxssx_s,tab_WARN_MESSAGE);
+				checkCanWarn(new_sum,dcxssx_s,tab_WARN_MESSAGE,option);
 			}
 
 		}
