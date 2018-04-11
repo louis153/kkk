@@ -274,7 +274,9 @@ public class PayAllStrategy implements IMethodStrategy {
 					tab_warn_message.setEvent_desc("达到限陪额"+tab_warn_setting.getRatio()+"%");
 					tab_WARN_MESSAGEService.insertTAB_WARN_MESSAGE(tab_warn_message);
 					for(TAB_WARN_RECEIVE tab_WARN_RECEIVE: lTab_WARN_RECEIVEs){
-						SmsUtils.SendSms(tab_WARN_RECEIVE.getPhone(), "240505", new String[]{""});
+						if(tab_WARN_RECEIVE.getAvailable()==1){
+							SmsUtils.SendSms(tab_WARN_RECEIVE.getPhone(), "240505", new String[]{""});
+						}
 					}					
 				}
 			}
