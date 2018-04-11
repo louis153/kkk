@@ -1,13 +1,13 @@
 package com.longti.upjc.formdata;
 
 public class Msg<T> {
-	private Head head;		//消息头
+	private IHead head;		//消息头
 	private T body;		//消息体
-	public Head getHead() {
+	public IHead getHead() {
 		return head;
 	}
 
-	public void setHead(Head head) {
+	public void setHead(IHead head) {
 		this.head = head;
 	}
 

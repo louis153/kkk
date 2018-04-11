@@ -11,11 +11,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.ServerException;
 import java.util.HashMap;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.longti.upjc.formdata.Head;
+import com.longti.upjc.formdata.IHead;
+import com.longti.upjc.formdata.RequestProperty;
 
 
 
@@ -67,20 +69,29 @@ public class PostUtils {
      * @return
      * @throws Exception
      */
-    public static String doGet(String urlStr) {
+    public static String doGet(String urlStr,IHead head,String para) {
         URL url = null;
         HttpURLConnection conn = null;
         InputStream is = null;
 
         ByteArrayOutputStream baos = null;
         try {
-            url = new URL(urlStr);
+        	if(para.isEmpty()){
+        		url = new URL(urlStr);
+        	}else{
+        		url = new URL(urlStr+"?"+para);
+        	}
+            
             conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(200000);
             conn.setConnectTimeout(200000);
             conn.setRequestMethod("GET");
             conn.setRequestProperty("accept", "*/*");
             conn.setRequestProperty("connection", "Keep-Alive");
+            List<RequestProperty> lstProperty=head.getProperty();
+            for(RequestProperty rp:lstProperty){
+            	conn.setRequestProperty(rp.key,rp.value);
+            }
             if (conn.getResponseCode() == 200) {
                 is = conn.getInputStream();
                 baos = new ByteArrayOutputStream();
@@ -123,7 +134,7 @@ public class PostUtils {
      * @return 所代表远程资源的响应结果
      * @throws Exception
      */
-    public static String doPostGZip(String url,Head header, String param) throws ServerException {
+    public static String doPostGZip(String url,IHead header, String param) throws ServerException {
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -143,7 +154,10 @@ public class PostUtils {
             System.out.println(conn.getRequestProperty("contentType"));
             conn.setRequestProperty("charset", "utf-8");
             conn.setRequestProperty("Accept-Encoding", "gzip");//gzip
-            conn.setRequestProperty("appkey",header.getAppkey());
+            List<RequestProperty> lstProperty=header.getProperty();
+            for(RequestProperty rp:lstProperty){
+            	conn.setRequestProperty(rp.key,rp.value);
+            }
             conn.setUseCaches(false);
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);

@@ -24,7 +24,7 @@ import com.longti.upjc.formdata.system.Response_LtGameLogic;
 import com.longti.upjc.service.sporttery.T_USERService;
 import com.longti.upjc.strategy.impl.sporttery.GameLogicMethodFactory;
 import com.longti.upjc.util.DateUtils;
-import com.longti.upjc.util.jdbet.BetUtils;
+import com.longti.upjc.util.jdbet.TokenUtils;
 
 
 
@@ -152,7 +152,7 @@ public class Game_Controller {
 			return 1;
 		}
 		else{
-			return BetUtils.CheckToken(userToken).status.equals(BetUtils.TOKEN_VALID)?0:2;//正式对接时需要修改
+			return TokenUtils.CheckToken(userToken).result.equals(TokenUtils.TOKEN_VALID)?0:2;//正式对接时需要修改
 		}
 	}
 	private int checkToken(String userPin,String userToken) throws Exception{
