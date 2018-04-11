@@ -46,8 +46,8 @@ public class Invcode_InputStrategy implements IMethodStrategy {
 			invList = userINVCODEService.selectT_USER_INVCODEList(t_user_invcode);
 			if(invList.size()>0){				
 				t_user_invcode = invList.get(0);
-                if(0==t_user_invcode.getIs_bind()&&"".equals(t_user_invcode.getBind_invitation_code())){
-                	if(t_user_invcode.getInvitation_code().equals(invitation_code)){
+                if(0==t_user_invcode.getIs_bind()&&"".equals(t_user_invcode.getBind_invitation_code().trim())){
+                	if(t_user_invcode.getInvitation_code().trim().equals(invitation_code)){
                 		rv.setStatus(ErrorMessage.SELF_INVCODE.getCode());
             			rv.setMessage(ErrorMessage.SELF_INVCODE.getMessage());
                 	}else{

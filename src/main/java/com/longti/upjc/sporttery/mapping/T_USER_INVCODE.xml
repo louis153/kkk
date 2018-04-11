@@ -10,7 +10,7 @@
  and t.user_pin=#{user_pin}
 </if>
 <if test="invitation_code != null">
- and t.invitation_code=#{invitation_code}
+ and BINARY t.invitation_code=#{invitation_code}
 </if>
 <if test="bind_user_pin != null">
  and t.bind_user_pin=#{bind_user_pin}
@@ -32,7 +32,7 @@ order by t.bind_time DESC
  and user_pin=#{user_pin}
 </if>
 <if test="invitation_code != null">
- and invitation_code=#{invitation_code}
+ and BINARY invitation_code=#{invitation_code}
 </if>
 <if test="bind_user_pin != null">
  and t.bind_user_pin=#{bind_user_pin}

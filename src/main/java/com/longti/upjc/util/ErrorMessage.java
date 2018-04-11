@@ -35,4 +35,5 @@ public class ErrorMessage {
 	public static ErrInfo NO_INVCODE=new ErrInfo("300003", "邀请码不存在");
 	public static ErrInfo SELF_INVCODE=new ErrInfo("300004", "禁止绑定自己邀请码");
 	
+	
 }
