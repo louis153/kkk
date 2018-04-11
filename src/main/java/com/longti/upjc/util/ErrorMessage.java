@@ -33,5 +33,6 @@ public class ErrorMessage {
 	public static ErrInfo BINDED_INVCODE=new ErrInfo("300001", "已绑定邀请码");
 	public static ErrInfo MUTUALBIND_INVCODE=new ErrInfo("300002", "两个用户不能相互绑定邀请码，请重新填写");
 	public static ErrInfo NO_INVCODE=new ErrInfo("300003", "邀请码不存在");
+	public static ErrInfo SELF_INVCODE=new ErrInfo("300004", "禁止绑定自己邀请码");
 	
 }
