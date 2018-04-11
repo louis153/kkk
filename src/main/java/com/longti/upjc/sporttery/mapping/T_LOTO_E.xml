@@ -100,7 +100,7 @@
  and return_max = #{return_max}
 </if>
 </where>
-order by issue
+order by sort
         <if test = "row_start != null and page_size != null" >
         limit ${row_start},${page_size}
         </if>
@@ -204,7 +204,7 @@ order by issue
  and return_max = #{return_max}
 </if>
 </where>
-order by issue
+order by sort
        
     </select>
     <insert id="save" parameterType="T_LOTO_E">
