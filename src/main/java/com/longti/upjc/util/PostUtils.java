@@ -197,6 +197,7 @@ public class PostUtils {
             while ((line = in.readLine()) != null) {
                 result += line;
             }
+            logger.info("钱包接口返回：---->"+result);
         } catch (Exception e) {
             logger.error(e.getMessage());
             throw new ServerException("服务器错误");

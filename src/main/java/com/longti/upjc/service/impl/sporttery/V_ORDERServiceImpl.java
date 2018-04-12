@@ -329,7 +329,9 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 		loto_en.setIssue(issume);
 		loto_en.setElectronic_code(electronic_code);
 		List<T_LOTO_E> lst_LOTO_E = loto_ENDao.selectLOTO_ENList(loto_en);
+		
 		if (lst_LOTO_E.size() > 0) {
+			lst_LOTO_E.get(0).setElectronic_code(electronic_code.toUpperCase());
 			BigDecimal odds_one=new BigDecimal(lst_LOTO_E.get(0).getOdds_one());
 			BigDecimal odds_two=null;
 			if(lst_LOTO_E.get(0).getOdds_two().isEmpty()){

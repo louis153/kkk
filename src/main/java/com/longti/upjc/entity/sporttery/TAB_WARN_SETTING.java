@@ -14,7 +14,7 @@ public class TAB_WARN_SETTING implements Serializable {
 
 
     private Integer id; //
-    private String type; //告警类型 0 竞猜话题先陪额告警比例
+    private String type; //告警类型 0 竞猜话题先赔额告警比例
     private Integer ratio; //比例 0 到100 之间 由程序控制, 默认不告警
     private Date create_time; //创建时间
     private Date start_create_time; //开始创建时间

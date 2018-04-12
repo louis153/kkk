@@ -21,7 +21,7 @@ public class TAB_WARN_MESSAGE implements Serializable {
     private String home_team_name; //主队名称
     private String guest_team_name; //客队名称
     private String play_method; //玩法 e.g. 梅西上半场是否能进2个球
-    private String event_desc; //事件说明 例如: 选项能达到限陪额85%
+    private String event_desc; //事件说明 例如: 选项能达到限赔额85%
     private Date event_time; //事件发生时间
     private Date start_event_time; //开始事件发生时间
     private Date end_event_time; //结束事件发生时间

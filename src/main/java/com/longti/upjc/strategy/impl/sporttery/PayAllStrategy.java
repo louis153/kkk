@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.LongToDoubleFunction;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -272,7 +273,7 @@ public class PayAllStrategy implements IMethodStrategy {
 		{
 			if(new_sum*100/dcxssx_s>tab_warn_setting.getRatio().intValue()){
 				if(tab_WARN_MESSAGEService.selectTAB_WARN_MESSAGEList(tab_warn_message).isEmpty()){
-					tab_warn_message.setEvent_desc(option+"/达到限陪额"+tab_warn_setting.getRatio()+"%");
+					tab_warn_message.setEvent_desc(option+"/达到限赔额"+tab_warn_setting.getRatio()+"%");
 					tab_WARN_MESSAGEService.insertTAB_WARN_MESSAGE(tab_warn_message);
 					for(TAB_WARN_RECEIVE tab_WARN_RECEIVE: lTab_WARN_RECEIVEs){
 						if(tab_WARN_RECEIVE.getAvailable()==1){
@@ -722,10 +723,11 @@ public class PayAllStrategy implements IMethodStrategy {
 		}
 
 		// 判断玩法是否已经到达赔率下线----->开始
+		Long sumCost=0L;
 		for (T_LOTO_E e : loto_Es) {
 			String issue = e.getIssue();
 			RequestData m = jsonMatchs.get(issue);
-			Long sumCost=0L;
+			
 			if (m != null) {
 				BigDecimal minOdd=new BigDecimal("1.01");
 				for (Odd odd : m.odds) {
@@ -761,15 +763,7 @@ public class PayAllStrategy implements IMethodStrategy {
 							endMatchs.add(e.getIssue());
 							rv.getData().setEndmatchs(endMatchs);
 							return;
-						}
-						
-						if(Long.parseLong(odd.getOdd_cost())>(long)(Double.parseDouble(e.getSingle_match_max()))){
-							rv.setMess(ErrorMessage.ERR_OVERMATCH);
-							endMatchs.clear();
-							endMatchs.add(e.getIssue());
-							rv.getData().setEndmatchs(endMatchs);
-							return;
-						}
+						}						
 					}
 				}
 			}
@@ -824,26 +818,38 @@ public class PayAllStrategy implements IMethodStrategy {
 			long one_p=StringUtil.ifnull(sis_e.getOne_p(),0L);
 			long two_p=StringUtil.ifnull(sis_e.getTwo_p(),0L);
 			long three_p=StringUtil.ifnull(sis_e.getThree_p(),0L);
+			long one_d=StringUtil.ifnull(sis_e.getOne_d(),0L);
+			long two_d=StringUtil.ifnull(sis_e.getTwo_d(),0L);
+			long three_d=StringUtil.ifnull(sis_e.getThree_d(),0L);
 			
 			for (Odd odd : m.getOdds()) {				
 				if (odd.getOdd_name().equals("odds_one") ){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					one_d+=(long)Double.parseDouble(odd.getOdd_cost());
 					one_p+=m_cost;
 					option=mapEs.get(issue).getOptions_one();
 				}
 				if (odd.getOdd_name().equals("odds_two")){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_two())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
 					two_p+=m_cost;
+					two_d+=(long)Double.parseDouble(odd.getOdd_cost());
 					option=mapEs.get(issue).getOptions_two();
 				}
 				if (odd.getOdd_name().equals("odds_three")){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_three())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					three_d+=(long)Double.parseDouble(odd.getOdd_cost());
 					three_p+=m_cost;
 					option=mapEs.get(issue).getOptions_three();
 				}
 			}
 			
-			
+			if(one_d+two_d+three_d>(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getSingle_lottery_max()))){
+				rv.setMess(ErrorMessage.ERR_OVERFLOW);
+				endMatchs.clear();
+				endMatchs.add(sis_e.getIssue());
+				rv.getData().setEndmatchs(endMatchs);
+				return;
+			}
 			
 			if (m_cost != 0) {
 				
@@ -874,7 +880,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				}
 				TAB_WARN_MESSAGE tab_WARN_MESSAGE=new TAB_WARN_MESSAGE();
 				tab_WARN_MESSAGE.setCurrency(electronic_code);//'币种'
-				tab_WARN_MESSAGE.setEvent_desc("");//事件说明 例如: 选项能达到限陪额85%//插入时动态确认
+				tab_WARN_MESSAGE.setEvent_desc("");//事件说明 例如: 选项能达到限赔额85%//插入时动态确认
 				tab_WARN_MESSAGE.setEvent_time(new Date());//事件发生时间
 				tab_WARN_MESSAGE.setGuest_team_name(mapEs.get(sis_e.getIssue()).getGuest_team_name());//客队名称
 				tab_WARN_MESSAGE.setHome_team_name(mapEs.get(sis_e.getIssue()).getHome_team_name());//主队名称
@@ -987,7 +993,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				v_orderService.insertV_ORDER(vOrder, lstTemp, canChangeOdd, canBet,null);
 				
 			} catch (Exception e1) {// 事物中的处理错误必须已异常的方式返回
-				sbFalse.add(vOrder.getVsteam());
+				sbFalse.add(vOrder.getVsteam()+e1.getMessage());
 			}
 
 			lstTemp = null;
