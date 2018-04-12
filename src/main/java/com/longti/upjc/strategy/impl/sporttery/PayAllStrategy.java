@@ -821,17 +821,24 @@ public class PayAllStrategy implements IMethodStrategy {
 			RequestData m = jsonMatchs.get(issue);
 			String option="";
 			long m_cost=0;
+			long one_p=StringUtil.ifnull(sis_e.getOne_p(),0L);
+			long two_p=StringUtil.ifnull(sis_e.getTwo_p(),0L);
+			long three_p=StringUtil.ifnull(sis_e.getThree_p(),0L);
+			
 			for (Odd odd : m.getOdds()) {				
 				if (odd.getOdd_name().equals("odds_one") ){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_one())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					one_p+=m_cost;
 					option=mapEs.get(issue).getOptions_one();
 				}
 				if (odd.getOdd_name().equals("odds_two")){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_two())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					two_p+=m_cost;
 					option=mapEs.get(issue).getOptions_two();
 				}
 				if (odd.getOdd_name().equals("odds_three")){
 					m_cost=(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getOdds_three())* (long)Double.parseDouble(odd.getOdd_cost())-(long)Double.parseDouble(odd.getOdd_cost()));
+					three_p+=m_cost;
 					option=mapEs.get(issue).getOptions_three();
 				}
 			}
@@ -839,7 +846,9 @@ public class PayAllStrategy implements IMethodStrategy {
 			
 			
 			if (m_cost != 0) {
-				long new_sum=StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost;
+				
+				long new_sum=Math.max(Math.max(one_p, two_p),three_p);
+				
 				long dcxssx_s=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max()));
 				long dcxssx_m=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_min()));
 				checkCanBet(canBet, issue, 501,new_sum ,dcxssx_m);

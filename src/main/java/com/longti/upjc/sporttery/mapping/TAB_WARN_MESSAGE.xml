@@ -16,24 +16,6 @@
 <if test="currency != null">
  and currency = #{currency}
 </if>
-<if test="match_name != null">
- and match_name = #{match_name}
-</if>
-<if test="home_team_name != null">
- and home_team_name = #{home_team_name}
-</if>
-<if test="guest_team_name != null">
- and guest_team_name = #{guest_team_name}
-</if>
-<if test="play_method != null">
- and play_method = #{play_method}
-</if>
-<if test="event_desc != null">
- and event_desc = #{event_desc}
-</if>
-<if test="event_time != null">
- and date(event_time)=date(#{event_time})
-</if>
 <if test="start_event_time != null and end_event_time != null ">
  and event_time between #{start_event_time} and #{end_event_time}
 </if>
