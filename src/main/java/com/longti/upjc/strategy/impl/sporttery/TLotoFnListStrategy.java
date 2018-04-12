@@ -45,7 +45,7 @@ public class TLotoFnListStrategy implements IMethodStrategy{
 		public String hd="";
 		public String ha="";
 		public int h_bet=1;
-	   
+	    
 	}
 	public static class LotoFnData{
 		public List<LotoFnDetail> lst=new ArrayList<LotoFnDetail>();
@@ -93,7 +93,7 @@ public class TLotoFnListStrategy implements IMethodStrategy{
 		LOTO_F  lotoF=new LOTO_F();
 		List<LOTO_F> lst=null;
 		lotoF.setStatus(1);
-		lotoF.setElectronic_code(request_LtGameLogic.getFeeType());
+		lotoF.setElectronic_code(request_LtGameLogic.getFeeType().toUpperCase());
 		lotoF.setStartIssue(jsonRequest.get("saleday").toString().replace("-", ""));
 		lotoF.setEndIssue(jsonRequest.get("saleday").toString().replace("-", "")+"9999");		
 		lotoF.setEndtime(DateUtils.getDateToStr(new Date(), "yyyyMMddHHmmss"));

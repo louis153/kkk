@@ -842,7 +842,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				long new_sum=StringUtil.ifnull(sis_e.getOne_p(),0L)+StringUtil.ifnull(sis_e.getTwo_p(),0L)+StringUtil.ifnull(sis_e.getThree_p(),0L)+ m_cost;
 				long dcxssx_s=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_max()));
 				long dcxssx_m=(long)(Double.parseDouble(mapEs.get(issue).getCompensate_min()));
-				checkCanBet(canBet, issue, 501,new_sum ,dcxssx_s);
+				checkCanBet(canBet, issue, 501,new_sum ,dcxssx_m);
 				
 				if (new_sum > dcxssx_s) {
 					rv.setMess(ErrorMessage.ERR_OVERFLOW);
