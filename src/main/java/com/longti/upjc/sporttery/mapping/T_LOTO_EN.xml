@@ -114,9 +114,9 @@ order by sort
     <select id = "selectT_LOTO_ENCount" resultType="int" parameterType="T_LOTO_E">
 		SELECT count(*) from 
 		<choose>  
-        	<when test="electronic_code=='ETH'.toString()">t_loto_e_eth</when>  
-        	<when test="electronic_code=='GTO'.toString()">t_loto_e_gto</when>
-        	<when test="electronic_code=='UZ'.toString()">t_loto_e_uz</when>   
+        	<when test="electronic_code=='ETH'.toString()">t_loto_en_eth</when>  
+        	<when test="electronic_code=='GTO'.toString()">t_loto_en_gto</when>
+        	<when test="electronic_code=='UZ'.toString()">t_loto_en_uz</when>   
     	</choose> 
         <where>
 <if test="issue != null">
