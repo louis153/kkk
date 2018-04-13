@@ -61,7 +61,7 @@ public class LOTO_ORDERDaoImpl extends BaseDaoImpl<LOTO_ORDER> implements LOTO_O
 
 	@Override
 	public LOTO_ORDER selectOnceLim(LOTO_ORDER loto_order) {
-		return getSqlSession().selectOne("com.longti.upjc.entity.sporttery.LOTO_ORDER.delete",loto_order);
+		return getSqlSession().selectOne("com.longti.upjc.entity.sporttery.LOTO_ORDER.selectOnceLim",loto_order);
 	}
 
 
