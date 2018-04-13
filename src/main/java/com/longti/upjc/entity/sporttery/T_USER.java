@@ -28,6 +28,7 @@ public class T_USER implements Serializable {
     private BigDecimal award_eth;//奖励的eth账户金额
     private BigDecimal award_uz;//奖励的uz账户金额
     private Integer bet_times;//投注次数
+    private BigDecimal cost_gto;//花费多少gto
     private Integer row_start;//开始行
     private Integer page_size;//每页行数
 
@@ -124,6 +125,12 @@ public class T_USER implements Serializable {
 	}
 	public void setBet_times(Integer bet_times) {
 		this.bet_times = bet_times;
+	}
+	public BigDecimal getCost_gto() {
+		return cost_gto;
+	}
+	public void setCost_gto(BigDecimal cost_gto) {
+		this.cost_gto = cost_gto;
 	}
 
 	

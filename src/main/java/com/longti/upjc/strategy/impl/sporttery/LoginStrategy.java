@@ -72,6 +72,7 @@ public class LoginStrategy implements IMethodStrategy {
 			t_user.setAward_eth(new BigDecimal(0));
 			t_user.setAward_gto(new BigDecimal(0));
 			t_user.setAward_uz(new BigDecimal(0));
+			t_user.setCost_gto(new BigDecimal(0));
 		    t_user.setBet_times(0);
 			t_user.setNick_name(login_Request.nick_name);
 			t_USERService.insertT_USER(t_user);

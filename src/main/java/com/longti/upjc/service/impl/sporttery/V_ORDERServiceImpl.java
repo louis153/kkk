@@ -238,6 +238,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 				}
 				if(electronic_code.equalsIgnoreCase("GTO")){
 					tUser.setAward_gto(award);
+					tUser.setCost_gto(tUser.getCost_gto().add(award));
 				}
 				else if(electronic_code.equalsIgnoreCase("ETH")){
 					tUser.setAward_eth(award);
