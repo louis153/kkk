@@ -99,7 +99,7 @@ public class ProfileListStrategy implements IMethodStrategy {
 				profileDetail.electronic_code = inv.getElectronic_code();
 				profileDetail.get_date = DateUtils.getDateToStr(inv.getCreate_time(), "yyyy-MM-dd HH:mm:ss");
 				profileDetail.nick_name = inv.getNick_name();
-				profileDetail.val = inv.getWin_fee();
+				profileDetail.val = StringUtil.removeEndZero(inv.getWin_fee());
 				rv.getData().lst.add(profileDetail);
 			}
 			rv.getData().page_index= page_index;
