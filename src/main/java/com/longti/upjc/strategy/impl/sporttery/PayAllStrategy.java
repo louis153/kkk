@@ -526,7 +526,7 @@ public class PayAllStrategy implements IMethodStrategy {
 			for (Odd odd : m.getOdds()) {
 				if (odd.getOdd_name().equals("hh") || odd.getOdd_name().equals("hd")
 						|| odd.getOdd_name().equals("ha")) {
-					h_cost += (int)Double.parseDouble(odd.getOdd_cost());
+					h_cost += new BigDecimal(odd.getOdd_cost()).longValue();
 				}
 			}
 			if (h_cost != 0) {
