@@ -220,14 +220,14 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 					long betFee=loto_ORDER.getBet_fee();
 					
 					if(award.compareTo(new BigDecimal(0))>0){
-						if(new BigDecimal(betFee/BetUtils.preMul).compareTo(award)>0){
+						if(NumberUtils.longDiv(betFee,BetUtils.preMul).compareTo(award)>0){
 							loto_ORDER.setReward_bet_fee(String.valueOf(award));
 							long subv=award.multiply(new BigDecimal(BetUtils.preMul)).setScale(0, BigDecimal.ROUND_FLOOR).longValue();
 							sumLong+=subv;
-							award=award.subtract(new BigDecimal(subv/BetUtils.preMul));							
+							award=award.subtract(NumberUtils.longDiv(subv,BetUtils.preMul));							
 						}else{
-							award.subtract(new BigDecimal(betFee/BetUtils.preMul));
-							loto_ORDER.setReward_bet_fee(String.valueOf(betFee));
+							award.subtract(NumberUtils.longDiv(betFee,BetUtils.preMul));
+							loto_ORDER.setReward_bet_fee(NumberUtils.longDiv(betFee,BetUtils.preMul).toString());
 							sumLong+=betFee;
 						}						
 						
