@@ -82,9 +82,9 @@ public class InvcodeDetailsStrategy implements IMethodStrategy {
 						}
 					}
 				}
-				invcodeDetail.gto = gto;
-				invcodeDetail.eth = eth;
-				invcodeDetail.uz = uz;
+				invcodeDetail.gto = StringUtil.removeEndZero(gto);
+				invcodeDetail.eth = StringUtil.removeEndZero(eth);
+				invcodeDetail.uz = StringUtil.removeEndZero(uz);
 				rv.getData().lst.add(invcodeDetail);
 			}
 	        rv.getData().invcode_count= String.valueOf(invuserList.size());
