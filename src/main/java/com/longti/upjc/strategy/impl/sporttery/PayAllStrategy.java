@@ -32,6 +32,7 @@ import com.longti.upjc.entity.sporttery.T_USER;
 import com.longti.upjc.entity.sporttery.V_ORDER;
 import com.longti.upjc.formdata.system.Request_LtGameLogic;
 import com.longti.upjc.service.sporttery.LOTO_FNService;
+import com.longti.upjc.service.sporttery.LOTO_ORDERService;
 import com.longti.upjc.service.sporttery.TAB_SALES_THRESHOLDService;
 import com.longti.upjc.service.sporttery.TAB_WARN_MESSAGEService;
 import com.longti.upjc.service.sporttery.T_LOTO_ENService;
@@ -75,6 +76,8 @@ public class PayAllStrategy implements IMethodStrategy {
 	private LangListStrategy langListStrategy;
 	@Autowired
 	private TAB_WARN_MESSAGEService tab_WARN_MESSAGEService;
+	@Autowired
+	private LOTO_ORDERService loto_ORDERService;
 	
 	public static class Odd {
 		private String odd_name;
@@ -856,7 +859,7 @@ public class PayAllStrategy implements IMethodStrategy {
 				}
 			}
 			
-			if(one_d+two_d+three_d>(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getSingle_lottery_max()))){
+			if(loto_ORDERService.selectOnceLim(userPin,issue,electronic_code)>(long)(Double.parseDouble(mapEs.get(sis_e.getIssue()).getSingle_match_max()))){
 				rv.setMess(ErrorMessage.ERR_OVERFLOW);
 				endMatchs.clear();
 				endMatchs.add(sis_e.getIssue());

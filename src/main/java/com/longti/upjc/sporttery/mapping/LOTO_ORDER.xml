@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
    <!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN" "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
     <mapper namespace="com.longti.upjc.entity.sporttery.LOTO_ORDER">
+    <select id = "selectOnceLim" resultType="LOTO_ORDER" parameterType="LOTO_ORDER">
+    select count(bet_fee) bet_fee from t_loto_order 
+where user_pin=#{user_pin}
+  and issue=#{issue}
+  and electronic_code=#{electronic_code}
+GROUP BY user_pin,issue,electronic_code
+    </select>
 	<select id = "selectLOTO_ORDERList" resultType="LOTO_ORDER" parameterType="LOTO_ORDER">
 		SELECT id,order_id,electronic_code,user_pin,issue,vsteam,vsresult,bet_fee,win_fee,create_time,bet_type,bet_info,bet_status,prize_status,prize_type,prize_cancel_time,order_source,match_result,memo,options_one,options_two,options_three,play_method,leaguename,reward_fee,reward_user_pin,reward_bet_fee from t_loto_order
         <where>

@@ -42,7 +42,7 @@ public interface LOTO_ORDERDao {
     public int deleteLOTO_ORDER(LOTO_ORDER loto_order) throws Exception;
     
     
-
+    public LOTO_ORDER selectOnceLim(LOTO_ORDER loto_order);
 
 	
 }

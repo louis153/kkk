@@ -46,5 +46,5 @@ public interface LOTO_ORDERService {
     public int deleteLOTO_ORDER(LOTO_ORDER loto_order) throws Exception;
 
 
-	
+    public Long selectOnceLim(String user_pin,String issue,String electronic_code);
 }

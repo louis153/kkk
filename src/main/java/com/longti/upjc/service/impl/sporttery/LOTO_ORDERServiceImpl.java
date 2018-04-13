@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.longti.upjc.dao.sporttery.LOTO_ORDERDao;
 import com.longti.upjc.entity.sporttery.LOTO_ORDER;
 import com.longti.upjc.service.sporttery.LOTO_ORDERService;
+import com.longti.upjc.util.StringUtil;
 
 
 /**
@@ -64,6 +65,20 @@ public class LOTO_ORDERServiceImpl implements LOTO_ORDERService  {
     public int deleteLOTO_ORDER(LOTO_ORDER loto_order) throws Exception{
         return lOTO_ORDERDao.deleteLOTO_ORDER(loto_order);
     }
+
+	@Override
+	public Long selectOnceLim(String user_pin,String issue,String electronic_code) {
+		LOTO_ORDER loto_order=new LOTO_ORDER();
+		loto_order.setIssue(issue);
+		loto_order.setUser_pin(user_pin);
+		loto_order.setElectronic_code(electronic_code.toUpperCase());
+		loto_order= lOTO_ORDERDao.selectOnceLim(loto_order);
+		if(loto_order!=null){
+		return (StringUtil.ifnull(loto_order.getBet_fee(),0L));
+		}else{
+			return 0L;
+		}
+	}
 
 
 	
