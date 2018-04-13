@@ -641,6 +641,22 @@ public class PayAllStrategy implements IMethodStrategy {
 
 		}
 	}
+	//判断不中返回是否超出限额
+	private boolean compareReturn_Max(long one_d,long two_d,long three_d,String odds_one,String odds_two,String odds_three ,String rMax){
+		BigDecimal oneD=new BigDecimal(one_d).multiply(new BigDecimal(StringUtil.ifnull(odds_one).isEmpty()?"0":StringUtil.ifnull(odds_one)));
+		BigDecimal twoD=new BigDecimal(two_d).multiply(new BigDecimal(StringUtil.ifnull(odds_two).isEmpty()?"0":StringUtil.ifnull(odds_two)));
+		BigDecimal threeD=new BigDecimal(three_d).multiply(new BigDecimal(StringUtil.ifnull(odds_three).isEmpty()?"0":StringUtil.ifnull(odds_three)));
+		if(
+			  oneD.add(twoD).compareTo(new BigDecimal(rMax))>0
+			||oneD.add(threeD).compareTo(new BigDecimal(rMax))>0
+			||twoD.add(threeD).compareTo(new BigDecimal(rMax))>0
+		  )
+		{
+			return true;
+		}else{
+			return false;
+		}
+	}
 	
 	private void payDj(ReturnValue<PayAll_Data> rv, List<String> sbFalse, String channel, JSONArray lst_rem,
 			String userPin, String nickName,String electronic_code,String lang) throws Exception {
@@ -866,9 +882,8 @@ public class PayAllStrategy implements IMethodStrategy {
 				}
 				if(mapEs.get(issue).getLottery_type()==1){
 					checkCanBet(canBet, issue, 501,new_sum ,Long.parseLong(mapEs.get(issue).getReturn_min()));
-					if(new_sum>Long.parseLong(mapEs.get(issue).getReturn_max())){						
+					if(compareReturn_Max(one_d,two_d,three_d,mapEs.get(issue).getOdds_one(),mapEs.get(issue).getOdds_two(),mapEs.get(issue).getOdds_three(),mapEs.get(issue).getReturn_max())){						
 						rv.setMess(ErrorMessage.ERR_OVERFLOW);
-
 						endMatchs.clear();
 						endMatchs.add(sis_e.getIssue());
 						rv.getData().setEndmatchs(endMatchs);

@@ -256,7 +256,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 	@Override
 	public int insertV_ORDER(V_ORDER vOrder, List<LOTO_ORDER> lstLotoOrder, HashMap<String, Boolean> canChangeOdd,
 			List<String> canBet, TAB_SALES_THRESHOLD tab_SALES_THRESHOLD) throws Exception {
-
+		Long sumRewardBetFee=getReward_Bet_fee(lstLotoOrder);//计算GTO抵减
 		if (vOrder.getBet_type() == 501) {
 			loto_ORDERDao.insertLOTO_ORDER(lstLotoOrder);
 			v_ORDERDao.insertV_ORDER(vOrder);
@@ -295,7 +295,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 			}
 		}
 		
-		Long sumRewardBetFee=getReward_Bet_fee(lstLotoOrder);//计算GTO抵减
+		
 		
 		logger.info("开始调用支付接口");
 		String password="";
