@@ -172,7 +172,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 					if ((new BigDecimal(loto_fn.getHad_h())).compareTo(new BigDecimal("1.01"))<0 
 					  ||(new BigDecimal(loto_fn.getHad_d())).compareTo(new BigDecimal("1.01"))<0
 					  ||(new BigDecimal(loto_fn.getHad_a())).compareTo(new BigDecimal("1.01"))<0) {
-						loto_fn.setHad_bet(0);
+						loto_fn.setHad_bet(0);						
 					}
 					
 					loto_FNDao.updateLOTO_FN(loto_fn);
@@ -354,6 +354,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 					|| (odds_two.compareTo(new BigDecimal("1.01"))<0&&lst_LOTO_E.get(0).getOdds_two().isEmpty()==false)
 					|| (odds_three.compareTo(new BigDecimal("1.01"))<0&&lst_LOTO_E.get(0).getOdds_three().isEmpty()==false)) {
 				lst_LOTO_E.get(0).setMnl_bet(0);
+				lst_LOTO_E.get(0).setAvailable(0);
 				loto_ENDao.updateLOTO_EN(lst_LOTO_E.get(0));
 			}
 		}
