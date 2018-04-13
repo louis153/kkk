@@ -222,12 +222,14 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 					if(award.compareTo(new BigDecimal(0))>0){
 						if(NumberUtils.longDiv(betFee,BetUtils.preMul).compareTo(award)>0){
 							loto_ORDER.setReward_bet_fee(String.valueOf(award));
+							tUser.setCost_gto(tUser.getCost_gto().add(award));
 							long subv=award.multiply(new BigDecimal(BetUtils.preMul)).setScale(0, BigDecimal.ROUND_FLOOR).longValue();
 							sumLong+=subv;
 							award=award.subtract(NumberUtils.longDiv(subv,BetUtils.preMul));							
 						}else{
 							award.subtract(NumberUtils.longDiv(betFee,BetUtils.preMul));
 							loto_ORDER.setReward_bet_fee(NumberUtils.longDiv(betFee,BetUtils.preMul).toString());
+							tUser.setCost_gto(tUser.getCost_gto().add(NumberUtils.longDiv(betFee,BetUtils.preMul)));
 							sumLong+=betFee;
 						}						
 						
@@ -237,8 +239,7 @@ public class V_ORDERServiceImpl implements V_ORDERService {
 					}
 				}
 				if(electronic_code.equalsIgnoreCase("GTO")){
-					tUser.setAward_gto(award);
-					tUser.setCost_gto(tUser.getCost_gto().add(award));
+					tUser.setAward_gto(award);					
 				}
 				else if(electronic_code.equalsIgnoreCase("ETH")){
 					tUser.setAward_eth(award);
